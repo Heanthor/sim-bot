@@ -10,7 +10,12 @@ class WarcraftLogs:
     def get_reports(self, guild_name, server, region):
         r = requests.get(API_URL + "reports/guild/%s/%s/%s" % (guild_name, server, region),
                          params={"api_key": self._api_key})
-        return r.json()
+        try:
+            return r.json()
+        except ValueError:
+            print r.text
+
+            return []
 
     def get_all_parses(self, character_name, server, region, metric):
         r = requests.get(API_URL + "parses/character/%s/%s/%s" % (character_name, server, region),
