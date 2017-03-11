@@ -3,13 +3,14 @@ import logging
 from collections import defaultdict
 
 API_URL = "https://us.api.battle.net/"
+logger = logging.getLogger()
 
 
 class BattleNet:
     def __init__(self, api_key):
         self._api_key = api_key
 
-    def get_guild_members(self, realm, guild_name, locale, max_level):
+    def get_guild_members(self, realm, guild_name, locale, level):
         """
         Gets list of max level guild members and their roles, in the form:
         { DPS: [],
@@ -19,6 +20,7 @@ class BattleNet:
         :param realm: Realm guild is located on
         :param guild_name: The guild to query for
         :param locale: en_US or other
+        :param level: Return only players at this level
         :return: Dict of guild members and their role
         """
         r = requests.get(API_URL + "wow/guild/%s/%s" % (realm, guild_name),
@@ -30,13 +32,16 @@ class BattleNet:
         try:
             members_raw = raw["members"]
         except KeyError:
-            logging.error("Unable to retrieve bnet guild list for guild %s, realm %s, locale %s", guild_name, realm,
-                          locale)
+            logger.error("Unable to retrieve bnet guild list for guild %s, realm %s, locale %s", guild_name, realm,
+                         locale)
             return {}
 
         for character in members_raw:
             character = character["character"]
-            if character["level"] == max_level:
-                names[character["spec"]["role"]].append(character["name"])
+            if character["level"] == level:
+                names[character["spec"]["role"]].append({
+                    "name": character["name"],
+                    "realm": character["realm"],
+                })
 
         return names
