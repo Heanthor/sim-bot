@@ -4,7 +4,7 @@ import requests
 from datetime import timedelta
 
 API_URL = "https://www.warcraftlogs.com:443/v1/"
-logger = logging.getLogger()
+logger = logging.getLogger("SimBot")
 
 
 class WarcraftLogs:
@@ -62,7 +62,6 @@ class WarcraftLogs:
 
                 # "Arms" for example
 
-
                 for kill in spec["data"]:
                     # filter everything older than x weeks
                     # curr_time - lookback time < log_time
@@ -74,7 +73,7 @@ class WarcraftLogs:
                         # log is too long ago
                         continue
                     else:
-                        logger.debug("Found good log of player %s at time %s", character_name, log_time)
+                        logger.debug("Found good log of player %s on boss %s", character_name, boss_name)
 
                         ilvl = kill["ilvl"]
                         dps = kill["persecondamount"]

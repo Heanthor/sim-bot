@@ -8,7 +8,7 @@ from api.warcraftlogs import WarcraftLogs
 
 import argparse
 
-logger = logging.getLogger()
+logger = logging.getLogger("SimBot")
 
 
 class SimcraftBot:
@@ -47,6 +47,7 @@ class SimcraftBot:
             raiding_stats = self._warcr.get_all_parses(player["name"], player["realm"], self._region, "dps",
                                                        self._difficulty,
                                                        self._num_weeks)
+            print raiding_stats
 
     @staticmethod
     def realm_slug(realm):
@@ -55,12 +56,7 @@ class SimcraftBot:
 
 
 def main():
-    logger.setLevel(logging.DEBUG)
-    handler = logging.FileHandler('simbot.log')
-    handler.setLevel(logging.DEBUG)
-    logger.addHandler(handler)
-
-    logger.info("App started")
+    logger.warning("TEST")
 
     with open("keys.json", 'r') as f:
         f = json.loads(f.read())
@@ -68,8 +64,6 @@ def main():
 
     w = WarcraftLogs(warcraft_logs_public)
     print w.get_all_parses("Heanthor", "fizzcrank", "US", "dps")
-
-    logger.info("App finished")
 
 
 if __name__ == '__main__':
@@ -94,4 +88,16 @@ if __name__ == '__main__':
 
     sb = SimcraftBot(args["<guild name>"], args["<realm>"], args["<region>"], args["<raid difficulty>"],
                      args["<weeks to examine>"], args["<max level>"])
+
+    logger.setLevel(logging.DEBUG)
+    handler = logging.FileHandler('simbot.log')
+    handler.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+    logger.info("App started")
+
     sb.run_sims()
+
+    logger.info("App finished")
