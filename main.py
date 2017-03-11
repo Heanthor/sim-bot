@@ -4,6 +4,7 @@ import logging
 import unicodedata
 
 from api.battlenet import BattleNet
+from api.simcraft import SimulationCraft
 from api.warcraftlogs import WarcraftLogs
 
 import argparse
@@ -35,6 +36,7 @@ class SimcraftBot:
 
         self._bnet = BattleNet(battlenet_pub)
         self._warcr = WarcraftLogs(warcraft_logs_public)
+        self._simc = SimulationCraft(simc_location)
 
         # talent array to be populated by bnet API
         self._talent_info = ""
@@ -76,7 +78,7 @@ def main():
 
 if __name__ == '__main__':
     logger.setLevel(logging.DEBUG)
-    handler = logging.FileHandler('simbot.log')
+    handler = logging.FileHandler('simbot.log', 'w')
     handler.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)

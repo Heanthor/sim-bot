@@ -74,7 +74,7 @@ class WarcraftLogs:
                         # log is too long ago
                         continue
                     else:
-                        logger.debug("Found good log of player %s on boss %s", character_name, boss_name)
+                        logger.debug("Found usable log of player %s on boss %s", character_name, boss_name)
 
                         ilvl = kill["ilvl"]
                         dps = kill["persecondamount"]
@@ -118,7 +118,8 @@ class WarcraftLogs:
                     for talent_entry in tier:
                         for talent_for_spec in talent_entry:
                             if "spec" in talent_for_spec:
-                                if talent_for_spec["spec"]["name"].lower().replace(" ", "") == spec_str.lower() and talent_for_spec["spell"]["id"] == talent["id"]:
+                                if talent_for_spec["spec"]["name"].lower().replace(" ", "") == spec_str.lower() and \
+                                                talent_for_spec["spell"]["id"] == talent["id"]:
                                     temp.append(talent_for_spec["column"])
                                     done_tier = True
                                     break
