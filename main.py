@@ -12,9 +12,8 @@ logger = logging.getLogger("SimBot")
 
 
 class SimcraftBot:
-    def __init__(self, guild, realm, region, difficulty, num_weeks, max_level=110):
+    def __init__(self, guild, realm, region, difficulty, num_weeks, max_level, simc_location):
         """
-
         :param guild: The guild name to run sims for
         :param realm: The realm
         :param region: US, EU, KR, TW, CN.
@@ -37,22 +36,31 @@ class SimcraftBot:
         self._bnet = BattleNet(battlenet_pub)
         self._warcr = WarcraftLogs(warcraft_logs_public)
 
+        # talent array to be populated by bnet API
+        self._talent_info = ""
+
     def run_sims(self):
         logger.info("Starting sims for guild %s, realm %s, region %s", self._guild, self._realm, self._region)
 
         names = self._bnet.get_guild_members(self._realm, self._guild, self._blizzard_locale, self._max_level)
 
+        if self._talent_info == "":
+            self._talent_info = self._bnet.get_all_talents(self._blizzard_locale)
+
         # only run sims for 110 dps players
         for player in names["DPS"]:
-            raiding_stats = self._warcr.get_all_parses(player["name"], player["realm"], self._region, "dps",
-                                                       self._difficulty,
-                                                       self._num_weeks)
+            raiding_stats = self._warcr.get_all_parses(player["name"], self.realm_slug(player["realm"]), self._region,
+                                                       "dps", self._difficulty, self._num_weeks, self._talent_info)
+
             print raiding_stats
 
     @staticmethod
     def realm_slug(realm):
         nfkd_form = unicodedata.normalize('NFKD', unicode(realm))
         return u"".join([c for c in nfkd_form if not unicodedata.combining(c)])
+
+    def set_talent_info(self, info):
+        self._talent_info = info
 
 
 def main():
@@ -67,11 +75,22 @@ def main():
 
 
 if __name__ == '__main__':
+    logger.setLevel(logging.DEBUG)
+    handler = logging.FileHandler('simbot.log')
+    handler.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+    logger.info("App started")
+
     parser = argparse.ArgumentParser(description='SimBot sim tool.')
     parser.add_argument('<guild name>', type=str,
                         help='Name of guild to be simmed')
     parser.add_argument('<realm>', type=str,
                         help='Realm where the guild exists')
+    parser.add_argument('<simc location>', type=str,
+                        help='Absolute path of SimulationCraft CLI executable')
     parser.add_argument('<region>', type=str, default="US", nargs="?", choices=["US", "EU", "KR", "TW", "CN"],
                         help='Region where guild exists.')
     parser.add_argument('<raid difficulty>', type=str, default="heroic", nargs="?",
@@ -87,16 +106,7 @@ if __name__ == '__main__':
     args = vars(parser.parse_args())
 
     sb = SimcraftBot(args["<guild name>"], args["<realm>"], args["<region>"], args["<raid difficulty>"],
-                     args["<weeks to examine>"], args["<max level>"])
-
-    logger.setLevel(logging.DEBUG)
-    handler = logging.FileHandler('simbot.log')
-    handler.setLevel(logging.DEBUG)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-
-    logger.info("App started")
+                     args["<weeks to examine>"], args["<max level>"], args["<simc location>"])
 
     sb.run_sims()
 

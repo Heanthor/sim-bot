@@ -26,9 +26,12 @@ class BattleNet:
     def get_guild_members(self, realm, guild_name, locale, level):
         """
         Gets list of max level guild members and their roles, in the form:
-        { DPS: [],
-          HEALING: [],
-          TANK: []
+        { DPS: [{
+                name: "",
+                realm: "",
+                }
+          HEALING: [..],
+          TANK: [..]
         }
         :param realm: Realm guild is located on
         :param guild_name: The guild to query for
@@ -58,6 +61,12 @@ class BattleNet:
                 })
 
         return names
+
+    def get_all_talents(self, locale):
+        r = self.bnet_request(requests.get, API_URL + "wow/data/talents", params={"locale": locale,
+                                                                                  "apikey": self._api_key})
+
+        return r.json()
 
     def bnet_request(self, req_func, *args, **kwargs):
         if self._calls_sec > self.BNET_MAX_CALLS_SEC:
