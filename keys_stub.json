@@ -1,0 +1,9 @@
+{
+  "warcraftlogs": {
+    "public": ""
+  },
+  "battlenet": {
+    "public": "",
+    "secret": ""
+  }
+}
