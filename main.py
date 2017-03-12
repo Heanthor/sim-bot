@@ -34,6 +34,9 @@ class SimcraftBot:
             battlenet_pub = f["battlenet"]["public"]
             battlenet_sec = f["battlenet"]["secret"]
 
+        with open("nighthold_profiles.json", 'r') as f:
+            self._profiles = json.loads(f.read())
+
         self._bnet = BattleNet(battlenet_pub)
         self._warcr = WarcraftLogs(warcraft_logs_public)
         self._simc = SimulationCraft(simc_location)
@@ -54,7 +57,38 @@ class SimcraftBot:
             raiding_stats = self._warcr.get_all_parses(player["name"], self.realm_slug(player["realm"]), self._region,
                                                        "dps", self._difficulty, self._num_weeks, self._talent_info)
 
-            print raiding_stats
+            if raiding_stats:
+                for boss_name, stats in raiding_stats.iteritems():
+                    average_dps = 0.0
+                    average_percentage = 0.0
+                    average_ilvl = 0.0
+
+                    max_dps = 0.0
+                    max_dps_talents = []
+                    max_dps_spec = ""
+
+                    for kill in stats:
+                        if kill["dps"] > max_dps:
+                            max_dps = kill["dps"]
+                            max_dps_spec = kill["spec"].lower()
+                            max_dps_talents = kill["talents"]
+                        average_dps += kill["dps"]
+                        average_percentage += kill["historical_percent"]
+                        average_ilvl += kill["ilvl"]
+
+                    average_dps /= len(stats)
+                    average_percentage /= len(stats)
+                    average_ilvl /= len(stats)
+
+                    sim_string = "armory=%s,%s,%s spec=%s talents=%s fight_style=%s" % (self._region,
+                                                                                        self.realm_slug(self._realm),
+                                                                                        player["name"], max_dps_spec,
+                                                                                        ''.join(str(x) for x in max_dps_talents),
+                                                                                        self._profiles[boss_name])
+
+                    sim_results = self._simc.run_sim(sim_string.split(" "))
+
+                    print sim_results
 
     @staticmethod
     def realm_slug(realm):
