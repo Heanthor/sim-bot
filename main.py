@@ -80,15 +80,22 @@ class SimcraftBot:
                     average_percentage /= len(stats)
                     average_ilvl /= len(stats)
 
+                    if max_dps_spec == "beastmastery":
+                        max_dps_spec = "beast_mastery"
+
                     sim_string = "armory=%s,%s,%s spec=%s talents=%s fight_style=%s" % (self._region,
-                                                                                        self.realm_slug(self._realm),
+                                                                                        self.realm_slug(
+                                                                                            player["realm"]),
                                                                                         player["name"], max_dps_spec,
-                                                                                        ''.join(str(x) for x in max_dps_talents),
+                                                                                        ''.join(str(x) for x in
+                                                                                                max_dps_talents),
                                                                                         self._profiles[boss_name])
 
                     sim_results = self._simc.run_sim(sim_string.split(" "))
 
-                    print sim_results
+                    print "[%s] Average dps (%d fight%s) %d vs sim %d on %s (%d%% of potential)" % (
+                        player["name"], len(stats), "" if len(stats) == 1 else "s", average_dps, sim_results, boss_name,
+                        (average_dps / sim_results) * 100)
 
     @staticmethod
     def realm_slug(realm):

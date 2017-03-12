@@ -19,8 +19,8 @@ class WarcraftLogs:
         self._api_key = api_key
 
     def get_reports(self, guild_name, server, region):
-        r = requests.get(API_URL + "reports/guild/%s/%s/%s" % (guild_name, server, region),
-                         params={"api_key": self._api_key})
+        r = self.warcraftlogs_request(requests.get, API_URL + "reports/guild/%s/%s/%s" % (guild_name, server, region),
+                                      params={"api_key": self._api_key})
         try:
             return r.json()
         except ValueError:
@@ -29,8 +29,9 @@ class WarcraftLogs:
             return []
 
     def get_all_parses(self, character_name, server, region, metric, difficulty, num_weeks, talent_data):
-        r = requests.get(API_URL + "parses/character/%s/%s/%s" % (character_name, server, region),
-                         params={"metric": metric, "api_key": self._api_key})
+        r = self.warcraftlogs_request(requests.get,
+                                      API_URL + "parses/character/%s/%s/%s" % (character_name, server, region),
+                                      params={"metric": metric, "api_key": self._api_key})
 
         raw = r.json()
 
@@ -93,6 +94,12 @@ class WarcraftLogs:
             kills_per_boss[boss_name] = kills_in_time
 
         return kills_per_boss
+
+    def warcraftlogs_request(self, req_func, *args, **kwargs):
+        r = req_func(*args, **kwargs)
+        logger.debug("Warcraftlogs request sent (%s)", r.url)
+
+        return r
 
     @staticmethod
     def convert_talents(class_str, spec_str, warcraftlogs_talents, blizzard_talents):

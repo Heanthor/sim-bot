@@ -76,6 +76,7 @@ class BattleNet:
 
         r = req_func(*args, **kwargs)
 
+        logger.debug("Bnet request sent (%s). In last hour: %d", r.url, self._calls_hr)
         self._calls_sec += 1
         self._calls_hr += 1
 

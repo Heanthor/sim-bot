@@ -6,6 +6,7 @@ import subprocess
 
 logger = logging.getLogger("SimBot")
 
+
 class SimulationCraft:
     def __init__(self, simc_path):
         if not os.path.isfile(simc_path):
@@ -31,4 +32,10 @@ class SimulationCraft:
         marker = "DPS Ranking:"
         tag = string.index(marker) + len(marker) + 1
         new_str = string[tag:tag + 20]
-        return new_str[:new_str.index(" ")]
+        x = new_str[:new_str.index(" ")]
+
+        if not x:
+            logging.error("Unable to find DPS in string")
+            x = 1
+
+        return x
