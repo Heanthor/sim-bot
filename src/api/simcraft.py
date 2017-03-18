@@ -4,6 +4,8 @@ import os
 
 import subprocess
 
+import sys
+
 logger = logging.getLogger("SimBot")
 
 
@@ -11,10 +13,14 @@ class SimulationCraft:
     def __init__(self, simc_path):
         if not os.path.isfile(simc_path):
             logger.error("Unable to find simcraft executable at location %s", simc_path)
-            self._simc_path = ""
+            sys.exit(1)
         else:
             logger.info("Found simcraft executable at %s", simc_path)
             self._simc_path = simc_path
+
+        if not simc_path.endswith("simc.exe") and not simc_path.endswith("simc"):
+            logging.error("Simc path incomplete (must end with simc executable")
+            sys.exit(1)
 
         with open("nighthold_profiles.json", 'r') as f:
             self._nighthold_profile = json.loads(f.read())

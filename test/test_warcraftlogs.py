@@ -15,6 +15,9 @@ with open("7_1_5_talents.json", 'r') as f:
 
 
 class TestWarcraftLogs(unittest.TestCase):
+    def setUp(self):
+        self.wl = WarcraftLogs("")
+
     def test_convert_talents(self):
         mage_talents = [
             {
@@ -85,6 +88,10 @@ class TestWarcraftLogs(unittest.TestCase):
                          WarcraftLogs.convert_talents("DemonHunter", "Havoc", demonhunter_talents, talent_dump))
 
     def test_process_parse(self):
+        # 999 weeks to prevent breaking dataset
+        result = self.wl.process_parses("Stachio", 4, 999, api_stub, talent_dump)
+
+        self.assertIsNotNone(result)
 
 
 class TestParseResponse(unittest.TestCase):

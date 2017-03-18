@@ -1,7 +1,11 @@
 import json
 import logging
+import datetime
+import time
 
 import unicodedata
+
+import sys
 
 from api.battlenet import BattleNet
 from api.simcraft import SimulationCraft
@@ -56,48 +60,63 @@ class SimcraftBot:
         for player in names["DPS"]:
             raiding_stats = self._warcr.get_all_parses(player["name"], self.realm_slug(player["realm"]), self._region,
                                                        "dps", self._difficulty, self._num_weeks, self._talent_info)
-            # raiding_stats = self._warcr.get_all_parses_new(player["name"], self.realm_slug(player["realm"]), self._region,
-            #                                            "dps", self._difficulty, self._num_weeks, self._talent_info)
 
-            if raiding_stats:
-                for boss_name, stats in raiding_stats.iteritems():
-                    average_dps = 0.0
-                    average_percentage = 0.0
-                    average_ilvl = 0.0
+            self.sim_single_character(player, raiding_stats)
 
-                    max_dps = 0.0
-                    max_dps_talents = []
-                    max_dps_spec = ""
+    def sim_single_character(self, player, raiding_stats):
+        # each sim is a character, talents, and fight configuration
+        #   tag (<character_name><talent string><fight config>)
+        sim_cache = {}
 
-                    for kill in stats:
-                        if kill["dps"] > max_dps:
-                            max_dps = kill["dps"]
-                            max_dps_spec = kill["spec"].lower()
-                            max_dps_talents = kill["talents"]
-                        average_dps += kill["dps"]
-                        average_percentage += kill["historical_percent"]
-                        average_ilvl += kill["ilvl"]
+        if raiding_stats:
+            for boss_name, stats in raiding_stats.iteritems():
+                average_dps = 0.0
+                average_percentage = 0.0
+                average_ilvl = 0.0
 
-                    average_dps /= len(stats)
-                    average_percentage /= len(stats)
-                    average_ilvl /= len(stats)
+                max_dps = 0.0
+                max_dps_talents = []
+                max_dps_spec = ""
 
-                    if max_dps_spec == "beastmastery":
-                        max_dps_spec = "beast_mastery"
+                for kill in stats:
+                    if kill["dps"] > max_dps:
+                        max_dps = kill["dps"]
+                        max_dps_spec = kill["spec"].lower()
+                        max_dps_talents = kill["talents"]
+                    average_dps += kill["dps"]
+                    average_percentage += kill["historical_percent"]
+                    average_ilvl += kill["ilvl"]
 
-                    sim_string = "armory=%s,%s,%s spec=%s talents=%s fight_style=%s" % (self._region,
-                                                                                        self.realm_slug(
-                                                                                            player["realm"]),
-                                                                                        player["name"], max_dps_spec,
-                                                                                        ''.join(str(x) for x in
-                                                                                                max_dps_talents),
-                                                                                        self._profiles[boss_name])
+                average_dps /= len(stats)
+                average_percentage /= len(stats)
+                average_ilvl /= len(stats)
 
+                if max_dps_spec == "beastmastery":
+                    max_dps_spec = "beast_mastery"
+
+                fight_profile = self._profiles[boss_name]
+                tag = hash(b"%s%s%s" % (player["name"], max_dps_spec, fight_profile))
+
+                sim_string = "armory=%s,%s,%s spec=%s talents=%s fight_style=%s" % (self._region,
+                                                                                    self.realm_slug(
+                                                                                        player["realm"]),
+                                                                                    player["name"], max_dps_spec,
+                                                                                    ''.join(str(x) for x in
+                                                                                            max_dps_talents),
+                                                                                    fight_profile)
+
+                # actually run sim
+                if tag not in sim_cache:
                     sim_results = self._simc.run_sim(sim_string.split(" "))
+                    sim_cache[tag] = sim_results
+                else:
+                    logger.debug("Using cached sim for player %s spec %s fight config %s", player["name"], max_dps_spec,
+                                 fight_profile)
+                    sim_results = sim_cache[tag]
 
-                    print "[%s] Average dps (%d fight%s) %d vs sim %d on %s (%d%% of potential)" % (
-                        player["name"], len(stats), "" if len(stats) == 1 else "s", average_dps, sim_results, boss_name,
-                        (average_dps / sim_results) * 100)
+                print "[%s] Average dps (%d fight%s) %d vs sim %d on %s (%d%% of potential)" % (
+                    player["name"], len(stats), "" if len(stats) == 1 else "s", average_dps, sim_results, boss_name,
+                    (average_dps / sim_results) * 100)
 
     @staticmethod
     def realm_slug(realm):
@@ -121,13 +140,19 @@ def main():
 
 if __name__ == '__main__':
     logger.setLevel(logging.DEBUG)
-    handler = logging.FileHandler('simbot.log', 'w')
+    handler = logging.FileHandler('../simbot.log', 'w')
     handler.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
 
-    logger.info("App started")
+    # stdout logger
+    ch = logging.StreamHandler(sys.stdout)
+    ch.setLevel(logging.DEBUG)
+    ch.setFormatter(formatter)
+    logger.addHandler(ch)
+
+    logger.info("App started at %s", datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))
 
     parser = argparse.ArgumentParser(description='SimBot sim tool.')
     parser.add_argument('<guild name>', type=str,

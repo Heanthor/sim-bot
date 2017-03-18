@@ -1,5 +1,6 @@
 import logging
 from time import time
+import datetime
 import requests
 from datetime import timedelta
 
@@ -76,9 +77,28 @@ class WarcraftLogs:
                 character_name, server, region, difficulty)
             return []
 
-        return self.process_parses(character_name, difficulty_normalized, num_weeks, raw, talent_data)
+        process_result = self.process_parses(character_name, difficulty_normalized, num_weeks, raw, talent_data)
+
+        for v in process_result.itervalues():
+            if v:
+                # at least one boss entry has data
+                return process_result
+
+        # all boss entries are empty, player is in guild but has not raided
+        logger.debug("Player %s has no boss kills in past %d weeks.", character_name, num_weeks)
+
+        return []
 
     def process_parses(self, character_name, difficulty_normalized, num_weeks, response_json, talent_data):
+        """
+        No error checking or logging, helper method to process parses from WarcraftLogs
+        :param character_name:
+        :param difficulty_normalized:
+        :param num_weeks:
+        :param response_json:
+        :param talent_data:
+        :return:
+        """
         kills_per_boss = {}
 
         for boss in response_json:
@@ -110,7 +130,8 @@ class WarcraftLogs:
                         # log is too long ago
                         continue
                     else:
-                        logger.debug("Found usable log of player %s on boss %s", character_name, boss_name)
+                        logger.debug("Found usable log of player %s on boss %s from %s", character_name, boss_name,
+                                     datetime.datetime.fromtimestamp(log_time).strftime('%Y-%m-%d %H:%M:%S'))
 
                         ilvl = kill["ilvl"]
                         dps = kill["persecondamount"]
@@ -129,26 +150,6 @@ class WarcraftLogs:
             kills_per_boss[boss_name] = kills_in_time
 
         return kills_per_boss
-
-    def get_all_parses_new(self, character_name, server, region, metric, difficulty, num_weeks, talent_data):
-        r = self.warcraftlogs_request(requests.get,
-                                      API_URL + "parses/character/%s/%s/%s" % (character_name, server, region),
-                                      params={"metric": metric, "api_key": self._api_key})
-
-        raw = r.json()
-
-        if not raw:
-            logger.debug("Empty warcraftlogs response for character %s, server %s, region %s, difficulty %s",
-                         character_name, server, region, difficulty)
-            return []
-        elif r.status_code != 200:
-            logger.debug(
-                "Unable to find parses for character %s, server %s, region %s, difficulty %s",
-                character_name, server, region, difficulty)
-            return []
-
-        pr = ParseResponse(raw)
-        pr.filter_kills(num_weeks * 7, difficulty)
 
     @staticmethod
     def warcraftlogs_request(req_func, *args, **kwargs):
