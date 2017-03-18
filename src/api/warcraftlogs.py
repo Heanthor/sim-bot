@@ -3,6 +3,8 @@ from time import time
 import requests
 from datetime import timedelta
 
+from src.data_structures.warcraftlogs import ParseResponse
+
 API_URL = "https://www.warcraftlogs.com:443/v1/"
 logger = logging.getLogger("SimBot")
 
@@ -13,6 +15,21 @@ class WarcraftLogs:
         "normal": 3,
         "heroic": 4,
         "mythic": 5,
+    }
+
+    BNET_CLASS_MAPPING = {
+        "warrior": "1",
+        "monk": "10",
+        "druid": "11",
+        "demonhunter": "12",
+        "paladin": "2",
+        "hunter": "3",
+        "rogue": "4",
+        "priest": "5",
+        "deathknight": "6",
+        "shaman": "7",
+        "mage": "8",
+        "warlock": "9"
     }
 
     def __init__(self, api_key):
@@ -29,6 +46,20 @@ class WarcraftLogs:
             return []
 
     def get_all_parses(self, character_name, server, region, metric, difficulty, num_weeks, talent_data):
+        if num_weeks <= 0:
+            logger.error("Number of days cannot be <= 0.")
+            return False
+
+        # convert string to int difficulty value
+        difficulty_normalized = difficulty
+        if isinstance(difficulty, str):
+            if difficulty.lower() not in self.DIFFICULTY_DICT:
+                logger.error("Unable to coerce difficulty value %s", difficulty)
+
+                return False
+            else:
+                difficulty_normalized = self.DIFFICULTY_DICT[difficulty.lower()]
+
         r = self.warcraftlogs_request(requests.get,
                                       API_URL + "parses/character/%s/%s/%s" % (character_name, server, region),
                                       params={"metric": metric, "api_key": self._api_key})
@@ -45,9 +76,13 @@ class WarcraftLogs:
                 character_name, server, region, difficulty)
             return []
 
+        return self.process_parses(character_name, difficulty_normalized, num_weeks, raw, talent_data)
+
+    def process_parses(self, character_name, difficulty_normalized, num_weeks, response_json, talent_data):
         kills_per_boss = {}
-        for boss in raw:
-            if boss["difficulty"] != self.DIFFICULTY_DICT[difficulty]:
+
+        for boss in response_json:
+            if boss["difficulty"] != difficulty_normalized:
                 # skip logs not at our difficulty
                 continue
 
@@ -95,7 +130,28 @@ class WarcraftLogs:
 
         return kills_per_boss
 
-    def warcraftlogs_request(self, req_func, *args, **kwargs):
+    def get_all_parses_new(self, character_name, server, region, metric, difficulty, num_weeks, talent_data):
+        r = self.warcraftlogs_request(requests.get,
+                                      API_URL + "parses/character/%s/%s/%s" % (character_name, server, region),
+                                      params={"metric": metric, "api_key": self._api_key})
+
+        raw = r.json()
+
+        if not raw:
+            logger.debug("Empty warcraftlogs response for character %s, server %s, region %s, difficulty %s",
+                         character_name, server, region, difficulty)
+            return []
+        elif r.status_code != 200:
+            logger.debug(
+                "Unable to find parses for character %s, server %s, region %s, difficulty %s",
+                character_name, server, region, difficulty)
+            return []
+
+        pr = ParseResponse(raw)
+        pr.filter_kills(num_weeks * 7, difficulty)
+
+    @staticmethod
+    def warcraftlogs_request(req_func, *args, **kwargs):
         r = req_func(*args, **kwargs)
         logger.debug("Warcraftlogs request sent (%s)", r.url)
 
@@ -115,28 +171,29 @@ class WarcraftLogs:
         temp = []
 
         counter = 0
+
         for talent in warcraftlogs_talents:
-            for entry in blizzard_talents.itervalues():
-                if entry["class"].replace("-", '').lower() == class_str.lower():
-                    talent_object = entry["talents"]
-                    tier = talent_object[counter]
+            entry = blizzard_talents[WarcraftLogs.BNET_CLASS_MAPPING[class_str.lower()]]
+            tier = entry["talents"][counter]
 
-                    done_tier = False
-                    for talent_entry in tier:
-                        for talent_for_spec in talent_entry:
-                            if "spec" in talent_for_spec:
-                                if talent_for_spec["spec"]["name"].lower().replace(" ", "") == spec_str.lower() and \
-                                                talent_for_spec["spell"]["id"] == talent["id"]:
-                                    temp.append(talent_for_spec["column"])
-                                    done_tier = True
-                                    break
-                            else:
-                                # talent is the same for all 3 specs
-                                temp.append(talent_for_spec["column"])
-                                done_tier = True
-                                break
-                        if done_tier:
+            done_tier = False
+            for talent_entry in tier:
+                for talent_for_spec in talent_entry:
+                    # One talent for each 3 (or 2, or 4) specs
+                    if "spec" in talent_for_spec:
+                        if talent_for_spec["spec"]["name"].lower().replace(" ", "") == spec_str.lower() and \
+                                        talent_for_spec["spell"]["id"] == talent["id"]:
+                            temp.append(talent_for_spec["column"])
+                            done_tier = True
                             break
+                    else:
+                        # talent is the same for all 3 specs
+                        if talent_for_spec["spell"]["id"] == talent["id"]:
+                            temp.append(talent_for_spec["column"])
+                            done_tier = True
+                            break
+                if done_tier:
+                    break
 
-                    counter += 1
+            counter += 1
         return temp

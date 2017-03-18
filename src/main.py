@@ -56,6 +56,8 @@ class SimcraftBot:
         for player in names["DPS"]:
             raiding_stats = self._warcr.get_all_parses(player["name"], self.realm_slug(player["realm"]), self._region,
                                                        "dps", self._difficulty, self._num_weeks, self._talent_info)
+            # raiding_stats = self._warcr.get_all_parses_new(player["name"], self.realm_slug(player["realm"]), self._region,
+            #                                            "dps", self._difficulty, self._num_weeks, self._talent_info)
 
             if raiding_stats:
                 for boss_name, stats in raiding_stats.iteritems():
