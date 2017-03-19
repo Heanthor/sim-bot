@@ -4,8 +4,6 @@ import datetime
 import requests
 from datetime import timedelta
 
-from src.data_structures.warcraftlogs import ParseResponse
-
 API_URL = "https://www.warcraftlogs.com:443/v1/"
 logger = logging.getLogger("SimBot")
 
@@ -36,6 +34,8 @@ class WarcraftLogs:
     def __init__(self, api_key):
         self._api_key = api_key
 
+        self._talent_data = {}
+
     def get_reports(self, guild_name, server, region):
         r = self.warcraftlogs_request(requests.get, API_URL + "reports/guild/%s/%s/%s" % (guild_name, server, region),
                                       params={"api_key": self._api_key})
@@ -46,7 +46,7 @@ class WarcraftLogs:
 
             return []
 
-    def get_all_parses(self, character_name, server, region, metric, difficulty, num_weeks, talent_data):
+    def get_all_parses(self, character_name, server, region, metric, difficulty, num_weeks):
         if num_weeks <= 0:
             logger.error("Number of days cannot be <= 0.")
             return False
@@ -77,7 +77,7 @@ class WarcraftLogs:
                 character_name, server, region, difficulty)
             return []
 
-        process_result = self.process_parses(character_name, difficulty_normalized, num_weeks, raw, talent_data)
+        process_result = self.process_parses(character_name, difficulty_normalized, num_weeks, raw)
 
         for v in process_result.itervalues():
             if v:
@@ -89,14 +89,13 @@ class WarcraftLogs:
 
         return []
 
-    def process_parses(self, character_name, difficulty_normalized, num_weeks, response_json, talent_data):
+    def process_parses(self, character_name, difficulty_normalized, num_weeks, response_json):
         """
         No error checking or logging, helper method to process parses from WarcraftLogs
         :param character_name:
         :param difficulty_normalized:
         :param num_weeks:
         :param response_json:
-        :param talent_data:
         :return:
         """
         kills_per_boss = {}
@@ -136,7 +135,7 @@ class WarcraftLogs:
                         ilvl = kill["ilvl"]
                         dps = kill["persecondamount"]
                         historical_percent = kill["historical_percent"]
-                        talents = self.convert_talents(class_str, spec_str, kill["talents"], talent_data)
+                        talents = self.convert_talents(class_str, spec_str, kill["talents"])
                         # gear will be pulled from blizzard API
 
                         kills_in_time.append({
@@ -158,14 +157,12 @@ class WarcraftLogs:
 
         return r
 
-    @staticmethod
-    def convert_talents(class_str, spec_str, warcraftlogs_talents, blizzard_talents):
+    def convert_talents(self, class_str, spec_str, warcraftlogs_talents):
         """
         Convert from warcraftlogs talent format to blizzard talent format
         :param class_str:
         :param spec_str:
         :param warcraftlogs_talents:
-        :param blizzard_talents:
         :return:
         """
 
@@ -173,8 +170,12 @@ class WarcraftLogs:
 
         counter = 0
 
+        if not self.has_talent_data():
+            logger.critical("Blizzard talents not set for WarcraftLogs!")
+            raise RuntimeError("Blizzard talents not set for WarcraftLogs!")
+
         for talent in warcraftlogs_talents:
-            entry = blizzard_talents[WarcraftLogs.BNET_CLASS_MAPPING[class_str.lower()]]
+            entry = self._talent_data[WarcraftLogs.BNET_CLASS_MAPPING[class_str.lower()]]
             tier = entry["talents"][counter]
 
             done_tier = False
@@ -198,3 +199,15 @@ class WarcraftLogs:
 
             counter += 1
         return temp
+
+    def has_talent_data(self):
+        return self._talent_data != {}
+
+    def set_talent_data(self, talent_data):
+        """
+        Set talent data from Bnet API
+        :param talent_data:
+        :return:
+
+        """
+        self._talent_data = talent_data

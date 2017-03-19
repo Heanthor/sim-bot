@@ -19,9 +19,14 @@ logger = logging.getLogger("SimBot")
 class SimcraftBot:
     def __init__(self, guild, realm, region, difficulty, num_weeks, max_level, simc_location):
         """
+
         :param guild: The guild name to run sims for
         :param realm: The realm
         :param region: US, EU, KR, TW, CN.
+        :param difficulty: lfr, normal, heroic, mythic
+        :param num_weeks: Number of weeks to look back in time
+        :param max_level: Level of characters to be simmed
+        :param simc_location: Location of simc executable
         """
         self._guild = guild
         self._realm = realm
@@ -32,21 +37,18 @@ class SimcraftBot:
 
         self._blizzard_locale = "en_US"
 
-        with open("keys.json", 'r') as f:
+        with open("../keys.json", 'r') as f:
             f = json.loads(f.read())
             warcraft_logs_public = f["warcraftlogs"]["public"]
             battlenet_pub = f["battlenet"]["public"]
             battlenet_sec = f["battlenet"]["secret"]
 
-        with open("nighthold_profiles.json", 'r') as f:
+        with open("../nighthold_profiles.json", 'r') as f:
             self._profiles = json.loads(f.read())
 
         self._bnet = BattleNet(battlenet_pub)
         self._warcr = WarcraftLogs(warcraft_logs_public)
         self._simc = SimulationCraft(simc_location)
-
-        # talent array to be populated by bnet API
-        self._talent_info = ""
 
         # all players in guild
         self._players_in_guild = []
@@ -57,8 +59,8 @@ class SimcraftBot:
         names, self._players_in_guild = self._bnet.get_guild_members(self._realm, self._guild, self._blizzard_locale,
                                                                      self._max_level)
 
-        if self._talent_info == "":
-            self._talent_info = self._bnet.get_all_talents(self._blizzard_locale)
+        if not self._warcr.has_talent_data():
+            self._warcr.set_talent_data(self._bnet.get_all_talents(self._blizzard_locale))
 
         # playername, sim results
         guild_sims = {}
@@ -80,8 +82,11 @@ class SimcraftBot:
             logger.error("Player %s not in guild %s", player_name, self._guild)
             return False
 
+        if not self._warcr.has_talent_data():
+            self._warcr.set_talent_data(self._bnet.get_all_talents(self._blizzard_locale))
+
         raiding_stats = self._warcr.get_all_parses(player_name, self.realm_slug(realm), self._region,
-                                                   "dps", self._difficulty, self._num_weeks, self._talent_info)
+                                                   "dps", self._difficulty, self._num_weeks)
 
         return self._sim_single_suite(player_name, realm, raiding_stats)
 
@@ -189,10 +194,6 @@ class SimcraftBot:
     def realm_slug(realm):
         nfkd_form = unicodedata.normalize('NFKD', unicode(realm))
         return u"".join([c for c in nfkd_form if not unicodedata.combining(c)])
-
-    def set_talent_info(self, info):
-        self._talent_info = info
-
 
 # def main():
 #     logger.warning("TEST")

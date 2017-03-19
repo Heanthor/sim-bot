@@ -13,16 +13,16 @@ class SimulationCraft:
     def __init__(self, simc_path):
         if not os.path.isfile(simc_path):
             logger.error("Unable to find simcraft executable at location %s", simc_path)
-            sys.exit(1)
+            raise RuntimeError("Unable to find simcraft executable at location " + simc_path)
         else:
             logger.info("Found simcraft executable at %s", simc_path)
             self._simc_path = simc_path
 
         if not simc_path.endswith("simc.exe") and not simc_path.endswith("simc"):
             logging.error("Simc path incomplete (must end with simc executable")
-            sys.exit(1)
+            raise RuntimeError("Simc path incomplete (must end with simc executable")
 
-        with open("nighthold_profiles.json", 'r') as f:
+        with open("../nighthold_profiles.json", 'r') as f:
             self._nighthold_profile = json.loads(f.read())
 
     def run_sim(self, param_list):
