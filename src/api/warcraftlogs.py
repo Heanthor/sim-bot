@@ -68,11 +68,11 @@ class WarcraftLogs:
         raw = r.json()
 
         if not raw:
-            logger.debug("Empty warcraftlogs response for character %s, server %s, region %s, difficulty %s",
+            logger.error("Empty warcraftlogs response for character %s, server %s, region %s, difficulty %s",
                          character_name, server, region, difficulty)
             return []
         elif r.status_code != 200:
-            logger.debug(
+            logger.error(
                 "Unable to find parses for character %s, server %s, region %s, difficulty %s",
                 character_name, server, region, difficulty)
             return []
@@ -85,7 +85,7 @@ class WarcraftLogs:
                 return process_result
 
         # all boss entries are empty, player is in guild but has not raided
-        logger.debug("Player %s has no boss kills in past %d weeks.", character_name, num_weeks)
+        logger.info("Player %s has no boss kills in past %d weeks.", character_name, num_weeks)
 
         return []
 

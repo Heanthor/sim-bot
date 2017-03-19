@@ -48,25 +48,76 @@ class SimcraftBot:
         # talent array to be populated by bnet API
         self._talent_info = ""
 
-    def run_sims(self):
+        # all players in guild
+        self._players_in_guild = []
+
+    def run_all_sims(self):
         logger.info("Starting sims for guild %s, realm %s, region %s", self._guild, self._realm, self._region)
 
-        names = self._bnet.get_guild_members(self._realm, self._guild, self._blizzard_locale, self._max_level)
+        names, self._players_in_guild = self._bnet.get_guild_members(self._realm, self._guild, self._blizzard_locale,
+                                                                     self._max_level)
 
         if self._talent_info == "":
             self._talent_info = self._bnet.get_all_talents(self._blizzard_locale)
 
+        # playername, sim results
+        guild_sims = {}
         # only run sims for 110 dps players
         for player in names["DPS"]:
-            raiding_stats = self._warcr.get_all_parses(player["name"], self.realm_slug(player["realm"]), self._region,
-                                                       "dps", self._difficulty, self._num_weeks, self._talent_info)
+            results = self.sim_single_character(player["name"], player["realm"])
 
-            self.sim_single_character(player, raiding_stats)
+            guild_sims[player["name"]] = results
+            logger.debug("Finished all sims for character %s in %.2f sec", player["name"], results["elapsed_time"])
 
-    def sim_single_character(self, player, raiding_stats):
+        return guild_sims
+
+    def sim_single_character(self, player_name, realm):
+        if not self._players_in_guild:
+            _, self._players_in_guild = self._players_in_guild = self._bnet.get_guild_members(self._realm, self._guild,
+                                                                                              self._blizzard_locale,
+                                                                                              self._max_level)
+        elif player_name not in self._players_in_guild:
+            logger.error("Player %s not in guild %s", player_name, self._guild)
+            return False
+
+        raiding_stats = self._warcr.get_all_parses(player_name, self.realm_slug(realm), self._region,
+                                                   "dps", self._difficulty, self._num_weeks, self._talent_info)
+
+        return self._sim_single_suite(player_name, realm, raiding_stats)
+
+    def _sim_single_suite(self, player, realm, raiding_stats):
+        """
+        Produces report on single character's average sims in the form:
+         {
+         boss name: {"average_dps": _,
+                     "num_fights": _,
+                      "sim_dps": _,
+                      "percent_potential": _
+                      },
+         "average_performance": _,
+         "elapsed_time": _
+         }
+        :param player:
+        :param realm:
+        :param raiding_stats:
+        :return:
+        """
         # each sim is a character, talents, and fight configuration
         #   tag (<character_name><talent string><fight config>)
         sim_cache = {}
+        # used to calculate average performance
+        scores_lst = []
+        # {
+        # boss name: {"average_dps": _,
+        #              "num_fights": _,
+        #              "sim_dps": _,
+        #              "percent_potential": _
+        #              },
+        # "average_performance": _,
+        # "elapsed_time": _
+        # }
+        scores = {}
+        start = time.time()
 
         if raiding_stats:
             for boss_name, stats in raiding_stats.iteritems():
@@ -95,12 +146,12 @@ class SimcraftBot:
                     max_dps_spec = "beast_mastery"
 
                 fight_profile = self._profiles[boss_name]
-                tag = hash(b"%s%s%s" % (player["name"], max_dps_spec, fight_profile))
+                tag = hash(b"%s%s%s" % (player, max_dps_spec, fight_profile))
 
                 sim_string = "armory=%s,%s,%s spec=%s talents=%s fight_style=%s" % (self._region,
                                                                                     self.realm_slug(
-                                                                                        player["realm"]),
-                                                                                    player["name"], max_dps_spec,
+                                                                                        realm),
+                                                                                    player, max_dps_spec,
                                                                                     ''.join(str(x) for x in
                                                                                             max_dps_talents),
                                                                                     fight_profile)
@@ -110,13 +161,29 @@ class SimcraftBot:
                     sim_results = self._simc.run_sim(sim_string.split(" "))
                     sim_cache[tag] = sim_results
                 else:
-                    logger.debug("Using cached sim for player %s spec %s fight config %s", player["name"], max_dps_spec,
+                    logger.debug("Using cached sim for player %s spec %s fight config %s", player, max_dps_spec,
                                  fight_profile)
                     sim_results = sim_cache[tag]
 
-                print "[%s] Average dps (%d fight%s) %d vs sim %d on %s (%d%% of potential)" % (
-                    player["name"], len(stats), "" if len(stats) == 1 else "s", average_dps, sim_results, boss_name,
-                    (average_dps / sim_results) * 100)
+                performance_percent = (average_dps / sim_results) * 100
+
+                logger.info("[%s] Average dps (%d fight%s) %d vs sim %d on %s (%d%% of potential)" % (
+                    player, len(stats), "" if len(stats) == 1 else "s", average_dps, sim_results, boss_name,
+                    performance_percent))
+
+                scores[boss_name] = {
+                    "average_dps": average_dps,
+                    "num_fights": len(stats),
+                    "sim_dps": sim_results,
+                    "percent_potential": performance_percent
+                }
+
+                scores_lst.append(performance_percent)
+
+        scores["average_performance"] = sum(scores_lst) / len(scores_lst) if len(scores_lst) != 0 else 0
+        scores["elapsed_time"] = time.time() - start
+
+        return scores
 
     @staticmethod
     def realm_slug(realm):
@@ -127,16 +194,15 @@ class SimcraftBot:
         self._talent_info = info
 
 
-def main():
-    logger.warning("TEST")
-
-    with open("keys.json", 'r') as f:
-        f = json.loads(f.read())
-        warcraft_logs_public = f["warcraftlogs"]["public"]
-
-    w = WarcraftLogs(warcraft_logs_public)
-    print w.get_all_parses("Heanthor", "fizzcrank", "US", "dps")
-
+# def main():
+#     logger.warning("TEST")
+#
+#     with open("keys.json", 'r') as f:
+#         f = json.loads(f.read())
+#         warcraft_logs_public = f["warcraftlogs"]["public"]
+#
+#     w = WarcraftLogs(warcraft_logs_public)
+#     print w.get_all_parses("Heanthor", "fizzcrank", "US", "dps")
 
 if __name__ == '__main__':
     logger.setLevel(logging.DEBUG)
@@ -178,6 +244,6 @@ if __name__ == '__main__':
     sb = SimcraftBot(args["<guild name>"], args["<realm>"], args["<region>"], args["<raid difficulty>"],
                      args["<weeks to examine>"], args["<max level>"], args["<simc location>"])
 
-    sb.run_sims()
+    sb.run_all_sims()
 
     logger.info("App finished")

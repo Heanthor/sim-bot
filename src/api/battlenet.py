@@ -37,13 +37,14 @@ class BattleNet:
         :param guild_name: The guild to query for
         :param locale: en_US or other
         :param level: Return only players at this level
-        :return: Dict of guild members and their role
+        :return: Dict of guild members and their role, and a simple list of all names
         """
         r = self.bnet_request(requests.get, API_URL + "wow/guild/%s/%s" % (realm, guild_name),
                               params={"fields": "members", "locale": locale, "apikey": self._api_key})
 
         raw = r.json()
         names = defaultdict(list)
+        basic_names = []
 
         try:
             members_raw = raw["members"]
@@ -59,8 +60,9 @@ class BattleNet:
                     "name": character["name"],
                     "realm": character["realm"],
                 })
+                basic_names.append(character["name"])
 
-        return names
+        return names, basic_names
 
     def get_all_talents(self, locale):
         r = self.bnet_request(requests.get, API_URL + "wow/data/talents", params={"locale": locale,
