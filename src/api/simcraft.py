@@ -1,16 +1,17 @@
 import json
 import logging
+import multiprocessing
 import os
 
 import subprocess
 
-import sys
+from multiprocessing.pool import ThreadPool
 
 logger = logging.getLogger("SimBot")
 
 
 class SimulationCraft:
-    def __init__(self, simc_path):
+    def __init__(self, simc_path, simc_timeout):
         if not os.path.isfile(simc_path):
             logger.error("Unable to find simcraft executable at location %s", simc_path)
             raise RuntimeError("Unable to find simcraft executable at location " + simc_path)
@@ -25,11 +26,39 @@ class SimulationCraft:
         with open("../nighthold_profiles.json", 'r') as f:
             self._nighthold_profile = json.loads(f.read())
 
-    def run_sim(self, param_list):
-        logger.debug("Simming with string %s", " ".join(param_list))
+        self._simc_timeout = simc_timeout
 
-        output = str(subprocess.check_output([self._simc_path] + param_list).replace(b'\r', b'').replace(b'\n', b''))
+    def run_sim(self, param_list):
+        """
+        Runs a sim (through a subprocess) with the given params
+        :param param_list: The string to run with, e.g. armory=US,Fizzcrank,xxx spec=elemental talents=0001220
+                                                        fight_style=HecticAddCleave
+        :return: The resulting simmed DPS, or False if sim timed out
+        """
+        sim_string = " ".join(param_list)
+        logger.debug("Simming with string %s", sim_string)
+
+        pool = ThreadPool(processes=1)
+        async_output = pool.apply_async(self.simcraft_proc_worker, (param_list,))
+
+        try:
+            output = async_output.get(timeout=self._simc_timeout)
+        except multiprocessing.context.TimeoutError:
+            # HecticAddCleave can take a long time on some specs -- make the timeout generous to avoid skipping any
+            logger.error("Sim timed out with string %s, skipping." % sim_string)
+
+            # windows kill process
+            if os.name == "nt":
+                subprocess.check_call('taskkill /im simc.exe /t /f')
+            else:
+                # TODO linux/mac
+                pass
+
+            return False
         return int(self.find_dps(output))
+
+    def simcraft_proc_worker(self, param_list):
+        return str(subprocess.check_output([self._simc_path] + param_list).replace(b'\r', b'').replace(b'\n', b''))
 
     @staticmethod
     def find_dps(string):
@@ -41,6 +70,6 @@ class SimulationCraft:
 
         if not x:
             logging.error("Unable to find DPS in string")
-            x = 1
+            return False
 
         return x

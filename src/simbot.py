@@ -17,7 +17,7 @@ logger = logging.getLogger("SimBot")
 
 
 class SimcraftBot:
-    def __init__(self, guild, realm, region, difficulty, num_weeks, max_level, simc_location):
+    def __init__(self, guild, realm, region, difficulty, num_weeks, max_level, simc_location, simc_timeout):
         """
 
         :param guild: The guild name to run sims for
@@ -50,7 +50,7 @@ class SimcraftBot:
 
         self._bnet = BattleNet(battlenet_pub)
         self._warcr = WarcraftLogs(warcraft_logs_public)
-        self._simc = SimulationCraft(simc_location)
+        self._simc = SimulationCraft(simc_location, simc_timeout)
 
         # all players in guild
         self._players_in_guild = []
@@ -114,15 +114,6 @@ class SimcraftBot:
         sim_cache = {}
         # used to calculate average performance
         scores_lst = []
-        # {
-        # boss name: {"average_dps": _,
-        #              "num_fights": _,
-        #              "sim_dps": _,
-        #              "percent_potential": _
-        #              },
-        # "average_performance": _,
-        # "elapsed_time": _
-        # }
         scores = {}
         start = time.time()
 
@@ -135,6 +126,11 @@ class SimcraftBot:
                 max_dps = 0.0
                 max_dps_talents = []
                 max_dps_spec = ""
+
+                if not stats:
+                    # no kills for this boss on record, but other kills are still present
+                    scores[boss_name] = False
+                    continue
 
                 for kill in stats:
                     if kill["dps"] > max_dps:
@@ -166,8 +162,20 @@ class SimcraftBot:
                 # actually run sim
                 if tag not in sim_cache:
                     sim_results = self._simc.run_sim(sim_string.split(" "))
+
+                    if not sim_results:
+                        # simcraft error, results are invalid
+                        scores[boss_name] = False
+                        sim_cache[tag] = False
+
+                        continue
+
                     sim_cache[tag] = sim_results
                 else:
+                    if not sim_cache[tag]:
+                        scores[boss_name] = False
+
+                        continue
                     logger.debug("Using cached sim for player %s spec %s fight config %s", player, max_dps_spec,
                                  fight_profile)
                     sim_results = sim_cache[tag]
@@ -235,6 +243,8 @@ def init_parser():
                         help='Realm where the guild exists')
     parser.add_argument('<simc location>', type=str,
                         help='Absolute path of SimulationCraft CLI executable')
+    parser.add_argument('<simcraft timeout>', type=int, default=5, nargs="?",
+                        help='Timeout, in seconds, of each individual simulation.')
     parser.add_argument('<region>', type=str, default="US", nargs="?", choices=["US", "EU", "KR", "TW", "CN"],
                         help='Region where guild exists.')
     parser.add_argument('<raid difficulty>', type=str, default="heroic", nargs="?",
@@ -254,7 +264,8 @@ if __name__ == '__main__':
     args = init_parser()
 
     sb = SimcraftBot(args["<guild name>"], args["<realm>"], args["<region>"], args["<raid difficulty>"],
-                     args["<weeks to examine>"], args["<max level>"], args["<simc location>"])
+                     args["<weeks to examine>"], args["<max level>"], args["<simc location>"],
+                     args["<simcraft timeout>"])
 
     sb.run_all_sims()
 
