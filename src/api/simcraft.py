@@ -28,7 +28,7 @@ class SimulationCraft:
     def run_sim(self, param_list):
         logger.debug("Simming with string %s", " ".join(param_list))
 
-        output = subprocess.check_output([self._simc_path] + param_list).replace('\r', '').replace('\n', '')
+        output = str(subprocess.check_output([self._simc_path] + param_list).replace(b'\r', b'').replace(b'\n', b''))
         return int(self.find_dps(output))
 
     @staticmethod

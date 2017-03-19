@@ -7,11 +7,11 @@ import unicodedata
 
 import sys
 
-from api.battlenet import BattleNet
-from api.simcraft import SimulationCraft
-from api.warcraftlogs import WarcraftLogs
-
 import argparse
+
+from src.api.battlenet import BattleNet
+from src.api.simcraft import SimulationCraft
+from src.api.warcraftlogs import WarcraftLogs
 
 logger = logging.getLogger("SimBot")
 
@@ -36,6 +36,8 @@ class SimcraftBot:
         self._max_level = max_level
 
         self._blizzard_locale = "en_US"
+
+        init_logger()
 
         with open("../keys.json", 'r') as f:
             f = json.loads(f.read())
@@ -75,10 +77,10 @@ class SimcraftBot:
 
     def sim_single_character(self, player_name, realm):
         if not self._players_in_guild:
-            _, self._players_in_guild = self._players_in_guild = self._bnet.get_guild_members(self._realm, self._guild,
-                                                                                              self._blizzard_locale,
-                                                                                              self._max_level)
-        elif player_name not in self._players_in_guild:
+            _, self._players_in_guild = self._bnet.get_guild_members(self._realm, self._guild, self._blizzard_locale,
+                                                                     self._max_level)
+
+        if player_name not in self._players_in_guild:
             logger.error("Player %s not in guild %s", player_name, self._guild)
             return False
 
@@ -125,7 +127,7 @@ class SimcraftBot:
         start = time.time()
 
         if raiding_stats:
-            for boss_name, stats in raiding_stats.iteritems():
+            for boss_name, stats in raiding_stats.items():
                 average_dps = 0.0
                 average_percentage = 0.0
                 average_ilvl = 0.0
@@ -151,7 +153,7 @@ class SimcraftBot:
                     max_dps_spec = "beast_mastery"
 
                 fight_profile = self._profiles[boss_name]
-                tag = hash(b"%s%s%s" % (player, max_dps_spec, fight_profile))
+                tag = hash("%s%s%s" % (player, max_dps_spec, fight_profile))
 
                 sim_string = "armory=%s,%s,%s spec=%s talents=%s fight_style=%s" % (self._region,
                                                                                     self.realm_slug(
@@ -192,8 +194,9 @@ class SimcraftBot:
 
     @staticmethod
     def realm_slug(realm):
-        nfkd_form = unicodedata.normalize('NFKD', unicode(realm))
+        nfkd_form = unicodedata.normalize('NFKD', realm)
         return u"".join([c for c in nfkd_form if not unicodedata.combining(c)])
+
 
 # def main():
 #     logger.warning("TEST")
@@ -205,21 +208,25 @@ class SimcraftBot:
 #     w = WarcraftLogs(warcraft_logs_public)
 #     print w.get_all_parses("Heanthor", "fizzcrank", "US", "dps")
 
-if __name__ == '__main__':
+
+def init_logger():
     logger.setLevel(logging.DEBUG)
     handler = logging.FileHandler('../simbot.log', 'w')
     handler.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
-
     # stdout logger
     ch = logging.StreamHandler(sys.stdout)
     ch.setLevel(logging.DEBUG)
     ch.setFormatter(formatter)
     logger.addHandler(ch)
-
     logger.info("App started at %s", datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))
+
+
+def init_parser():
+    if sys.version_info < (3, 0):
+        sys.exit('Sorry, Python < 2 is not supported')
 
     parser = argparse.ArgumentParser(description='SimBot sim tool.')
     parser.add_argument('<guild name>', type=str,
@@ -240,7 +247,11 @@ if __name__ == '__main__':
     parser.add_argument('<weeks to examine>', type=int, default=3, nargs="?",
                         help='Number of weeks of historical logs to average')
 
-    args = vars(parser.parse_args())
+    return vars(parser.parse_args())
+
+
+if __name__ == '__main__':
+    args = init_parser()
 
     sb = SimcraftBot(args["<guild name>"], args["<realm>"], args["<region>"], args["<raid difficulty>"],
                      args["<weeks to examine>"], args["<max level>"], args["<simc location>"])

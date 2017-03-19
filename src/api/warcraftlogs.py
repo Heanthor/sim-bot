@@ -42,7 +42,7 @@ class WarcraftLogs:
         try:
             return r.json()
         except ValueError:
-            print r.text
+            print(r.text)
 
             return []
 
@@ -79,7 +79,7 @@ class WarcraftLogs:
 
         process_result = self.process_parses(character_name, difficulty_normalized, num_weeks, raw)
 
-        for v in process_result.itervalues():
+        for v in process_result.values():
             if v:
                 # at least one boss entry has data
                 return process_result
