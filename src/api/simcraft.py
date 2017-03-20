@@ -69,7 +69,7 @@ class SimulationCraft:
         x = new_str[:new_str.index(" ")]
 
         if not x:
-            logging.error("Unable to find DPS in string")
+            logger.error("Unable to find DPS in string")
             return False
 
         return x

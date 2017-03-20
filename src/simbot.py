@@ -1,6 +1,7 @@
 import json
 import logging
 import datetime
+import pprint
 import time
 
 import unicodedata
@@ -8,12 +9,18 @@ import unicodedata
 import sys
 
 import argparse
+from enum import Enum
 
 from src.api.battlenet import BattleNet
 from src.api.simcraft import SimulationCraft
-from src.api.warcraftlogs import WarcraftLogs
+from src.api.warcraftlogs import WarcraftLogs, WarcraftLogsError
 
 logger = logging.getLogger("SimBot")
+
+
+class SimBotError(Enum):
+    SIMCRAFT_ERROR = 1
+    NO_KILLS_LOGGED = 2
 
 
 class SimcraftBot:
@@ -102,7 +109,8 @@ class SimcraftBot:
                       "percent_potential": _
                       },
          "average_performance": _,
-         "elapsed_time": _
+         "elapsed_time": _,
+         "error": _ (if an error causes the entire result to be useless. Otherwise, errors are per-boss)
          }
         :param player:
         :param realm:
@@ -117,7 +125,7 @@ class SimcraftBot:
         scores = {}
         start = time.time()
 
-        if raiding_stats:
+        if not isinstance(raiding_stats, WarcraftLogsError):
             for boss_name, stats in raiding_stats.items():
                 average_dps = 0.0
                 average_percentage = 0.0
@@ -129,7 +137,7 @@ class SimcraftBot:
 
                 if not stats:
                     # no kills for this boss on record, but other kills are still present
-                    scores[boss_name] = False
+                    scores[boss_name] = SimBotError.NO_KILLS_LOGGED
                     continue
 
                 for kill in stats:
@@ -165,15 +173,15 @@ class SimcraftBot:
 
                     if not sim_results:
                         # simcraft error, results are invalid
-                        scores[boss_name] = False
-                        sim_cache[tag] = False
+                        scores[boss_name] = SimBotError.SIMCRAFT_ERROR
+                        sim_cache[tag] = SimBotError.SIMCRAFT_ERROR
 
                         continue
 
                     sim_cache[tag] = sim_results
                 else:
-                    if not sim_cache[tag]:
-                        scores[boss_name] = False
+                    if isinstance(sim_cache[tag], SimBotError):
+                        scores[boss_name] = sim_cache[tag]
 
                         continue
                     logger.debug("Using cached sim for player %s spec %s fight config %s", player, max_dps_spec,
@@ -194,6 +202,9 @@ class SimcraftBot:
                 }
 
                 scores_lst.append(performance_percent)
+        else:
+            # save error for score
+            scores["error"] = raiding_stats
 
         scores["average_performance"] = sum(scores_lst) / len(scores_lst) if len(scores_lst) != 0 else 0
         scores["elapsed_time"] = time.time() - start
@@ -206,6 +217,7 @@ class SimcraftBot:
         return u"".join([c for c in nfkd_form if not unicodedata.combining(c)])
 
 
+
 # def main():
 #     logger.warning("TEST")
 #
@@ -215,7 +227,6 @@ class SimcraftBot:
 #
 #     w = WarcraftLogs(warcraft_logs_public)
 #     print w.get_all_parses("Heanthor", "fizzcrank", "US", "dps")
-
 
 def init_logger():
     logger.setLevel(logging.DEBUG)
@@ -267,6 +278,6 @@ if __name__ == '__main__':
                      args["<weeks to examine>"], args["<max level>"], args["<simc location>"],
                      args["<simcraft timeout>"])
 
-    sb.run_all_sims()
+    pprint.pprint(sb.run_all_sims())
 
     logger.info("App finished")
