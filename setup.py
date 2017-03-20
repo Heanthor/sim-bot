@@ -5,5 +5,5 @@ setup(name='SimBot',
       description='DPS Nazi',
       author='Heanthor',
       author_email='reedtrevelyan@gmail.com',
-      requires=['requests']
+      requires=['requests', 'flask', 'flask_socketio', 'eventlet']
       )

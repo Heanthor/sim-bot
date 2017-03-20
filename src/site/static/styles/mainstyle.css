@@ -1,0 +1,22 @@
+body {
+    padding: 10px;
+    background: #F5F3EE
+}
+
+.center-block {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1, h2, h3 {
+    text-align: center;
+}
+
+label {
+    margin-top: 10px;
+}
+
+.spacer {
+    margin: 50px;
+}
