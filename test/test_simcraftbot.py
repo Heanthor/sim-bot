@@ -4,6 +4,7 @@ from __future__ import absolute_import
 
 import unittest
 
+from src.api.warcraftlogs import WarcraftLogsError
 from src.simbot import SimcraftBot
 
 
@@ -13,9 +14,9 @@ class TestSimcraftBot(unittest.TestCase):
                               "C:\\Users\\reedt\Downloads\\simc-715-02-win64-bdd3ba8\\simc-715-02-win64\\simc.exe", 15)
 
     def testSimReports(self):
-        # self.assertTrue(self.sb.sim_single_character("Heanthor", "Fizzcrank"))
-        # self.assertTrue(self.sb.sim_single_character("Råekwon", "Fizzcrank"))
+        self.assertIsNone(self.sb.sim_single_character("Heanthor", "Fizzcrank")["error"])
+        self.assertIsNone(self.sb.sim_single_character("Råekwon", "Fizzcrank")["error"])
         # caused errors on HecticAddCleave
-        # self.assertTrue(self.sb.sim_single_character("Thanaton", "Fizzcrank"))
+        self.assertIsNone(self.sb.sim_single_character("Thanaton", "Fizzcrank")["error"])
         # has had empty response
-        self.assertTrue(self.sb.sim_single_character("Thugy", "Fizzcrank"))
+        self.assertEqual(self.sb.sim_single_character("Thugy", "Fizzcrank")["error"], WarcraftLogsError.NO_RECENT_KILLS)

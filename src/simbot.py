@@ -24,7 +24,8 @@ class SimBotError(Enum):
 
 
 class SimcraftBot:
-    def __init__(self, guild, realm, region, difficulty, num_weeks, max_level, simc_location, simc_timeout):
+    def __init__(self, guild, realm, region, difficulty, num_weeks, max_level, simc_location, simc_timeout,
+                 persist_logs):
         """
 
         :param guild: The guild name to run sims for
@@ -44,7 +45,7 @@ class SimcraftBot:
 
         self._blizzard_locale = "en_US"
 
-        init_logger()
+        init_logger(persist_logs)
 
         with open("../keys.json", 'r') as f:
             f = json.loads(f.read())
@@ -63,6 +64,10 @@ class SimcraftBot:
         self._players_in_guild = []
 
     def run_all_sims(self):
+        """
+        Run sims for each DPS player in the guild.
+        :return:
+        """
         logger.info("Starting sims for guild %s, realm %s, region %s", self._guild, self._realm, self._region)
 
         names, self._players_in_guild = self._bnet.get_guild_members(self._realm, self._guild, self._blizzard_locale,
@@ -83,6 +88,12 @@ class SimcraftBot:
         return guild_sims
 
     def sim_single_character(self, player_name, realm):
+        """
+        Runs full suite of sims on specific character and realm, using the given locale.
+        :param player_name:
+        :param realm:
+        :return:
+        """
         if not self._players_in_guild:
             _, self._players_in_guild = self._bnet.get_guild_members(self._realm, self._guild, self._blizzard_locale,
                                                                      self._max_level)
@@ -213,9 +224,13 @@ class SimcraftBot:
 
     @staticmethod
     def realm_slug(realm):
+        """
+        Get sanitized realm name for BNET api.
+        :param realm:
+        :return:
+        """
         nfkd_form = unicodedata.normalize('NFKD', realm)
         return u"".join([c for c in nfkd_form if not unicodedata.combining(c)])
-
 
 
 # def main():
@@ -228,9 +243,12 @@ class SimcraftBot:
 #     w = WarcraftLogs(warcraft_logs_public)
 #     print w.get_all_parses("Heanthor", "fizzcrank", "US", "dps")
 
-def init_logger():
+def init_logger(persist):
     logger.setLevel(logging.DEBUG)
-    handler = logging.FileHandler('../simbot.log', 'w')
+    if persist:
+        handler = logging.FileHandler("../logs/simbot-%s.log" % time.strftime("%Y%m%d-%H%M%S"))
+    else:
+        handler = logging.FileHandler('../logs/simbot.log', 'w')
     handler.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
@@ -248,25 +266,27 @@ def init_parser():
         sys.exit('Sorry, Python < 2 is not supported')
 
     parser = argparse.ArgumentParser(description='SimBot sim tool.')
-    parser.add_argument('<guild name>', type=str,
+    parser.add_argument('guildname', type=str,
                         help='Name of guild to be simmed')
-    parser.add_argument('<realm>', type=str,
+    parser.add_argument('realm', type=str,
                         help='Realm where the guild exists')
-    parser.add_argument('<simc location>', type=str,
+    parser.add_argument('simc_location', type=str,
                         help='Absolute path of SimulationCraft CLI executable')
-    parser.add_argument('<simcraft timeout>', type=int, default=5, nargs="?",
+    parser.add_argument('--simcraft_timeout', type=int, default=5, nargs="?",
                         help='Timeout, in seconds, of each individual simulation.')
-    parser.add_argument('<region>', type=str, default="US", nargs="?", choices=["US", "EU", "KR", "TW", "CN"],
+    parser.add_argument('--region', type=str, default="US", nargs="?", choices=["US", "EU", "KR", "TW", "CN"],
                         help='Region where guild exists.')
-    parser.add_argument('<raid difficulty>', type=str, default="heroic", nargs="?",
+    parser.add_argument('--raid_difficulty', type=str, default="heroic", nargs="?",
                         choices=["lfr", "normal", "heroic", "mythic"],
                         help='Difficulty to filter logs by. ')
-    parser.add_argument('<blizzard locale>', type=str, default="en_US", nargs="?", choices=["en_US", "pt_BR", "es_MX"],
+    parser.add_argument('--blizzard_locale', type=str, default="en_US", nargs="?", choices=["en_US", "pt_BR", "es_MX"],
                         help='Blizzard language locale,')
-    parser.add_argument('<max level>', type=int, default=110, nargs="?",
+    parser.add_argument('--max_level', type=int, default=110, nargs="?",
                         help='Level of characters to sim')
-    parser.add_argument('<weeks to examine>', type=int, default=3, nargs="?",
+    parser.add_argument('--weeks_to_examine', type=int, default=3, nargs="?",
                         help='Number of weeks of historical logs to average')
+    parser.add_argument('--persist_logs', type=bool, default=False, nargs='?',
+                        help="Save logs in separate files, or overwrite single file.")
 
     return vars(parser.parse_args())
 
@@ -274,10 +294,12 @@ def init_parser():
 if __name__ == '__main__':
     args = init_parser()
 
-    sb = SimcraftBot(args["<guild name>"], args["<realm>"], args["<region>"], args["<raid difficulty>"],
-                     args["<weeks to examine>"], args["<max level>"], args["<simc location>"],
-                     args["<simcraft timeout>"])
+    sb = SimcraftBot(args["guildname"], args["realm"], args["region"], args["raid_difficulty"],
+                     args["weeks_to_examine"], args["max_level"], args["simc_location"],
+                     args["simcraft_timeout"], args["persist_logs"])
 
+    start = time.time()
     pprint.pprint(sb.run_all_sims())
+    end = time.time() - start
 
-    logger.info("App finished")
+    logger.info("App finished in %.2f seconds (%.2f minutes)", end, end / 60)

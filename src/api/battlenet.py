@@ -65,12 +65,24 @@ class BattleNet:
         return names, basic_names
 
     def get_all_talents(self, locale):
+        """
+        Gets the master list of all talents currently in game.
+        :param locale:
+        :return:
+        """
         r = self.bnet_request(requests.get, API_URL + "wow/data/talents", params={"locale": locale,
                                                                                   "apikey": self._api_key})
 
         return r.json()
 
     def bnet_request(self, req_func, *args, **kwargs):
+        """
+        Monitors rate of API calls to warn if rates are exceeded.
+        :param req_func: Function to call
+        :param args:
+        :param kwargs:
+        :return:
+        """
         if self._calls_sec > self.BNET_MAX_CALLS_SEC:
             logger.error("API call/sec rate %d exceeded max %d", self._calls_sec, self.BNET_MAX_CALLS_SEC)
         elif self._calls_hr > self.BNET_MAX_CALLS_HR:

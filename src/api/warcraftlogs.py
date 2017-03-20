@@ -54,6 +54,16 @@ class WarcraftLogs:
             return []
 
     def get_all_parses(self, character_name, server, region, metric, difficulty, num_weeks):
+        """
+        Get all parse information on a specific player. This includes all boss kills on record, on all difficulties.
+        :param character_name:
+        :param server:
+        :param region:
+        :param metric:
+        :param difficulty:
+        :param num_weeks:
+        :return:
+        """
         if num_weeks <= 0:
             logger.error("Number of days cannot be <= 0.")
             return False
@@ -98,7 +108,9 @@ class WarcraftLogs:
 
     def process_parses(self, character_name, difficulty_normalized, num_weeks, response_json):
         """
-        No error checking or logging, helper method to process parses from WarcraftLogs
+        No error checking or logging, helper method to process parses from WarcraftLogs.
+        Will filter out generic "Ranged" or "Melee" reports (actual reports under their class/spec are duplicated).
+        Filters out reports older than x weeks. Filters out reports not at the specified difficulty.
         :param character_name:
         :param difficulty_normalized:
         :param num_weeks:
@@ -166,7 +178,7 @@ class WarcraftLogs:
 
     def convert_talents(self, class_str, spec_str, warcraftlogs_talents):
         """
-        Convert from warcraftlogs talent format to blizzard talent format
+        Convert from warcraftlogs talent format to column number format (e.g. 0011221)
         :param class_str:
         :param spec_str:
         :param warcraftlogs_talents:
@@ -212,7 +224,7 @@ class WarcraftLogs:
 
     def set_talent_data(self, talent_data):
         """
-        Set talent data from Bnet API
+        Set talent data from Bnet API.
         :param talent_data:
         :return:
 
