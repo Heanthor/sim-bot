@@ -11,13 +11,14 @@ def main():
     return render_template("main.html")
 
 
-@app.route("/all_sims/<guild>/<realm>/<locale>/<num_weeks>")
-def all_sims(guild=None, realm=None, locale=None, num_weeks=None):
+@app.route("/all_sims/", methods=["GET"])
+def all_sims():
     pass
 
 
-@app.route("/sim/<name>/<realm>/<locale>/<num_weeks>")
-def sim_single(name=None, realm=None, locale=None, num_weeks=None):
+@app.route("/sim/", methods=["GET"])
+def sim_single():
+    # TODO simbot needs to be able to run without a guild param for this endpoint
     pass
 
 

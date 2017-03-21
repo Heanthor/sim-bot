@@ -242,7 +242,10 @@ class SimcraftBot:
 
 class SimBotConfig:
     def __init__(self):
-        self.params = []
+        if sys.version_info < (3, 0):
+            sys.exit('Sorry, Python < 2 is not supported')
+
+        self.params = {}
 
     @staticmethod
     def init_logger(persist):
@@ -262,10 +265,7 @@ class SimBotConfig:
         logger.addHandler(ch)
         logger.info("App started at %s", datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))
 
-    def init(self):
-        if sys.version_info < (3, 0):
-            sys.exit('Sorry, Python < 2 is not supported')
-
+    def init_cmd_line(self):
         parser = argparse.ArgumentParser(description='SimBot sim tool.')
         parser.add_argument('guildname', type=str,
                             help='Name of guild to be simmed')
@@ -294,11 +294,40 @@ class SimBotConfig:
 
         self.init_logger(self.params["persist_logs"])
 
+    def init_args(self, guildname, realm, simc_location, simc_timeout=5, region="US", raid_difficulty="heroic",
+                  blizzard_locale="en_US", max_level=110, weeks_to_examine=3, persist_logs=False):
+        """
+
+        :param guildname: The guild name to run sims for
+        :param realm: The realm
+        :param simc_location: Location of simc executable
+        :param simc_timeout Timeout, in seconds, of each individual simulation.
+        :param region: US, EU, KR, TW, CN.
+        :param blizzard_locale: en_US
+        :param raid_difficulty: normal, heroic, mythic, lfr
+        :param weeks_to_examine: Number of weeks to look back in time
+        :param max_level: Level of characters to be simmed
+        :param persist_logs Save logs in separate files, or overwrite single file.
+        :return:
+        """
+        self.params["guildname"] = guildname
+        self.params["realm"] = realm
+        self.params["simc_location"] = simc_location
+        self.params["simc_timeout"] = simc_timeout
+        self.params["region"] = region
+        self.params["raid_difficulty"] = raid_difficulty
+        self.params["blizzard_locale"] = blizzard_locale
+        self.params["max_level"] = max_level
+        self.params["weeks_to_examine"] = weeks_to_examine
+        self.params["persist_logs"] = persist_logs
+
+        self.init_logger(persist_logs)
+
 
 if __name__ == '__main__':
     # parse cmd line args, start logging
     sbc = SimBotConfig()
-    sbc.init()
+    sbc.init_cmd_line()
 
     # create simbot with realm and guild info
     sb = SimcraftBot(sbc)
