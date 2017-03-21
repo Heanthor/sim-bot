@@ -38,7 +38,7 @@ def all_sims():
     difficulty = request.args.get('difficulty')
     weeks = request.args.get('weeks')
     guild = request.args.get('guild')
-    realm = request.args.get('region')
+    realm = request.args.get('realm')
 
     sbc = SimBotConfig()
     sbc.init_args(guild, realm, saved_params["simc_location"], saved_params["config_path"],

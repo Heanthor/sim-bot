@@ -8,6 +8,12 @@ API_URL = "https://us.api.battle.net/"
 logger = logging.getLogger("SimBot")
 
 
+class BattleNetError(Exception):
+    REALM_NOT_FOUND = 1
+    GUILD_NOT_FOUND = 2
+    OTHER_ERROR = 3
+
+
 class BattleNet:
     # API rate limits
     BNET_MAX_CALLS_SEC = 100
@@ -60,7 +66,12 @@ class BattleNet:
             logger.error("Unable to retrieve bnet guild list for guild '%s', realm '%s', locale '%s'", guild_name,
                          realm,
                          locale)
-            return {}
+
+            # bnet error, with "status" and "reason" json
+            if raw["reason"] == "Realm not found." or raw["reason"] == "Guild not found.":
+                raise BattleNetError(raw["reason"])
+            else:
+                raise BattleNetError("Unexpected Battle.net Error '%s'" % raw["reason"])
 
         for character in members_raw:
             character = character["character"]

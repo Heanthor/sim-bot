@@ -1,5 +1,4 @@
 import logging
-from enum import Enum
 from time import time
 import datetime
 import requests
@@ -9,10 +8,11 @@ API_URL = "https://www.warcraftlogs.com:443/v1/"
 logger = logging.getLogger("SimBot")
 
 
-class WarcraftLogsError(Enum):
+class WarcraftLogsError(Exception):
     EMPTY_RESPONSE = 1
     NO_RECENT_KILLS = 2
     SERVER_ERROR = 3
+    OTHER_ERROR = 4
 
 
 class WarcraftLogs:
@@ -96,12 +96,12 @@ class WarcraftLogs:
         if not raw:
             logger.error("Empty warcraftlogs response for character %s, server %s, region %s, difficulty %s",
                          character_name, server, region, difficulty)
-            return WarcraftLogsError.EMPTY_RESPONSE
+            raise WarcraftLogsError("No logs on record.")
         elif r.status_code != 200:
             logger.error(
                 "Unable to find parses for character %s, server %s, region %s, difficulty %s",
                 character_name, server, region, difficulty)
-            return WarcraftLogsError.SERVER_ERROR
+            raise WarcraftLogsError("WarcraftLogs server error %d" % r.status_code)
 
         process_result = self.process_parses(character_name, difficulty_normalized, num_weeks, raw)
 
@@ -113,7 +113,7 @@ class WarcraftLogs:
         # all boss entries are empty, player is in guild but has not raided
         logger.info("Player %s has no boss kills in past %d weeks.", character_name, num_weeks)
 
-        return WarcraftLogsError.NO_RECENT_KILLS
+        raise WarcraftLogsError("No recent kills")
 
     def process_parses(self, character_name, difficulty_normalized, num_weeks, response_json):
         """

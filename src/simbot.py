@@ -113,8 +113,9 @@ class SimcraftBot:
 
             if results and "error" not in results:
                 guild_percents.append(results["average_performance"])
-
-            logger.debug("Finished all sims for character %s in %.2f sec", player["name"], results["elapsed_time"])
+                logger.debug("Finished all sims for character %s in %.2f sec", player["name"], results["elapsed_time"])
+            else:
+                logger.debug("Skipped player %s", player["name"])
 
         guild_sims["guild_avg"] = sum(guild_percents) / len(guild_percents) if len(guild_percents) > 0 else 0.0
 
@@ -138,8 +139,11 @@ class SimcraftBot:
         if not self._warcr.has_talent_data():
             self._warcr.set_talent_data(self._bnet.get_all_talents(self._blizzard_locale))
 
-        raiding_stats = self._warcr.get_all_parses(player_name, self.realm_slug(realm), self._region,
-                                                   "dps", self._difficulty, self._num_weeks)
+        try:
+            raiding_stats = self._warcr.get_all_parses(player_name, self.realm_slug(realm), self._region,
+                                                       "dps", self._difficulty, self._num_weeks)
+        except WarcraftLogsError as e:
+            return {"error": str(e)}
 
         return self._sim_single_suite(player_name, realm, raiding_stats)
 
@@ -169,97 +173,93 @@ class SimcraftBot:
         scores = {}
         start = time.time()
 
-        if not isinstance(raiding_stats, WarcraftLogsError):
-            for boss_name, stats in raiding_stats.items():
-                average_dps = 0.0
-                average_percentage = 0.0
-                average_ilvl = 0.0
+        for boss_name, stats in raiding_stats.items():
+            average_dps = 0.0
+            average_percentage = 0.0
+            average_ilvl = 0.0
 
-                max_dps = 0.0
-                max_dps_talents = []
-                max_dps_spec = ""
+            max_dps = 0.0
+            max_dps_talents = []
+            max_dps_spec = ""
 
-                if not stats:
-                    # no kills for this boss on record, but other kills are still present
-                    scores[boss_name] = SimBotError.NO_KILLS_LOGGED
+            if not stats:
+                # no kills for this boss on record, but other kills are still present
+                scores[boss_name] = SimBotError.NO_KILLS_LOGGED
+                continue
+
+            for kill in stats:
+                if kill["dps"] > max_dps:
+                    max_dps = kill["dps"]
+                    max_dps_spec = kill["spec"].lower()
+                    max_dps_talents = kill["talents"]
+                average_dps += kill["dps"]
+                average_percentage += kill["historical_percent"]
+                average_ilvl += kill["ilvl"]
+
+            average_dps /= len(stats)
+            average_percentage /= len(stats)
+            average_ilvl /= len(stats)
+
+            if max_dps_spec == "beastmastery":
+                max_dps_spec = "beast_mastery"
+
+            fight_profile = self._profiles[boss_name]
+            tag = hash("%s%s%s" % (player, max_dps_spec, fight_profile))
+
+            sim_string = "armory=%s,%s,%s spec=%s talents=%s fight_style=%s" % (self._region,
+                                                                                self.realm_slug(
+                                                                                    realm),
+                                                                                player, max_dps_spec,
+                                                                                ''.join(str(x) for x in
+                                                                                        max_dps_talents),
+                                                                                fight_profile)
+
+            # actually run sim
+            if tag not in sim_cache:
+                sim_results = self._simc.run_sim(sim_string.split(" "))
+
+                if not sim_results:
+                    # simcraft error, results are invalid
+                    scores[boss_name] = SimBotError.SIMCRAFT_ERROR
+                    sim_cache[tag] = SimBotError.SIMCRAFT_ERROR
+
                     continue
 
-                for kill in stats:
-                    if kill["dps"] > max_dps:
-                        max_dps = kill["dps"]
-                        max_dps_spec = kill["spec"].lower()
-                        max_dps_talents = kill["talents"]
-                    average_dps += kill["dps"]
-                    average_percentage += kill["historical_percent"]
-                    average_ilvl += kill["ilvl"]
+                sim_cache[tag] = sim_results
+            else:
+                if isinstance(sim_cache[tag], SimBotError):
+                    scores[boss_name] = sim_cache[tag]
 
-                average_dps /= len(stats)
-                average_percentage /= len(stats)
-                average_ilvl /= len(stats)
+                    continue
+                logger.debug("Using cached sim for player %s spec %s fight config %s", player, max_dps_spec,
+                             fight_profile)
+                sim_results = sim_cache[tag]
 
-                if max_dps_spec == "beastmastery":
-                    max_dps_spec = "beast_mastery"
+            # result is calculated
+            performance_percent = (average_dps / sim_results) * 100
 
-                fight_profile = self._profiles[boss_name]
-                tag = hash("%s%s%s" % (player, max_dps_spec, fight_profile))
+            # notify any threads monitoring progress
+            self._event_message = {
+                "player": player,
+                "boss": boss_name
+            }
 
-                sim_string = "armory=%s,%s,%s spec=%s talents=%s fight_style=%s" % (self._region,
-                                                                                    self.realm_slug(
-                                                                                        realm),
-                                                                                    player, max_dps_spec,
-                                                                                    ''.join(str(x) for x in
-                                                                                            max_dps_talents),
-                                                                                    fight_profile)
+            self.event.acquire()
+            self.event.notify_all()
+            self.event.release()
 
-                # actually run sim
-                if tag not in sim_cache:
-                    sim_results = self._simc.run_sim(sim_string.split(" "))
+            logger.info("[%s] Average dps (%d fight%s) %d vs sim %d on %s (%d%% of potential)" % (
+                player, len(stats), "" if len(stats) == 1 else "s", average_dps, sim_results, boss_name,
+                performance_percent))
 
-                    if not sim_results:
-                        # simcraft error, results are invalid
-                        scores[boss_name] = SimBotError.SIMCRAFT_ERROR
-                        sim_cache[tag] = SimBotError.SIMCRAFT_ERROR
+            scores[boss_name] = {
+                "average_dps": average_dps,
+                "num_fights": len(stats),
+                "sim_dps": sim_results,
+                "percent_potential": performance_percent
+            }
 
-                        continue
-
-                    sim_cache[tag] = sim_results
-                else:
-                    if isinstance(sim_cache[tag], SimBotError):
-                        scores[boss_name] = sim_cache[tag]
-
-                        continue
-                    logger.debug("Using cached sim for player %s spec %s fight config %s", player, max_dps_spec,
-                                 fight_profile)
-                    sim_results = sim_cache[tag]
-
-                # result is calculated
-                performance_percent = (average_dps / sim_results) * 100
-
-                # notify any threads monitoring progress
-                self._event_message = {
-                    "player": player,
-                    "boss": boss_name
-                }
-
-                self.event.acquire()
-                self.event.notify_all()
-                self.event.release()
-
-                logger.info("[%s] Average dps (%d fight%s) %d vs sim %d on %s (%d%% of potential)" % (
-                    player, len(stats), "" if len(stats) == 1 else "s", average_dps, sim_results, boss_name,
-                    performance_percent))
-
-                scores[boss_name] = {
-                    "average_dps": average_dps,
-                    "num_fights": len(stats),
-                    "sim_dps": sim_results,
-                    "percent_potential": performance_percent
-                }
-
-                scores_lst.append(performance_percent)
-        else:
-            # save error for score
-            scores["error"] = raiding_stats
+            scores_lst.append(performance_percent)
 
         scores["average_performance"] = sum(scores_lst) / len(scores_lst) if len(scores_lst) != 0 else 0
         scores["elapsed_time"] = time.time() - start
