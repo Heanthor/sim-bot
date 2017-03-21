@@ -286,6 +286,10 @@ class SimBotConfig:
 
     @staticmethod
     def init_logger(persist, location):
+        if len(logger.handlers):
+            # logger has already been initialized by another SimBot
+            return
+
         logger.setLevel(logging.DEBUG)
         if persist:
             handler = logging.FileHandler(
