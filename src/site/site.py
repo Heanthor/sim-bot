@@ -1,16 +1,30 @@
 import json
+import threading
 
 from flask import Flask
 from flask import render_template, request
 from flask_socketio import SocketIO
 
-from src.simbot import SimBotConfig
+from src.simbot import SimBotConfig, SimcraftBot
 
 app = Flask(__name__)
 socketio = SocketIO(app)
 
 with open('simbot_params.json', 'r') as f:
     saved_params = json.loads(f.read())
+
+
+# thread target
+def check_sim_status(sb, cond):
+    while True:
+        cond.acquire()
+
+        while not sb.message_ready():
+            cond.wait()
+
+        message = sb.consume_message()
+        print("MESSAGE IN SITE: " + str(message))
+        cond.release()
 
 
 @app.route("/")
@@ -29,6 +43,11 @@ def all_sims():
     sbc = SimBotConfig()
     sbc.init_args(guild, realm, saved_params["simc_location"], saved_params["simc_timeout"], region, difficulty,
                   weeks_to_examine=weeks, log_path=saved_params["log_path"])
+
+    sb = SimcraftBot(sbc)
+
+    alert_thread = threading.Thread(daemon=True, target=check_sim_status, args=(sb, sb.event))
+    alert_thread.start()
     return "All Sims!"
 
 

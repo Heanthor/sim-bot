@@ -3,6 +3,7 @@ import logging
 import datetime
 import os
 import pprint
+import threading
 import time
 
 import unicodedata
@@ -39,9 +40,7 @@ class SimcraftBot:
         max_level: Level of characters to be simmed
         simc_location: Location of simc executable
         """
-        # args["guildname"], args["realm"], args["region"], args["raid_difficulty"],
-        # args["weeks_to_examine"], args["max_level"], args["simc_location"],
-        # args["simcraft_timeout"], args["persist_logs"]
+
         self._guild = config.params["guildname"]
         self._realm = config.params["realm"]
         self._region = config.params["region"]
@@ -51,21 +50,43 @@ class SimcraftBot:
 
         self._blizzard_locale = "en_US"
 
-        with open("../keys.json", 'r') as f:
+        with open(os.path.join(config.params["config_path"], "config", "keys.json"), 'r') as f:
             f = json.loads(f.read())
             warcraft_logs_public = f["warcraftlogs"]["public"]
             battlenet_pub = f["battlenet"]["public"]
             battlenet_sec = f["battlenet"]["secret"]
 
-        with open("../nighthold_profiles.json", 'r') as f:
+        with open(os.path.join(config.params["config_path"], "config", "nighthold_profiles.json"), 'r') as f:
             self._profiles = json.loads(f.read())
 
         self._bnet = BattleNet(battlenet_pub)
         self._warcr = WarcraftLogs(warcraft_logs_public)
-        self._simc = SimulationCraft(config.params["simc_location"], config.params["simcraft_timeout"])
+        self._simc = SimulationCraft(config.params["simc_location"], config.params["simcraft_timeout"],
+                                     config.params["config_path"])
 
         # all players in guild
         self._players_in_guild = []
+
+        # alert thread for sim progress
+        self.event = threading.Condition()
+        self._event_message = None
+
+    def message_ready(self):
+        """
+        Is a message ready to be consumed?
+        :return:
+        """
+        return self._event_message is not None
+
+    def consume_message(self):
+        """
+        Returns an available message and clears the message (sets to None)
+        :return:
+        """
+        temp = self._event_message
+        self._event_message = None
+
+        return temp
 
     def run_all_sims(self):
         """
@@ -211,7 +232,18 @@ class SimcraftBot:
                                  fight_profile)
                     sim_results = sim_cache[tag]
 
+                # result is calculated
                 performance_percent = (average_dps / sim_results) * 100
+
+                # notify any threads monitoring progress
+                self._event_message = {
+                    "player": player,
+                    "boss": boss_name
+                }
+
+                self.event.acquire()
+                self.event.notify_all()
+                self.event.release()
 
                 logger.info("[%s] Average dps (%d fight%s) %d vs sim %d on %s (%d%% of potential)" % (
                     player, len(stats), "" if len(stats) == 1 else "s", average_dps, sim_results, boss_name,
@@ -279,6 +311,8 @@ class SimBotConfig:
                             help='Realm where the guild exists')
         parser.add_argument('simc_location', type=str,
                             help='Absolute path of SimulationCraft CLI executable')
+        parser.add_argument('config_path', type=str, default='/',
+                            help="Path (relative to __file__) of config directory (not including /config")
         parser.add_argument('--simcraft_timeout', type=int, default=5, nargs="?",
                             help='Timeout, in seconds, of each individual simulation.')
         parser.add_argument('--region', type=str, default="US", nargs="?", choices=["US", "EU", "KR", "TW", "CN"],
@@ -302,25 +336,25 @@ class SimBotConfig:
 
         self.init_logger(self.params["persist_logs"], self.params["log_path"])
 
-    def init_args(self, guildname, realm, simc_location, simc_timeout=5, region="US", raid_difficulty="heroic",
-                  blizzard_locale="en_US", max_level=110, weeks_to_examine=3, persist_logs=False,
-                  log_path="../logs"):
+    def init_args(self, guildname, realm, simc_location, config_path="/", simc_timeout=5, region="US",
+                  raid_difficulty="heroic", blizzard_locale="en_US", max_level=110, weeks_to_examine=3,
+                  persist_logs=False, log_path="../logs"):
         """
 
         :param guildname: The guild name to run sims for
         :param realm: The realm
         :param simc_location: Location of simc executable
-        :param simc_timeout Timeout, in seconds, of each individual simulation.
+        :param config_path: Path (relative to __file__) of config directory (keys.json and profiles.json)
+        :param simc_timeout: Timeout, in seconds, of each individual simulation.
         :param region: US, EU, KR, TW, CN.
         :param blizzard_locale: en_US
         :param raid_difficulty: normal, heroic, mythic, lfr
         :param weeks_to_examine: Number of weeks to look back in time
         :param max_level: Level of characters to be simmed
-        :param persist_logs Save logs in separate files, or overwrite single file.
+        :param persist_logs: Save logs in separate files, or overwrite single file.
         :param log_path: Path (relative to __file__) to save logs to (excluding /<filename>.log)
-
-        :return:
         """
+
         self.params["guildname"] = guildname
         self.params["realm"] = realm
         self.params["simc_location"] = simc_location
@@ -332,6 +366,7 @@ class SimBotConfig:
         self.params["weeks_to_examine"] = weeks_to_examine
         self.params["persist_logs"] = persist_logs
         self.params["log_path"] = log_path
+        self.params["config_path"] = config_path
 
         self.init_logger(persist_logs, log_path)
 
