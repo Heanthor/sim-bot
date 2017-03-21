@@ -50,13 +50,13 @@ class SimcraftBot:
 
         self._blizzard_locale = "en_US"
 
-        with open(os.path.join(config.params["config_path"], "config", "keys.json"), 'r') as f:
+        with open(os.path.join(config.params["config_path"], "keys.json"), 'r') as f:
             f = json.loads(f.read())
             warcraft_logs_public = f["warcraftlogs"]["public"]
             battlenet_pub = f["battlenet"]["public"]
             battlenet_sec = f["battlenet"]["secret"]
 
-        with open(os.path.join(config.params["config_path"], "config", "nighthold_profiles.json"), 'r') as f:
+        with open(os.path.join(config.params["config_path"], "nighthold_profiles.json"), 'r') as f:
             self._profiles = json.loads(f.read())
 
         self._bnet = BattleNet(battlenet_pub)
@@ -91,7 +91,7 @@ class SimcraftBot:
     def run_all_sims(self):
         """
         Run sims for each DPS player in the guild.
-        :return:
+        :return: Guild sim report
         """
         logger.info("Starting sims for guild %s, realm %s, region %s", self._guild, self._realm, self._region)
 
@@ -312,7 +312,7 @@ class SimBotConfig:
         parser.add_argument('simc_location', type=str,
                             help='Absolute path of SimulationCraft CLI executable')
         parser.add_argument('config_path', type=str, default='/',
-                            help="Path (relative to __file__) of config directory (not including /config")
+                            help="Path (relative to __file__) of config directory (including /config")
         parser.add_argument('--simcraft_timeout', type=int, default=5, nargs="?",
                             help='Timeout, in seconds, of each individual simulation.')
         parser.add_argument('--region', type=str, default="US", nargs="?", choices=["US", "EU", "KR", "TW", "CN"],
@@ -336,7 +336,7 @@ class SimBotConfig:
 
         self.init_logger(self.params["persist_logs"], self.params["log_path"])
 
-    def init_args(self, guildname, realm, simc_location, config_path="/", simc_timeout=5, region="US",
+    def init_args(self, guildname, realm, simc_location, config_path="", simc_timeout=5, region="US",
                   raid_difficulty="heroic", blizzard_locale="en_US", max_level=110, weeks_to_examine=3,
                   persist_logs=False, log_path="../logs"):
         """
@@ -344,7 +344,7 @@ class SimBotConfig:
         :param guildname: The guild name to run sims for
         :param realm: The realm
         :param simc_location: Location of simc executable
-        :param config_path: Path (relative to __file__) of config directory (keys.json and profiles.json)
+        :param config_path: Path (relative to __file__) of config directory (including /config)
         :param simc_timeout: Timeout, in seconds, of each individual simulation.
         :param region: US, EU, KR, TW, CN.
         :param blizzard_locale: en_US
@@ -358,7 +358,7 @@ class SimBotConfig:
         self.params["guildname"] = guildname
         self.params["realm"] = realm
         self.params["simc_location"] = simc_location
-        self.params["simc_timeout"] = simc_timeout
+        self.params["simcraft_timeout"] = simc_timeout
         self.params["region"] = region
         self.params["raid_difficulty"] = raid_difficulty
         self.params["blizzard_locale"] = blizzard_locale

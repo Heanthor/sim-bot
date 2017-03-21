@@ -1,4 +1,4 @@
-import json
+from flask import json, jsonify
 import threading
 
 from flask import Flask
@@ -41,14 +41,17 @@ def all_sims():
     realm = request.args.get('region')
 
     sbc = SimBotConfig()
-    sbc.init_args(guild, realm, saved_params["simc_location"], saved_params["simc_timeout"], region, difficulty,
-                  weeks_to_examine=weeks, log_path=saved_params["log_path"])
+    sbc.init_args(guild, realm, saved_params["simc_location"], saved_params["config_path"],
+                  saved_params["simc_timeout"], region, difficulty, weeks_to_examine=weeks,
+                  log_path=saved_params["log_path"])
 
     sb = SimcraftBot(sbc)
 
     alert_thread = threading.Thread(daemon=True, target=check_sim_status, args=(sb, sb.event))
     alert_thread.start()
-    return "All Sims!"
+
+    report = sb.run_all_sims()
+    return jsonify(report)
 
 
 @app.route("/sim/", methods=["GET"])

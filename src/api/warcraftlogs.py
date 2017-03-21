@@ -64,9 +64,18 @@ class WarcraftLogs:
         :param num_weeks:
         :return:
         """
+
         if num_weeks <= 0:
             logger.error("Number of days cannot be <= 0.")
             return False
+
+        if not character_name or not server or not region or not metric or not difficulty:
+            message = "Some parameters missing: name '%s', server '%s', region '%s', metric '%s', difficulty '%s'" % (
+                character_name, server, region, metric, difficulty
+            )
+
+            logger.error(message)
+            raise ValueError(message)
 
         # convert string to int difficulty value
         difficulty_normalized = difficulty
@@ -148,7 +157,8 @@ class WarcraftLogs:
                         # log is too long ago
                         continue
                     else:
-                        logger.debug("Found usable log of player %s on boss %s from %s", character_name, boss_name,
+                        logger.debug("Found usable log of player '%s' on boss '%s' from '%s'", character_name,
+                                     boss_name,
                                      datetime.datetime.fromtimestamp(log_time).strftime('%Y-%m-%d %H:%M:%S'))
 
                         ilvl = kill["ilvl"]

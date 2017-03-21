@@ -39,6 +39,14 @@ class BattleNet:
         :param level: Return only players at this level
         :return: Dict of guild members and their role, and a simple list of all names
         """
+
+        if not realm or not guild_name or not locale or not level:
+            message = "Parameters missing: realm '%s', guild '%s', locale '%s', level '%d'" % (
+                realm, guild_name, locale, level)
+
+            logger.error(message)
+            raise ValueError(message)
+
         r = self.bnet_request(requests.get, API_URL + "wow/guild/%s/%s" % (realm, guild_name),
                               params={"fields": "members", "locale": locale, "apikey": self._api_key})
 
@@ -49,7 +57,8 @@ class BattleNet:
         try:
             members_raw = raw["members"]
         except KeyError:
-            logger.error("Unable to retrieve bnet guild list for guild %s, realm %s, locale %s", guild_name, realm,
+            logger.error("Unable to retrieve bnet guild list for guild '%s', realm '%s', locale '%s'", guild_name,
+                         realm,
                          locale)
             return {}
 
@@ -70,6 +79,10 @@ class BattleNet:
         :param locale:
         :return:
         """
+
+        if not locale:
+            raise ValueError("Missing locale string")
+
         r = self.bnet_request(requests.get, API_URL + "wow/data/talents", params={"locale": locale,
                                                                                   "apikey": self._api_key})
 

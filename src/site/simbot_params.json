@@ -2,5 +2,6 @@
   "simc_location": "C:\\Users\\reedt\\Downloads\\simc-715-02-win64-bdd3ba8\\simc-715-02-win64\\simc.exe",
   "simc_timeout": 15,
   "persist_logs": true,
-  "log_path": "../../logs"
+  "log_path": "../../logs",
+  "config_path": "../../config"
 }
