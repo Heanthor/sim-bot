@@ -1,6 +1,7 @@
 import json
 import logging
 import datetime
+import os
 import pprint
 import time
 
@@ -16,6 +17,10 @@ from src.api.simcraft import SimulationCraft
 from src.api.warcraftlogs import WarcraftLogs, WarcraftLogsError
 
 logger = logging.getLogger("SimBot")
+
+
+def get_script_path():
+    return os.path.dirname(os.path.realpath(sys.argv[0]))
 
 
 class SimBotError(Enum):
@@ -248,12 +253,13 @@ class SimBotConfig:
         self.params = {}
 
     @staticmethod
-    def init_logger(persist):
+    def init_logger(persist, location):
         logger.setLevel(logging.DEBUG)
         if persist:
-            handler = logging.FileHandler("../logs/simbot-%s.log" % time.strftime("%Y%m%d-%H%M%S"))
+            handler = logging.FileHandler(
+                os.path.join(get_script_path(), location, "simbot-%s.log" % time.strftime("%Y%m%d-%H%M%S")))
         else:
-            handler = logging.FileHandler('../logs/simbot.log', 'w')
+            handler = logging.FileHandler(os.path.join(get_script_path(), location, 'simbot.log'), 'w')
         handler.setLevel(logging.DEBUG)
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         handler.setFormatter(formatter)
@@ -289,13 +295,16 @@ class SimBotConfig:
                             help='Number of weeks of historical logs to average')
         parser.add_argument('--persist_logs', type=bool, default=False, nargs='?',
                             help="Save logs in separate files, or overwrite single file.")
+        parser.add_argument('--log_path', type=str, default="../logs", nargs='?',
+                            help="Path (relative to __file__) to save logs to (excluding /<filename>.log)")
 
         self.params = vars(parser.parse_args())
 
-        self.init_logger(self.params["persist_logs"])
+        self.init_logger(self.params["persist_logs"], self.params["log_path"])
 
     def init_args(self, guildname, realm, simc_location, simc_timeout=5, region="US", raid_difficulty="heroic",
-                  blizzard_locale="en_US", max_level=110, weeks_to_examine=3, persist_logs=False):
+                  blizzard_locale="en_US", max_level=110, weeks_to_examine=3, persist_logs=False,
+                  log_path="../logs"):
         """
 
         :param guildname: The guild name to run sims for
@@ -308,6 +317,8 @@ class SimBotConfig:
         :param weeks_to_examine: Number of weeks to look back in time
         :param max_level: Level of characters to be simmed
         :param persist_logs Save logs in separate files, or overwrite single file.
+        :param log_path: Path (relative to __file__) to save logs to (excluding /<filename>.log)
+
         :return:
         """
         self.params["guildname"] = guildname
@@ -320,8 +331,9 @@ class SimBotConfig:
         self.params["max_level"] = max_level
         self.params["weeks_to_examine"] = weeks_to_examine
         self.params["persist_logs"] = persist_logs
+        self.params["log_path"] = log_path
 
-        self.init_logger(persist_logs)
+        self.init_logger(persist_logs, log_path)
 
 
 if __name__ == '__main__':
