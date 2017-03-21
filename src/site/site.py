@@ -15,16 +15,11 @@ with open('simbot_params.json', 'r') as f:
 
 
 # thread target
-def check_sim_status(sb, cond):
+def check_sim_status(queue):
     while True:
-        cond.acquire()
-
-        while not sb.message_ready():
-            cond.wait()
-
-        message = sb.consume_message()
+        message = queue.get()
         print("MESSAGE IN SITE: " + str(message))
-        cond.release()
+        queue.task_done()
 
 
 @app.route("/")
@@ -47,7 +42,7 @@ def all_sims():
 
     sb = SimcraftBot(sbc)
 
-    alert_thread = threading.Thread(daemon=True, target=check_sim_status, args=(sb, sb.event))
+    alert_thread = threading.Thread(daemon=True, target=check_sim_status, args=(sb.event_queue,))
     alert_thread.start()
 
     report = sb.run_all_sims()

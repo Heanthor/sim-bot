@@ -66,7 +66,7 @@ class WarcraftLogs:
         """
 
         if num_weeks <= 0:
-            logger.error("Number of days cannot be <= 0.")
+            logger.error("Number of weeks cannot be <= 0.")
             return False
 
         if not character_name or not server or not region or not metric or not difficulty:
@@ -113,7 +113,7 @@ class WarcraftLogs:
         # all boss entries are empty, player is in guild but has not raided
         logger.info("Player %s has no boss kills in past %d weeks.", character_name, num_weeks)
 
-        raise WarcraftLogsError("No recent kills")
+        raise WarcraftLogsError("No kills in the given time window.")
 
     def process_parses(self, character_name, difficulty_normalized, num_weeks, response_json):
         """

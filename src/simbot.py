@@ -3,7 +3,6 @@ import logging
 import datetime
 import os
 import pprint
-import threading
 import time
 
 import unicodedata
@@ -12,6 +11,7 @@ import sys
 
 import argparse
 from enum import Enum
+from queue import Queue
 
 from src.api.battlenet import BattleNet
 from src.api.simcraft import SimulationCraft
@@ -25,8 +25,8 @@ def get_script_path():
 
 
 class SimBotError(Enum):
-    SIMCRAFT_ERROR = 1
-    NO_KILLS_LOGGED = 2
+    SIMCRAFT_ERROR = "SimulationCraft threw an error while running the sim."
+    NO_KILLS_LOGGED = "No kills logged for this boss."
 
 
 class SimcraftBot:
@@ -68,25 +68,7 @@ class SimcraftBot:
         self._players_in_guild = []
 
         # alert thread for sim progress
-        self.event = threading.Condition()
-        self._event_message = None
-
-    def message_ready(self):
-        """
-        Is a message ready to be consumed?
-        :return:
-        """
-        return self._event_message is not None
-
-    def consume_message(self):
-        """
-        Returns an available message and clears the message (sets to None)
-        :return:
-        """
-        temp = self._event_message
-        self._event_message = None
-
-        return temp
+        self.event_queue = Queue()
 
     def run_all_sims(self):
         """
@@ -141,7 +123,7 @@ class SimcraftBot:
 
         try:
             raiding_stats = self._warcr.get_all_parses(player_name, self.realm_slug(realm), self._region,
-                                                       "dps", self._difficulty, self._num_weeks)
+                                                       "dps", self._difficulty, int(self._num_weeks))
         except WarcraftLogsError as e:
             return {"error": str(e)}
 
@@ -184,7 +166,7 @@ class SimcraftBot:
 
             if not stats:
                 # no kills for this boss on record, but other kills are still present
-                scores[boss_name] = SimBotError.NO_KILLS_LOGGED
+                scores[boss_name] = SimBotError.NO_KILLS_LOGGED.value
                 continue
 
             for kill in stats:
@@ -220,7 +202,7 @@ class SimcraftBot:
 
                 if not sim_results:
                     # simcraft error, results are invalid
-                    scores[boss_name] = SimBotError.SIMCRAFT_ERROR
+                    scores[boss_name] = SimBotError.SIMCRAFT_ERROR.value
                     sim_cache[tag] = SimBotError.SIMCRAFT_ERROR
 
                     continue
@@ -238,15 +220,11 @@ class SimcraftBot:
             # result is calculated
             performance_percent = (average_dps / sim_results) * 100
 
-            # notify any threads monitoring progress
-            self._event_message = {
+            # add message to be consumed
+            self.event_queue.put({
                 "player": player,
                 "boss": boss_name
-            }
-
-            self.event.acquire()
-            self.event.notify_all()
-            self.event.release()
+            })
 
             logger.info("[%s] Average dps (%d fight%s) %d vs sim %d on %s (%d%% of potential)" % (
                 player, len(stats), "" if len(stats) == 1 else "s", average_dps, sim_results, boss_name,

@@ -60,9 +60,9 @@ class BattleNet:
         names = defaultdict(list)
         basic_names = []
 
-        try:
+        if r.status_code == 200:
             members_raw = raw["members"]
-        except KeyError:
+        else:
             logger.error("Unable to retrieve bnet guild list for guild '%s', realm '%s', locale '%s'", guild_name,
                          realm,
                          locale)
