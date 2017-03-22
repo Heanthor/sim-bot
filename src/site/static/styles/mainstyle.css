@@ -24,3 +24,13 @@ label {
 #submitsp {
     margin-top: 20px;
 }
+
+#submitguild {
+    margin-bottom: 20px;
+}
+.progress span {
+    position: absolute;
+    display: block;
+    width: 100%;
+    color: black;
+ }

@@ -74,7 +74,7 @@ def sim_single():
 @socketio.on('my event')
 def handle_my_custom_event(j):
     print('received json: ' + str(j))
-    emit('progressbar', "hello back")
+    # emit('progressbar', "hello back")
 
 
 if __name__ == "__main__":

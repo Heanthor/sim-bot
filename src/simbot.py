@@ -88,6 +88,14 @@ class SimcraftBot:
         # average dps
         guild_percents = []
         # only run sims for 110 dps players
+
+        num_sims = len(names["DPS"])
+
+        self.event_queue.put({
+            "start": True,
+            "num_sims": num_sims
+        })
+
         for player in names["DPS"]:
             results = self.sim_single_character(player["name"], player["realm"])
 
@@ -136,7 +144,7 @@ class SimcraftBot:
 
         self.event_queue.put({
             "player": player_name,
-            "done:": True
+            "done": True
         })
 
         return to_return
