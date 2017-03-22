@@ -1,11 +1,13 @@
 from flask import json, jsonify
-import threading
 
 from flask import Flask
 from flask import render_template, request
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, emit
 
 from src.simbot import SimBotConfig, SimcraftBot
+
+# import eventlet
+# eventlet.monkey_patch()
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -14,12 +16,23 @@ with open('simbot_params.json', 'r') as f:
     saved_params = json.loads(f.read())
 
 
-# thread target
-def check_sim_status(queue):
-    while True:
-        message = queue.get()
-        print("MESSAGE IN SITE: " + str(message))
-        queue.task_done()
+# # thread target
+# def check_sim_status(queue):
+#     while True:
+#         print("Eventlet thread started")
+#         message = queue.get()
+#         print("MESSAGE IN SITE: " + str(message))
+#         # with app.app_context():
+#         #     socketio.emit("progressbar", json.dumps(message))
+#         socketio.emit("progressbar", json.dumps(message))
+#
+#         queue.task_done()
+
+
+def report_sim_update(message):
+    print("MESSAGE IN SITE: " + str(message))
+    with app.app_context():
+        socketio.emit("progressbar", json.dumps(message))
 
 
 @app.route("/")
@@ -42,8 +55,10 @@ def all_sims():
 
     sb = SimcraftBot(sbc)
 
-    alert_thread = threading.Thread(daemon=True, target=check_sim_status, args=(sb.event_queue,))
-    alert_thread.start()
+    # t = threading.Thread(target=check_sim_status, args=(sb.event_queue,), daemon=True)
+    # t.start()
+    # eventlet.spawn(check_sim_status, sb.event_queue)
+    sb.register_alert_func(report_sim_update)
 
     report = sb.run_all_sims()
     return jsonify(report)
@@ -51,14 +66,14 @@ def all_sims():
 
 @app.route("/sim/", methods=["GET"])
 def sim_single():
-    # TODO simbot needs to be able to run without a guild param for this endpoint
     pass
 
 
 @socketio.on('my event')
 def handle_my_custom_event(j):
     print('received json: ' + str(j))
+    emit('progressbar', "hello back")
 
 
 if __name__ == "__main__":
-    socketio.run(app)
+    socketio.run(app, debug=True)
