@@ -1,3 +1,5 @@
+import threading
+
 from flask import json, jsonify
 
 from flask import Flask
@@ -16,23 +18,23 @@ with open('simbot_params.json', 'r') as f:
     saved_params = json.loads(f.read())
 
 
-# # thread target
-# def check_sim_status(queue):
-#     while True:
-#         print("Eventlet thread started")
-#         message = queue.get()
-#         print("MESSAGE IN SITE: " + str(message))
-#         # with app.app_context():
-#         #     socketio.emit("progressbar", json.dumps(message))
-#         socketio.emit("progressbar", json.dumps(message))
-#
-#         queue.task_done()
-
-
-def report_sim_update(message):
-    print("MESSAGE IN SITE: " + str(message))
-    with app.app_context():
+# thread target
+def check_sim_status(queue):
+    while True:
+        # print("Eventlet thread started")
+        message = queue.get()
+        print("MESSAGE IN SITE: " + str(message))
+        # with app.app_context():
+        #     socketio.emit("progressbar", json.dumps(message))
         socketio.emit("progressbar", json.dumps(message))
+
+        queue.task_done()
+
+
+# def report_sim_update(message):
+#     print("MESSAGE IN SITE: " + str(message))
+#     with app.app_context():
+#         socketio.emit("progressbar", json.dumps(message))
 
 
 @app.route("/")
@@ -55,10 +57,10 @@ def all_sims():
 
     sb = SimcraftBot(sbc)
 
-    # t = threading.Thread(target=check_sim_status, args=(sb.event_queue,), daemon=True)
-    # t.start()
+    t = threading.Thread(target=check_sim_status, args=(sb.event_queue,), daemon=True)
+    t.start()
     # eventlet.spawn(check_sim_status, sb.event_queue)
-    sb.register_alert_func(report_sim_update)
+    # sb.register_alert_func(report_sim_update)
 
     report = sb.run_all_sims()
     return jsonify(report)

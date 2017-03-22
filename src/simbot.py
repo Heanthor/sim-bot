@@ -11,6 +11,7 @@ import sys
 
 import argparse
 from enum import Enum
+from queue import Queue
 
 from src.api.battlenet import BattleNet
 from src.api.simcraft import SimulationCraft
@@ -67,18 +68,7 @@ class SimcraftBot:
         self._players_in_guild = []
 
         # alert thread for sim progress
-        # self.event_queue = Queue()
-
-        self._notifier_function = None
-
-    def register_alert_func(self, func):
-        """
-        Register the function that is called to report sim events
-        Done this way to work with Flask-SocketIO, in which mixing websockets and threads doesn't play nicely.
-        :param func: Reporter function. Must take one argument (a message)
-        :return:
-        """
-        self._notifier_function = func
+        self.event_queue = Queue()
 
     def run_all_sims(self):
         """
@@ -109,10 +99,9 @@ class SimcraftBot:
             else:
                 logger.debug("Skipped player %s", player["name"])
 
-                # since it's skipped, we're done with this player
-                self._notifier_function({
+                self.event_queue.put({
                     "player": player["name"],
-                    "done:": True
+                    "done": True
                 })
 
         guild_sims["guild_avg"] = sum(guild_percents) / len(guild_percents) if len(guild_percents) > 0 else 0.0
@@ -145,7 +134,7 @@ class SimcraftBot:
 
         to_return = self._sim_single_suite(player_name, realm, raiding_stats)
 
-        self._notifier_function({
+        self.event_queue.put({
             "player": player_name,
             "done:": True
         })
@@ -244,7 +233,7 @@ class SimcraftBot:
             performance_percent = (average_dps / sim_results) * 100
 
             # add message to be consumed
-            self._notifier_function({
+            self.event_queue.put({
                 "player": player,
                 "boss": boss_name,
                 "done": False
