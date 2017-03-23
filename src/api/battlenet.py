@@ -79,11 +79,14 @@ class BattleNet:
         for character in members_raw:
             character = character["character"]
             if character["level"] == level:
-                names[character["spec"]["role"]].append({
-                    "name": character["name"],
-                    "realm": character["realm"],
-                })
-                basic_names.append(character["name"])
+                if 'spec' in character:
+                    names[character["spec"]["role"]].append({
+                        "name": character["name"],
+                        "realm": character["realm"],
+                    })
+                    basic_names.append(character["name"])
+                else:
+                    logger.error("Character %s does not have a spec!", character['name'])
 
         return names, basic_names
 

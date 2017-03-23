@@ -344,7 +344,7 @@ class SimBotConfig:
                   persist_logs=False, log_path="../logs"):
         """
 
-        :param guildname: The guild name to run sims for
+        :param guildname: The guild name to run sims for (in quotes)
         :param realm: The realm
         :param simc_location: Location of simc executable
         :param config_path: Path (relative to __file__) of config directory (including /config)
