@@ -30,10 +30,14 @@
 
     {#    <script src="{{ url_for('static', filename='js/main.js') }}"></script>#}
     <script type="text/javascript" charset="utf-8">
+        var clientID = "";
+
         var socket = io.connect('http://' + document.domain + ':' + location.port);
         socket.on('connect', function () {
+            clientID = generateUniqueID();
+
+            socket.emit('handshake', {data: clientID});
             console.log("Connected to server");
-            socket.emit('my event', {data: 'I\'m connected!'});
         });
 
         var progress = 0;
@@ -66,8 +70,6 @@
 
         $(function () {
             // TODO multiple jobs
-            var jobID = "";
-
             $("#submitguild").on('click', function () {
                 var spinnerStr = "<i class='fa fa-spinner fa-spin'></i>";
                 if (!$(this).hasClass("btn-danger")) {
@@ -83,7 +85,6 @@
 
                     // add spinner
                     $(this).html("Submit " + spinnerStr);
-                    jobID = Math.random().toString(36).substring(7);
 
                     $.post(
                         "all_sims/",
@@ -93,8 +94,8 @@
                             "difficulty": $("#difficulty").val(),
                             "guild": guild,
                             "realm": realm,
-                            "jobID": jobID
-                        },
+                            "jobID": clientID
+                        }).done(
                         function (data) {
                             // $("#guild-report-printout").html(data);
                             $("#submitguild").html("Submit");
@@ -107,7 +108,9 @@
                                 guildError('alert-danger', data["message"]);
                             }
                         }
-                    );
+                    ).fail(function (xhr, status, error) {
+                        guildError('alert-danger', "Internal Server Error")
+                    });
 
                     // once clicked, can cancel
 
@@ -157,6 +160,10 @@
                 $(this).removeClass('btn-danger');
                 $(this).addClass('btn-default');
             });
+        }
+
+        function generateUniqueID() {
+            return Math.random().toString(36).substring(7);
         }
 
     </script>

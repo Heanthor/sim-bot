@@ -8,12 +8,33 @@ from flask_socketio import SocketIO, emit
 
 from src.simbot import SimBotConfig, SimcraftBot
 
+from multiprocessing.pool import ThreadPool
+
+import logging
+
 # import eventlet
 # eventlet.monkey_patch()
 
 app = Flask(__name__)
 socketio = SocketIO(app)
+logger = logging.getLogger("SimBot")
 
+
+# Taiiwo @ https://gist.github.com/ericremoreynolds/dbea9361a97179379f3b#gistcomment-1730314
+class Socket:
+    def __init__(self, sid):
+        self.sid = sid
+        self.connected = True
+
+    # Emits data to a socket's unique room
+    def emit(self, event, data):
+        socketio.emit(event, data, room=self.sid)
+
+
+# currently connected socket.io clients
+sockets = {}
+# client ID to socket SID
+client_socket = {}
 # reference to SimcraftBot objects
 all_running_jobs = {}
 
@@ -22,14 +43,15 @@ with open('simbot_params.json', 'r') as f:
 
 
 # thread target
-def check_sim_status(queue):
+def check_sim_status(queue, client_id):
     while True:
         # print("Eventlet thread started")
         message = queue.get()
         print("MESSAGE IN SITE: " + str(message))
         # with app.app_context():
         #     socketio.emit("progressbar", json.dumps(message))
-        socketio.emit("progressbar", json.dumps(message))
+        # send message to correct client
+        client_socket[client_id].emit("progressbar", json.dumps(message))
         queue.task_done()
 
 
@@ -39,9 +61,15 @@ def check_sim_status(queue):
 #         socketio.emit("progressbar", json.dumps(message))
 
 
+def check_task_progress(id):
+    pass
+
+
 @app.route("/")
 def main():
     return render_template("main.html")
+
+pool = ThreadPool(processes=1)
 
 
 @app.route("/all_sims/", methods=["POST"])
@@ -69,21 +97,24 @@ def all_sims():
 
     # TODO multiple jobs
     try:
-        all_running_jobs[job_id] = sb
 
-        t = threading.Thread(target=check_sim_status, args=(sb.event_queue,), daemon=True)
-        t.start()
+        threading.Thread(target=check_sim_status, args=(sb.event_queue, job_id), daemon=True).start()
 
-        report = sb.run_all_sims()
+        # TODO return from this immediately, but keep the result going, send it back later
+        # async_result = pool.apply_async(sb.run_all_sims)
+        # all_running_jobs[job_id] = async_result
+        #
+        # result = async_result.get()
+
+        result = sb.run_all_sims()
     except Exception as e:
+        logger.exception("SimBot exception")
         return jsonify({
             "status": "error",
             "message": str(e)
         })
-    # eventlet.spawn(check_sim_status, sb.event_queue)
-    # sb.register_alert_func(report_sim_update)
 
-    return jsonify(report)
+    return jsonify(result)
 
 
 @app.route("/sim/", methods=["POST"])
@@ -104,11 +135,15 @@ def cancel_job(job_id=None):
     })
 
 
-@socketio.on('my event')
-def handle_my_custom_event(j):
-    print('received json: ' + str(j))
-    # emit('progressbar', "hello back")
+@socketio.on('connect')
+def client_connected():
+    sockets[request.sid] = Socket(request.sid)
+    print("Client connected")
 
+
+@socketio.on('handshake')
+def handshake_client(data):
+    client_socket[data['data']] = sockets[request.sid]
 
 if __name__ == "__main__":
     socketio.run(app, debug=True)
