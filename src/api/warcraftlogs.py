@@ -181,8 +181,10 @@ class WarcraftLogs:
 
     @staticmethod
     def warcraftlogs_request(req_func, *args, **kwargs):
+        start = time()
         r = req_func(*args, **kwargs)
-        logger.debug("Warcraftlogs request sent (%s)", r.url)
+        dur = time() - start
+        logger.debug("Warcraftlogs request complete (%d ms) - (%s)", dur, r.url)
 
         return r
 
@@ -199,6 +201,9 @@ class WarcraftLogs:
 
         counter = 0
 
+        # Simc talents are 1-indexed instead of 0, for the time being (pending fix)
+        simc_offset = 1
+
         if not self.has_talent_data():
             logger.critical("Blizzard talents not set for WarcraftLogs!")
             raise RuntimeError("Blizzard talents not set for WarcraftLogs!")
@@ -214,13 +219,13 @@ class WarcraftLogs:
                     if "spec" in talent_for_spec:
                         if talent_for_spec["spec"]["name"].lower().replace(" ", "") == spec_str.lower() and \
                                         talent_for_spec["spell"]["id"] == talent["id"]:
-                            temp.append(talent_for_spec["column"])
+                            temp.append(talent_for_spec["column"] + simc_offset)
                             done_tier = True
                             break
                     else:
                         # talent is the same for all 3 specs
                         if talent_for_spec["spell"]["id"] == talent["id"]:
-                            temp.append(talent_for_spec["column"])
+                            temp.append(talent_for_spec["column"] + simc_offset)
                             done_tier = True
                             break
                 if done_tier:

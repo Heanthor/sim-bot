@@ -64,9 +64,16 @@ class SimulationCraft:
     def find_dps(string):
         # regex does not work here, do it the old fashioned way
         marker = "DPS Ranking:"
-        tag = string.index(marker) + len(marker) + 1
-        new_str = string[tag:tag + 20]
-        x = new_str[:new_str.index(" ")]
+        tag = string.index(marker) + len(marker) - 1
+        col_loc = string[tag:].index(":")
+        if string[tag + col_loc + 1] == " ":
+            # 6 digit number
+            new_str = string[tag + 2:tag + 20]
+            x = new_str[:new_str.index(" ")]
+        else:
+            # 7 digit number
+            new_str = string[tag + 1:tag + 20]
+            x = new_str[:new_str.index(" ")]
 
         if not x:
             logger.error("Unable to find DPS in string")

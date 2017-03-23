@@ -5,7 +5,6 @@ import json
 import unittest
 
 from src.api.warcraftlogs import WarcraftLogs
-from src.data_structures.warcraftlogs import ParseResponse
 
 with open("sample_warcraftlogs_api_response.json", 'r') as f:
     api_stub = json.loads(f.read())
@@ -17,6 +16,7 @@ with open("7_1_5_talents.json", 'r') as f:
 class TestWarcraftLogs(unittest.TestCase):
     def setUp(self):
         self.wl = WarcraftLogs("")
+        self.wl.set_talent_data(talent_dump)
 
     def test_convert_talents(self):
         mage_talents = [
@@ -81,28 +81,17 @@ class TestWarcraftLogs(unittest.TestCase):
             }
         ]
 
-        self.assertEqual([0, 0, 2, 2, 0, 1, 0],
-                         WarcraftLogs.convert_talents("Mage", "Frost", mage_talents, talent_dump))
+        self.assertEqual([1, 1, 3, 3, 1, 2, 1],
+                         self.wl.convert_talents("Mage", "Frost", mage_talents))
 
-        self.assertEqual([0, 0, 2, 2, 0, 1, 2],
-                         WarcraftLogs.convert_talents("DemonHunter", "Havoc", demonhunter_talents, talent_dump))
+        self.assertEqual([1, 1, 3, 3, 1, 2, 3],
+                         self.wl.convert_talents("DemonHunter", "Havoc", demonhunter_talents))
 
     def test_process_parse(self):
         # 999 weeks to prevent breaking dataset
         result = self.wl.process_parses("Stachio", 4, 999, api_stub, talent_dump)
 
         self.assertIsNotNone(result)
-
-
-class TestParseResponse(unittest.TestCase):
-    def setUp(self):
-        self.pr = ParseResponse(api_stub)
-
-    def test_filter_kills(self):
-        self.assertTrue(self.pr.filter_kills(21, self.pr.HEROIC))
-        self.assertFalse(self.pr.filter_kills(21, "asdf"))
-        self.assertFalse(self.pr.filter_kills(0, self.pr.NORMAL))
-
 
 if __name__ == '__main__':
     unittest.main()

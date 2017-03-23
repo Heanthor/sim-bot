@@ -112,9 +112,11 @@ class BattleNet:
         elif self._calls_hr > self.BNET_MAX_CALLS_HR:
             logger.error("API call/hr rate %d exceeded max %d", self._calls_hr, self.BNET_MAX_CALLS_HR)
 
+        start = time.time()
         r = req_func(*args, **kwargs)
+        dur = time.time() - start
 
-        logger.debug("Bnet request sent (%s). In last hour: %d", r.url, self._calls_hr)
+        logger.debug("Bnet request complete (%d ms) - (%s). In last hour: %d", dur, r.url, self._calls_hr)
         self._calls_sec += 1
         self._calls_hr += 1
 

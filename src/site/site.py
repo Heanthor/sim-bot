@@ -27,7 +27,6 @@ def check_sim_status(queue):
         # with app.app_context():
         #     socketio.emit("progressbar", json.dumps(message))
         socketio.emit("progressbar", json.dumps(message))
-
         queue.task_done()
 
 
