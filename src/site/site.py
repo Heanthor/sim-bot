@@ -52,7 +52,7 @@ def all_sims():
         return jsonify({
             "status": "error",
             "message": "Job already started."
-        }), 400
+        })
 
     region = request.form.get('region')
     difficulty = request.form.get('difficulty')
@@ -73,19 +73,20 @@ def all_sims():
 
         t = threading.Thread(target=check_sim_status, args=(sb.event_queue,), daemon=True)
         t.start()
+
+        report = sb.run_all_sims()
     except Exception as e:
         return jsonify({
             "status": "error",
             "message": str(e)
-        }), 500
+        })
     # eventlet.spawn(check_sim_status, sb.event_queue)
     # sb.register_alert_func(report_sim_update)
 
-    report = sb.run_all_sims()
     return jsonify(report)
 
 
-@app.route("/sim/", methods=["GET"])
+@app.route("/sim/", methods=["POST"])
 def sim_single():
     pass
 

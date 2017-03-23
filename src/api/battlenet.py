@@ -67,9 +67,12 @@ class BattleNet:
                          realm,
                          locale)
 
-            # bnet error, with "status" and "reason" json
-            if raw["reason"] == "Realm not found." or raw["reason"] == "Guild not found.":
-                raise BattleNetError(raw["reason"])
+            try:
+                # bnet error, with "status" and "reason" json
+                if raw["reason"] == "Realm not found." or raw["reason"] == "Guild not found.":
+                    raise BattleNetError(raw["reason"])
+            except KeyError as e:
+                raise BattleNetError("Unexpected Battle.net Error (code %d)", r.status_code)
             else:
                 raise BattleNetError("Unexpected Battle.net Error '%s'" % raw["reason"])
 
