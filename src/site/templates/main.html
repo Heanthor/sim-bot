@@ -43,9 +43,7 @@
         var progress = 0;
         var num_sims = 0;
         socket.on('progressbar', function (data) {
-            data = JSON.parse(data);
             console.log(data);
-
             if (data['start']) {
                 num_sims = data['num_sims'];
                 console.log("Total sims: " + num_sims);
@@ -66,6 +64,11 @@
             var width = (progress / num_sims) * 100;
             console.log("New width: " + width);
             $("#progressbar-inner").css("width", width + "%").attr('aria-valuenow', width);
+        });
+
+        socket.on("guild-result", function (data) {
+            console.log("SIM RESULT:");
+            console.log(data);
         });
 
         $(function () {
@@ -98,13 +101,16 @@
                         }).done(
                         function (data) {
                             // $("#guild-report-printout").html(data);
-                            $("#submitguild").html("Submit");
+                            var sg = $("#submitguild");
 
                             if (data["status"] == "success") {
-                                setSpinnerListeners(this);
+                                setSpinnerListeners(sg, spinnerStr);
+                                // remove any errors
+                                $("#gr-alert").html("");
                                 // Remove spinner
                                 // print big response
                             } else {
+                                sg.html("Submit");
                                 guildError('alert-danger', data["message"]);
                             }
                         }
@@ -124,7 +130,7 @@
                     $(this).unbind("mouseout");
 
                     $.post(
-                        "cancel/" + jobID,
+                        "cancel/" + clientID,
                         function (data) {
                             $("#guild-report-printout").html(data);
                             // Remove spinner
@@ -150,7 +156,7 @@
                 "&times;</span></button> " + errorText + " </div>");
         }
 
-        function setSpinnerListeners(currObj) {
+        function setSpinnerListeners(currObj, spinnerStr) {
             $(currObj).mouseover(function () {
                 $(this).html("Cancel " + spinnerStr);
                 $(this).removeClass('btn-default');

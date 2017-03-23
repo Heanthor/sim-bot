@@ -1,10 +1,13 @@
 import threading
 
+import time
+
+from flask import copy_current_request_context
 from flask import json, jsonify
 
 from flask import Flask
 from flask import render_template, request
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO
 
 from src.simbot import SimBotConfig, SimcraftBot
 
@@ -44,15 +47,16 @@ with open('simbot_params.json', 'r') as f:
 
 # thread target
 def check_sim_status(queue, client_id):
-    while True:
-        # print("Eventlet thread started")
-        message = queue.get()
-        print("MESSAGE IN SITE: " + str(message))
-        # with app.app_context():
-        #     socketio.emit("progressbar", json.dumps(message))
-        # send message to correct client
-        client_socket[client_id].emit("progressbar", json.dumps(message))
-        queue.task_done()
+    with app.test_request_context():
+        while True:
+            # print("Eventlet thread started")
+            message = queue.get()
+            print("MESSAGE IN SITE: " + str(message))
+            # with app.app_context():
+            #     socketio.emit("progressbar", json.dumps(message))
+            # send message to correct client
+            client_socket[client_id].emit("progressbar", message)
+            queue.task_done()
 
 
 # def report_sim_update(message):
@@ -61,13 +65,43 @@ def check_sim_status(queue, client_id):
 #         socketio.emit("progressbar", json.dumps(message))
 
 
-def check_task_progress(id):
-    pass
+# thread to check task progress.
+# cycle through all running tasks, query their status
+# if ready, send a socketio message to that client, along with the data
+def check_task_progress():
+    logger.debug("Task progress thread started")
+
+    with app.test_request_context():
+        while True:
+            for client_id, task in list(all_running_jobs.items()):
+                if task.ready():
+                    sock = client_socket[client_id]
+
+                    try:
+                        result = task.get()
+
+                        sock.emit("guild-result", {
+                            "status": "success",
+                            "message": "Sim complete",
+                            "data": result  # result is a dict
+                        })
+                    except Exception:
+                        # error
+                        sock.emit("guild-result", {
+                            "status": "error",
+                            "message": "Internal server error"
+                        })
+
+                        # task is dead now
+                        del all_running_jobs[client_id]
+            # can tune this for faster response
+            time.sleep(0.1)
 
 
 @app.route("/")
 def main():
     return render_template("main.html")
+
 
 pool = ThreadPool(processes=1)
 
@@ -96,25 +130,20 @@ def all_sims():
     sb = SimcraftBot(sbc)
 
     # TODO multiple jobs
-    try:
 
-        threading.Thread(target=check_sim_status, args=(sb.event_queue, job_id), daemon=True).start()
+    threading.Thread(target=check_sim_status, args=(sb.event_queue, job_id), daemon=True).start()
 
-        # TODO return from this immediately, but keep the result going, send it back later
-        # async_result = pool.apply_async(sb.run_all_sims)
-        # all_running_jobs[job_id] = async_result
-        #
-        # result = async_result.get()
+    # TODO return from this immediately, but keep the result going, send it back later
+    async_result = pool.apply_async(sb.run_all_sims)
+    all_running_jobs[job_id] = async_result
 
-        result = sb.run_all_sims()
-    except Exception as e:
-        logger.exception("SimBot exception")
-        return jsonify({
-            "status": "error",
-            "message": str(e)
-        })
+    logger.debug("Queued task for client %s", job_id)
+    # result = sb.run_all_sims()
 
-    return jsonify(result)
+    return jsonify({
+        "status": "success",
+        "message": "Task queued,"
+    })
 
 
 @app.route("/sim/", methods=["POST"])
@@ -145,5 +174,10 @@ def client_connected():
 def handshake_client(data):
     client_socket[data['data']] = sockets[request.sid]
 
+
 if __name__ == "__main__":
+    SimBotConfig.init_logger(False, saved_params["log_path"])
+
+    # task response thread
+    threading.Thread(target=check_task_progress).start()
     socketio.run(app, debug=True)
