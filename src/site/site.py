@@ -14,6 +14,9 @@ from src.simbot import SimBotConfig, SimcraftBot
 app = Flask(__name__)
 socketio = SocketIO(app)
 
+# reference to SimcraftBot objects
+all_running_jobs = {}
+
 with open('simbot_params.json', 'r') as f:
     saved_params = json.loads(f.read())
 
@@ -41,13 +44,21 @@ def main():
     return render_template("main.html")
 
 
-@app.route("/all_sims/", methods=["GET"])
+@app.route("/all_sims/", methods=["POST"])
 def all_sims():
-    region = request.args.get('region')
-    difficulty = request.args.get('difficulty')
-    weeks = request.args.get('weeks')
-    guild = request.args.get('guild')
-    realm = request.args.get('realm')
+    job_id = request.form.get('jobID')
+
+    if job_id in all_running_jobs:
+        return jsonify({
+            "status": "error",
+            "message": "Job already started."
+        }), 400
+
+    region = request.form.get('region')
+    difficulty = request.form.get('difficulty')
+    weeks = request.form.get('weeks')
+    guild = request.form.get('guild')
+    realm = request.form.get('realm')
 
     sbc = SimBotConfig()
     sbc.init_args(guild, realm, saved_params["simc_location"], saved_params["config_path"],
@@ -56,8 +67,17 @@ def all_sims():
 
     sb = SimcraftBot(sbc)
 
-    t = threading.Thread(target=check_sim_status, args=(sb.event_queue,), daemon=True)
-    t.start()
+    # TODO multiple jobs
+    try:
+        all_running_jobs[job_id] = sb
+
+        t = threading.Thread(target=check_sim_status, args=(sb.event_queue,), daemon=True)
+        t.start()
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
     # eventlet.spawn(check_sim_status, sb.event_queue)
     # sb.register_alert_func(report_sim_update)
 
@@ -68,6 +88,19 @@ def all_sims():
 @app.route("/sim/", methods=["GET"])
 def sim_single():
     pass
+
+
+@app.route("/cancel/<job_id>", methods=["POST"])
+def cancel_job(job_id=None):
+    job = all_running_jobs[job_id]
+
+    del job
+    print("Cancel! job %s" % job_id)
+
+    return jsonify({
+        "status": "success",
+        "message": "Job cancelled."
+    })
 
 
 @socketio.on('my event')
