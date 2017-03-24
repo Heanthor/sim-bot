@@ -1,0 +1,684 @@
+{
+   "Arvhaax":{
+      "error":"No logs on record."
+   },
+   "Doomstorm":{
+      "error":"No logs on record."
+   },
+   "Stachio":{
+      "error":"No kills in the given time window."
+   },
+   "Seymoursays":{
+      "error":"No logs on record."
+   },
+   "Karendis":{
+      "Skorpyron":{
+         "average_dps":662326.6666666666,
+         "num_fights":3,
+         "sim_dps":853390,
+         "percent_potential":77.61125237777179
+      },
+      "Chronomatic Anomaly":{
+         "average_dps":632642.6666666666,
+         "num_fights":3,
+         "sim_dps":664042,
+         "percent_potential":95.27148383184597
+      },
+      "Trilliax":{
+         "average_dps":514276.0,
+         "num_fights":3,
+         "sim_dps":664042,
+         "percent_potential":77.44630610714383
+      },
+      "Spellblade Aluriel":{
+         "average_dps":599502.3333333334,
+         "num_fights":3,
+         "sim_dps":853390,
+         "percent_potential":70.24951468066574
+      },
+      "Tichondrius":{
+         "average_dps":544693.0,
+         "num_fights":4,
+         "sim_dps":979227,
+         "percent_potential":55.62479384249005
+      },
+      "Star Augur Etraeus":{
+         "average_dps":499451.75,
+         "num_fights":4,
+         "sim_dps":664042,
+         "percent_potential":75.2138795437638
+      },
+      "Krosus":{
+         "average_dps":451441.75,
+         "num_fights":4,
+         "sim_dps":664042,
+         "percent_potential":67.9839151740402
+      },
+      "High Botanist Tel'arn":{
+         "average_dps":550914.0,
+         "num_fights":3,
+         "sim_dps":853390,
+         "percent_potential":64.5559474566142
+      },
+      "Grand Magistrix Elisande":{
+         "average_dps":433833.3333333333,
+         "num_fights":3,
+         "sim_dps":649923,
+         "percent_potential":66.75149722864606
+      },
+      "Gul'dan":{
+         "average_dps":444086.0,
+         "num_fights":1,
+         "sim_dps":649923,
+         "percent_potential":68.32901743745028
+      },
+      "average_performance":71.9037607680432,
+      "elapsed_time":15.35300350189209
+   },
+   "Zulrahn":{
+      "Skorpyron":{
+         "average_dps":758782.3333333334,
+         "num_fights":3,
+         "sim_dps":1122388,
+         "percent_potential":67.60428063497947
+      },
+      "Chronomatic Anomaly":{
+         "average_dps":545738.0,
+         "num_fights":3,
+         "sim_dps":589796,
+         "percent_potential":92.52995951142428
+      },
+      "Trilliax":{
+         "average_dps":425756.6666666667,
+         "num_fights":3,
+         "sim_dps":589796,
+         "percent_potential":72.18710650236127
+      },
+      "Spellblade Aluriel":{
+         "average_dps":604284.3333333334,
+         "num_fights":3,
+         "sim_dps":1122388,
+         "percent_potential":53.839165541090374
+      },
+      "Tichondrius":{
+         "average_dps":627799.0,
+         "num_fights":3,
+         "sim_dps":1156810,
+         "percent_potential":54.269845523465385
+      },
+      "Star Augur Etraeus":{
+         "average_dps":510781.6666666667,
+         "num_fights":3,
+         "sim_dps":589796,
+         "percent_potential":86.60310796727457
+      },
+      "Krosus":{
+         "average_dps":461050.6666666667,
+         "num_fights":3,
+         "sim_dps":589796,
+         "percent_potential":78.1712094803401
+      },
+      "High Botanist Tel'arn":{
+         "average_dps":506082.5,
+         "num_fights":2,
+         "sim_dps":1122388,
+         "percent_potential":45.089799605840405
+      },
+      "Grand Magistrix Elisande":{
+         "average_dps":469981.0,
+         "num_fights":2,
+         "sim_dps":589208,
+         "percent_potential":79.7648708096292
+      },
+      "average_performance":70.0065939529339,
+      "elapsed_time":16.963823318481445
+   },
+   "Giasham":{
+      "Skorpyron":{
+         "average_dps":809266.0,
+         "num_fights":1,
+         "sim_dps":876931,
+         "percent_potential":92.283885505245
+      },
+      "Chronomatic Anomaly":{
+         "average_dps":799413.0,
+         "num_fights":1,
+         "sim_dps":469677,
+         "percent_potential":170.2048429026757
+      },
+      "Trilliax":{
+         "average_dps":498624.0,
+         "num_fights":1,
+         "sim_dps":469677,
+         "percent_potential":106.16317171162308
+      },
+      "Spellblade Aluriel":{
+         "average_dps":745180.0,
+         "num_fights":1,
+         "sim_dps":876931,
+         "percent_potential":84.97589890196606
+      },
+      "Tichondrius":{
+         "average_dps":539275.0,
+         "num_fights":1,
+         "sim_dps":910399,
+         "percent_potential":59.23501673442084
+      },
+      "Star Augur Etraeus":{
+         "average_dps":604443.0,
+         "num_fights":1,
+         "sim_dps":469677,
+         "percent_potential":128.6933360586105
+      },
+      "Krosus":{
+         "average_dps":572505.0,
+         "num_fights":1,
+         "sim_dps":469677,
+         "percent_potential":121.8933437234525
+      },
+      "High Botanist Tel'arn":{
+         "average_dps":402510.0,
+         "num_fights":1,
+         "sim_dps":876931,
+         "percent_potential":45.8998484487377
+      },
+      "average_performance":101.16866799834142,
+      "elapsed_time":18.95897150039673
+   },
+   "Zhul\u00ec":{
+      "error":"No logs on record."
+   },
+   "Rollthebones":{
+      "error":"No logs on record."
+   },
+   "Heanthor":{
+      "Skorpyron":{
+         "average_dps":1030055.3333333334,
+         "num_fights":3,
+         "sim_dps":1072672,
+         "percent_potential":96.02705517934031
+      },
+      "Chronomatic Anomaly":{
+         "average_dps":710401.3333333334,
+         "num_fights":3,
+         "sim_dps":720596,
+         "percent_potential":98.58524517667783
+      },
+      "Trilliax":{
+         "average_dps":621484.3333333334,
+         "num_fights":3,
+         "sim_dps":720596,
+         "percent_potential":86.24587609885891
+      },
+      "Spellblade Aluriel":{
+         "average_dps":890343.3333333334,
+         "num_fights":3,
+         "sim_dps":1072672,
+         "percent_potential":83.00238407764287
+      },
+      "Tichondrius":{
+         "average_dps":788801.5,
+         "num_fights":4,
+         "sim_dps":1317005,
+         "percent_potential":59.89358430681736
+      },
+      "Star Augur Etraeus":{
+         "average_dps":595614.75,
+         "num_fights":4,
+         "sim_dps":720596,
+         "percent_potential":82.65585015736974
+      },
+      "Krosus":{
+         "average_dps":609589.5,
+         "num_fights":4,
+         "sim_dps":720596,
+         "percent_potential":84.5951823213007
+      },
+      "High Botanist Tel'arn":{
+         "average_dps":701073.0,
+         "num_fights":2,
+         "sim_dps":1072672,
+         "percent_potential":65.35763029145909
+      },
+      "Grand Magistrix Elisande":{
+         "average_dps":509371.6666666667,
+         "num_fights":3,
+         "sim_dps":696289,
+         "percent_potential":73.15520806255257
+      },
+      "Gul'dan":{
+         "average_dps":579125.0,
+         "num_fights":1,
+         "sim_dps":696289,
+         "percent_potential":83.17307899449797
+      },
+      "average_performance":81.26910946665174,
+      "elapsed_time":12.927616119384766
+   },
+   "Pazh":{
+      "Skorpyron":{
+         "average_dps":610327.0,
+         "num_fights":2,
+         "sim_dps":899321,
+         "percent_potential":67.86531171850763
+      },
+      "Chronomatic Anomaly":{
+         "average_dps":600304.0,
+         "num_fights":2,
+         "sim_dps":676192,
+         "percent_potential":88.77715205148834
+      },
+      "Trilliax":{
+         "average_dps":530838.0,
+         "num_fights":2,
+         "sim_dps":676192,
+         "percent_potential":78.50403435710568
+      },
+      "Spellblade Aluriel":{
+         "average_dps":576118.0,
+         "num_fights":2,
+         "sim_dps":899321,
+         "percent_potential":64.06144191006325
+      },
+      "Tichondrius":{
+         "average_dps":525244.0,
+         "num_fights":3,
+         "sim_dps":854627,
+         "percent_potential":61.45885865997681
+      },
+      "Star Augur Etraeus":{
+         "average_dps":498909.3333333333,
+         "num_fights":3,
+         "sim_dps":676192,
+         "percent_potential":73.78219992743678
+      },
+      "Krosus":{
+         "average_dps":492352.6666666667,
+         "num_fights":3,
+         "sim_dps":676192,
+         "percent_potential":72.81255422522992
+      },
+      "High Botanist Tel'arn":{
+         "average_dps":489937.0,
+         "num_fights":2,
+         "sim_dps":899321,
+         "percent_potential":54.47854548042357
+      },
+      "Grand Magistrix Elisande":{
+         "average_dps":368688.6666666667,
+         "num_fights":3,
+         "sim_dps":664919,
+         "percent_potential":55.44865865867371
+      },
+      "Gul'dan":{
+         "average_dps":458999.0,
+         "num_fights":1,
+         "sim_dps":664919,
+         "percent_potential":69.03081427963406
+      },
+      "average_performance":68.62195712685397,
+      "elapsed_time":13.597320079803467
+   },
+   "Brokenkey":{
+      "Skorpyron":{
+         "average_dps":807079.5,
+         "num_fights":2,
+         "sim_dps":779099,
+         "percent_potential":103.5913921080633
+      },
+      "Chronomatic Anomaly":{
+         "average_dps":732747.0,
+         "num_fights":2,
+         "sim_dps":691175,
+         "percent_potential":106.01468513762795
+      },
+      "Trilliax":{
+         "average_dps":561598.0,
+         "num_fights":2,
+         "sim_dps":691175,
+         "percent_potential":81.25264947372229
+      },
+      "Spellblade Aluriel":{
+         "average_dps":654452.0,
+         "num_fights":2,
+         "sim_dps":779099,
+         "percent_potential":84.00113464399261
+      },
+      "Tichondrius":{
+         "average_dps":603749.0,
+         "num_fights":3,
+         "sim_dps":521330,
+         "percent_potential":115.80937218268659
+      },
+      "Star Augur Etraeus":{
+         "average_dps":544006.5,
+         "num_fights":4,
+         "sim_dps":691175,
+         "percent_potential":78.70749086700184
+      },
+      "Krosus":{
+         "average_dps":553192.5,
+         "num_fights":4,
+         "sim_dps":691175,
+         "percent_potential":80.03653199262126
+      },
+      "High Botanist Tel'arn":"SimulationCraft threw an error while running the sim.",
+      "Grand Magistrix Elisande":{
+         "average_dps":430035.3333333333,
+         "num_fights":3,
+         "sim_dps":669556,
+         "percent_potential":64.22694044013247
+      },
+      "Gul'dan":{
+         "average_dps":443324.0,
+         "num_fights":1,
+         "sim_dps":669556,
+         "percent_potential":66.21163875762446
+      },
+      "average_performance":86.65020395594142,
+      "elapsed_time":29.830709218978882
+   },
+   "R\u00e5ekwon":{
+      "Skorpyron":{
+         "average_dps":962078.0,
+         "num_fights":2,
+         "sim_dps":1083732,
+         "percent_potential":88.77453097260208
+      },
+      "Chronomatic Anomaly":{
+         "average_dps":772470.0,
+         "num_fights":2,
+         "sim_dps":829959,
+         "percent_potential":93.07327229417356
+      },
+      "Trilliax":{
+         "average_dps":672533.0,
+         "num_fights":2,
+         "sim_dps":829959,
+         "percent_potential":81.03207507840749
+      },
+      "Spellblade Aluriel":{
+         "average_dps":750600.0,
+         "num_fights":2,
+         "sim_dps":1083732,
+         "percent_potential":69.26066592109488
+      },
+      "Tichondrius":{
+         "average_dps":656782.6666666666,
+         "num_fights":3,
+         "sim_dps":1044018,
+         "percent_potential":62.90913247345033
+      },
+      "Star Augur Etraeus":{
+         "average_dps":625977.3333333334,
+         "num_fights":3,
+         "sim_dps":829959,
+         "percent_potential":75.42268152201896
+      },
+      "Krosus":{
+         "average_dps":639564.0,
+         "num_fights":3,
+         "sim_dps":829959,
+         "percent_potential":77.0597101784546
+      },
+      "High Botanist Tel'arn":{
+         "average_dps":685517.0,
+         "num_fights":2,
+         "sim_dps":1083732,
+         "percent_potential":63.255214388797235
+      },
+      "Grand Magistrix Elisande":{
+         "average_dps":516884.0,
+         "num_fights":3,
+         "sim_dps":826003,
+         "percent_potential":62.576528172415834
+      },
+      "Gul'dan":{
+         "average_dps":627960.0,
+         "num_fights":1,
+         "sim_dps":826003,
+         "percent_potential":76.02393695906673
+      },
+      "average_performance":74.93877479604816,
+      "elapsed_time":11.329497814178467
+   },
+   "Thanaton":{
+      "Skorpyron":"No kills logged for this boss.",
+      "Chronomatic Anomaly":"No kills logged for this boss.",
+      "Trilliax":"No kills logged for this boss.",
+      "Spellblade Aluriel":"No kills logged for this boss.",
+      "Tichondrius":{
+         "average_dps":595508.0,
+         "num_fights":1,
+         "sim_dps":1075354,
+         "percent_potential":55.37785696617114
+      },
+      "Star Augur Etraeus":{
+         "average_dps":519789.0,
+         "num_fights":1,
+         "sim_dps":621393,
+         "percent_potential":83.64899508040806
+      },
+      "Krosus":{
+         "average_dps":520713.0,
+         "num_fights":1,
+         "sim_dps":621393,
+         "percent_potential":83.79769324726864
+      },
+      "High Botanist Tel'arn":{
+         "average_dps":571780.0,
+         "num_fights":1,
+         "sim_dps":992433,
+         "percent_potential":57.61396487218785
+      },
+      "Grand Magistrix Elisande":{
+         "average_dps":504682.0,
+         "num_fights":1,
+         "sim_dps":588744,
+         "percent_potential":85.72180778063131
+      },
+      "Gul'dan":{
+         "average_dps":473430.0,
+         "num_fights":1,
+         "sim_dps":588744,
+         "percent_potential":80.41355835473483
+      },
+      "average_performance":74.42897938356698,
+      "elapsed_time":16.26026725769043
+   },
+   "Kewnik":{
+      "error":"No kills in the given time window."
+   },
+   "Grind\u00e9lwald":{
+      "Skorpyron":{
+         "average_dps":804289.0,
+         "num_fights":2,
+         "sim_dps":842197,
+         "percent_potential":95.49891533691049
+      },
+      "Chronomatic Anomaly":{
+         "average_dps":628344.0,
+         "num_fights":2,
+         "sim_dps":666607,
+         "percent_potential":94.26003627324646
+      },
+      "Trilliax":{
+         "average_dps":553624.0,
+         "num_fights":2,
+         "sim_dps":666607,
+         "percent_potential":83.05103306745953
+      },
+      "Spellblade Aluriel":{
+         "average_dps":575623.6666666666,
+         "num_fights":3,
+         "sim_dps":842197,
+         "percent_potential":68.34786477114815
+      },
+      "Tichondrius":{
+         "average_dps":519869.0,
+         "num_fights":4,
+         "sim_dps":963131,
+         "percent_potential":53.97697717132976
+      },
+      "Star Augur Etraeus":{
+         "average_dps":501041.25,
+         "num_fights":4,
+         "sim_dps":666607,
+         "percent_potential":75.16291458085499
+      },
+      "Krosus":{
+         "average_dps":517214.75,
+         "num_fights":4,
+         "sim_dps":666607,
+         "percent_potential":77.5891567295273
+      },
+      "High Botanist Tel'arn":{
+         "average_dps":559056.6666666666,
+         "num_fights":3,
+         "sim_dps":842197,
+         "percent_potential":66.38074781395169
+      },
+      "Grand Magistrix Elisande":{
+         "average_dps":407619.3333333333,
+         "num_fights":3,
+         "sim_dps":657152,
+         "percent_potential":62.028165984937026
+      },
+      "Gul'dan":{
+         "average_dps":382017.0,
+         "num_fights":1,
+         "sim_dps":657152,
+         "percent_potential":58.13221294312427
+      },
+      "average_performance":73.44280246724895,
+      "elapsed_time":14.254976511001587
+   },
+   "Valeratis":{
+      "Skorpyron":{
+         "average_dps":782043.3333333334,
+         "num_fights":3,
+         "sim_dps":929879,
+         "percent_potential":84.10162325779305
+      },
+      "Chronomatic Anomaly":{
+         "average_dps":729327.3333333334,
+         "num_fights":3,
+         "sim_dps":711732,
+         "percent_potential":102.47218522327692
+      },
+      "Trilliax":{
+         "average_dps":620457.6666666666,
+         "num_fights":3,
+         "sim_dps":711732,
+         "percent_potential":87.17574405347331
+      },
+      "Spellblade Aluriel":{
+         "average_dps":775392.3333333334,
+         "num_fights":3,
+         "sim_dps":929879,
+         "percent_potential":83.38636890749585
+      },
+      "Tichondrius":{
+         "average_dps":692788.75,
+         "num_fights":4,
+         "sim_dps":1038700,
+         "percent_potential":66.69767497833831
+      },
+      "Star Augur Etraeus":{
+         "average_dps":598308.25,
+         "num_fights":4,
+         "sim_dps":711732,
+         "percent_potential":84.06369953859037
+      },
+      "Krosus":{
+         "average_dps":687093.5,
+         "num_fights":4,
+         "sim_dps":711732,
+         "percent_potential":96.53823349238196
+      },
+      "High Botanist Tel'arn":{
+         "average_dps":659380.0,
+         "num_fights":3,
+         "sim_dps":929879,
+         "percent_potential":70.91030123274103
+      },
+      "Grand Magistrix Elisande":{
+         "average_dps":541094.3333333334,
+         "num_fights":3,
+         "sim_dps":696870,
+         "percent_potential":77.64638072141624
+      },
+      "Gul'dan":{
+         "average_dps":569763.0,
+         "num_fights":1,
+         "sim_dps":696870,
+         "percent_potential":81.76029962546816
+      },
+      "average_performance":83.47525110309752,
+      "elapsed_time":17.3223774433136
+   },
+   "Odiwanken\u00f2b":{
+      "Skorpyron":"No kills logged for this boss.",
+      "Chronomatic Anomaly":"No kills logged for this boss.",
+      "Trilliax":"No kills logged for this boss.",
+      "Spellblade Aluriel":"No kills logged for this boss.",
+      "Tichondrius":{
+         "average_dps":407734.0,
+         "num_fights":1,
+         "sim_dps":1188049,
+         "percent_potential":34.31962823082213
+      },
+      "Star Augur Etraeus":{
+         "average_dps":473127.0,
+         "num_fights":1,
+         "sim_dps":572976,
+         "percent_potential":82.57361564882298
+      },
+      "Krosus":"No kills logged for this boss.",
+      "High Botanist Tel'arn":"No kills logged for this boss.",
+      "average_performance":58.446621939822556,
+      "elapsed_time":8.221035242080688
+   },
+   "Halion":{
+      "error":"No logs on record."
+   },
+   "Thugenz":{
+      "Skorpyron":"No kills logged for this boss.",
+      "Chronomatic Anomaly":"No kills logged for this boss.",
+      "Trilliax":"No kills logged for this boss.",
+      "Spellblade Aluriel":"No kills logged for this boss.",
+      "Tichondrius":"No kills logged for this boss.",
+      "Star Augur Etraeus":{
+         "average_dps":474356.0,
+         "num_fights":1,
+         "sim_dps":591981,
+         "percent_potential":80.13027445137597
+      },
+      "Krosus":"No kills logged for this boss.",
+      "High Botanist Tel'arn":"No kills logged for this boss.",
+      "Grand Magistrix Elisande":{
+         "average_dps":388689.0,
+         "num_fights":1,
+         "sim_dps":557386,
+         "percent_potential":69.73425956159646
+      },
+      "Gul'dan":{
+         "average_dps":460061.0,
+         "num_fights":1,
+         "sim_dps":557386,
+         "percent_potential":82.53903040262942
+      },
+      "average_performance":77.46785480520062,
+      "elapsed_time":4.0587379932403564
+   },
+   "Heanth\u00f8r":{
+      "error":"No logs on record."
+   },
+   "Thugy":{
+      "error":"No kills in the given time window."
+   },
+   "Karendas":{
+      "error":"No kills in the given time window."
+   },
+   "guild_avg":76.81838148031254
+}

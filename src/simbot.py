@@ -404,7 +404,7 @@ if __name__ == '__main__':
     sb = SimcraftBot(sbc)
 
     start = time.time()
-    pprint.pprint(sb.run_all_sims())
+    print(json.dumps(sb.run_all_sims()))
     end = time.time() - start
 
     logger.info("App finished in %.2f seconds (%.2f minutes)", end, end / 60)

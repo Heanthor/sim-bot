@@ -45,10 +45,14 @@
         socket.on('progressbar', function (data) {
             console.log(data);
             var gpb = $("#guild-progress-bar");
+            var pbi = $("#progressbar-inner");
 
             if (data['start']) {
                 num_sims = data['num_sims'];
                 console.log("Total sims: " + num_sims);
+                // Reset all progress bar variables
+                progress = 0;
+                setBarWidth(pbi, 0);
                 gpb.show();
 
             } else if (data['done']) {
@@ -65,7 +69,7 @@
 
             var width = (progress / num_sims) * 100;
             console.log("New width: " + width);
-            $("#progressbar-inner").css("width", width + "%").attr('aria-valuenow', width);
+            setBarWidth(pbi, width);
         });
 
         socket.on("guild-result", function (data) {
@@ -192,6 +196,10 @@
 
         function generateUniqueID() {
             return Math.random().toString(36).substring(7);
+        }
+
+        function setBarWidth(bar, percent) {
+            bar.css("width", percent + "%").attr('aria-valuenow', percent);
         }
 
     </script>
