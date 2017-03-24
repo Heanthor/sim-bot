@@ -12,6 +12,7 @@ import sys
 import argparse
 from enum import Enum
 from queue import Queue
+import _thread
 
 from src.api.battlenet import BattleNet
 from src.api.simcraft import SimulationCraft
@@ -70,6 +71,9 @@ class SimcraftBot:
         # alert thread for sim progress
         self.event_queue = Queue()
 
+        # set by another thread to indicate processing should stop early and result is not wanted
+        self.cancelFlag = False
+
     def run_all_sims(self):
         """
         Run sims for each DPS player in the guild.
@@ -97,6 +101,11 @@ class SimcraftBot:
         })
 
         for player in names["DPS"]:
+            if self.cancelFlag:
+                # kill this simbot in the hottest loop
+                logger.debug("Cancelled job for %s", player["name"])
+                _thread.exit()
+
             results = self.sim_single_character(player["name"], player["realm"])
 
             guild_sims[player["name"]] = results
@@ -190,6 +199,11 @@ class SimcraftBot:
                 continue
 
             for kill in stats:
+                if self.cancelFlag:
+                    # kill this simbot in the hottest loop
+                    logger.debug("Cancelled job for %s" % player)
+                    _thread.exit()
+
                 if kill["dps"] > max_dps:
                     max_dps = kill["dps"]
                     max_dps_spec = kill["spec"].lower()

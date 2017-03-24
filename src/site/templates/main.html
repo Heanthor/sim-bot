@@ -67,8 +67,12 @@
         });
 
         socket.on("guild-result", function (data) {
-            console.log("SIM RESULT:");
-            console.log(data);
+            // listener for error or finished results
+{#            console.log("SIM RESULT:");#}
+{#            console.log(data);#}
+
+            resetButton($("#submitguild"));
+            guildError('alert-danger', data["message"]);
         });
 
         $(function () {
@@ -122,19 +126,17 @@
 
                 } else {
                     // clicking cancel
-                    $(this).html("Submit");
-                    $(this).removeClass('btn-danger');
-                    $(this).addClass('btn-default');
-
-                    $(this).unbind("mouseover");
-                    $(this).unbind("mouseout");
+                    resetButton(this);
 
                     $.post(
                         "cancel/" + clientID,
                         function (data) {
                             $("#guild-report-printout").html(data);
                             // Remove spinner
-                            $(this).html("Submit")
+                            $(this).html("Submit");
+
+                            // hide progressbar
+                            $("#guild-progress-bar").hide();
                         }
                     );
                 }
@@ -166,6 +168,15 @@
                 $(this).removeClass('btn-danger');
                 $(this).addClass('btn-default');
             });
+        }
+
+        function resetButton(button) {
+            $(button).html("Submit");
+            $(button).removeClass('btn-danger');
+            $(button).addClass('btn-default');
+
+            $(button).unbind("mouseover");
+            $(button).unbind("mouseout");
         }
 
         function generateUniqueID() {

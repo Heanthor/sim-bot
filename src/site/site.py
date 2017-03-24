@@ -2,7 +2,6 @@ import threading
 
 import time
 
-from flask import copy_current_request_context
 from flask import json, jsonify
 
 from flask import Flask
@@ -73,7 +72,7 @@ def check_task_progress():
 
     with app.test_request_context():
         while True:
-            for client_id, task in list(all_running_jobs.items()):
+            for client_id, (task, simbot_obj) in list(all_running_jobs.items()):
                 if task.ready():
                     sock = client_socket[client_id]
 
@@ -85,11 +84,11 @@ def check_task_progress():
                             "message": "Sim complete",
                             "data": result  # result is a dict
                         })
-                    except Exception:
+                    except Exception as e:
                         # error
                         sock.emit("guild-result", {
                             "status": "error",
-                            "message": "Internal server error"
+                            "message": str(e)
                         })
 
                         # task is dead now
@@ -135,7 +134,7 @@ def all_sims():
 
     # TODO return from this immediately, but keep the result going, send it back later
     async_result = pool.apply_async(sb.run_all_sims)
-    all_running_jobs[job_id] = async_result
+    all_running_jobs[job_id] = (async_result, sb)
 
     logger.debug("Queued task for client %s", job_id)
     # result = sb.run_all_sims()
@@ -153,9 +152,9 @@ def sim_single():
 
 @app.route("/cancel/<job_id>", methods=["POST"])
 def cancel_job(job_id=None):
-    job = all_running_jobs[job_id]
+    job, simbot_obj = all_running_jobs[job_id]
 
-    del job
+    simbot_obj.cancelFlag = True
     print("Cancel! job %s" % job_id)
 
     return jsonify({
