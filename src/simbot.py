@@ -191,6 +191,8 @@ class SimcraftBot:
         scores = {}
         start = time.time()
 
+        scores["bosses"] = []
+
         for boss_name, stats in raiding_stats.items():
             average_dps = 0.0
             average_percentage = 0.0
@@ -202,7 +204,7 @@ class SimcraftBot:
 
             if not stats:
                 # no kills for this boss on record, but other kills are still present
-                scores[boss_name] = SimBotError.NO_KILLS_LOGGED.value
+                scores["bosses"].append({"error": SimBotError.NO_KILLS_LOGGED.value})
                 continue
 
             for kill in stats:
@@ -243,7 +245,7 @@ class SimcraftBot:
 
                 if not sim_results:
                     # simcraft error, results are invalid
-                    scores[boss_name] = SimBotError.SIMCRAFT_ERROR.value
+                    scores["bosses"].append({"error": SimBotError.SIMCRAFT_ERROR.value})
                     sim_cache[tag] = SimBotError.SIMCRAFT_ERROR
 
                     continue
@@ -251,7 +253,7 @@ class SimcraftBot:
                 sim_cache[tag] = sim_results
             else:
                 if isinstance(sim_cache[tag], SimBotError):
-                    scores[boss_name] = sim_cache[tag]
+                    scores["bosses"].append({"error": sim_cache[tag]})
 
                     continue
                 logger.debug("Using cached sim for player %s spec %s fight config %s", player, max_dps_spec,
@@ -272,12 +274,13 @@ class SimcraftBot:
                 player, len(stats), "" if len(stats) == 1 else "s", average_dps, sim_results, boss_name,
                 performance_percent))
 
-            scores[boss_name] = {
+            scores["bosses"].append({
+                "boss_name": boss_name,
                 "average_dps": average_dps,
                 "num_fights": len(stats),
                 "sim_dps": sim_results,
                 "percent_potential": performance_percent
-            }
+            })
 
             scores_lst.append(performance_percent)
 
