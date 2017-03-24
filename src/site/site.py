@@ -85,7 +85,7 @@ def check_task_progress():
                             "data": result  # result is a dict
                         })
                     except Exception as e:
-                        # error
+                        logger.exception(e)
                         sock.emit("guild-result", {
                             "status": "error",
                             "message": str(e)

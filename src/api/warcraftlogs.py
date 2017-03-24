@@ -38,6 +38,19 @@ class WarcraftLogs:
         "warlock": "9"
     }
 
+    NON_DPS_SPECS = [
+        "Guardian",
+        "Protection",
+        "Blood",
+        "Brewmaster",
+        "Vengeance",
+
+        "Mistweaver",
+        "Holy",
+        "Discipline",
+        "Restoration",
+    ]
+
     def __init__(self, api_key):
         self._api_key = api_key
 
@@ -139,8 +152,13 @@ class WarcraftLogs:
 
             for spec in boss["specs"]:
                 spec_str = spec["spec"]
-                if spec_str == "Melee" or spec_str == "Ranged":
+                if spec_str == "Melee" or spec_str == "Ranged" or spec_str == "Healing":
                     # Ignore duplicated array for "all specs"
+                    continue
+
+                # In some cases, a healer can log out in dps spec, causing the armory to return them as dps
+                # We must manually filter healing specs
+                if spec_str in WarcraftLogs.NON_DPS_SPECS:
                     continue
 
                 # "Warrior" for example
