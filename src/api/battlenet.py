@@ -4,11 +4,13 @@ from collections import defaultdict
 
 import time
 
+from src.api import ReportableError
+
 API_URL = "https://us.api.battle.net/"
 logger = logging.getLogger("SimBot")
 
 
-class BattleNetError(Exception):
+class BattleNetError(ReportableError):
     REALM_NOT_FOUND = 1
     GUILD_NOT_FOUND = 2
     OTHER_ERROR = 3

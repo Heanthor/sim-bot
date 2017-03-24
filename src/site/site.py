@@ -8,6 +8,7 @@ from flask import Flask
 from flask import render_template, request
 from flask_socketio import SocketIO
 
+from src.api import ReportableError
 from src.simbot import SimBotConfig, SimcraftBot
 
 from multiprocessing.pool import ThreadPool
@@ -37,6 +38,8 @@ class Socket:
 sockets = {}
 # client ID to socket SID
 client_socket = {}
+# socket ID to client ID
+socket_client = {}
 # reference to SimcraftBot objects
 all_running_jobs = {}
 
@@ -84,11 +87,19 @@ def check_task_progress():
                             "message": "Sim complete",
                             "data": result  # result is a dict
                         })
+
+                        # task is done
+                        del all_running_jobs[client_id]
                     except Exception as e:
+                        if isinstance(e, ReportableError):
+                            # These exceptions have user-friendly messages
+                            msg = str(e)
+                        else:
+                            msg = "Error while processing sim."
                         logger.exception(e)
                         sock.emit("guild-result", {
                             "status": "error",
-                            "message": str(e)
+                            "message": msg
                         })
 
                         # task is dead now
@@ -152,10 +163,19 @@ def sim_single():
 
 @app.route("/cancel/<job_id>", methods=["POST"])
 def cancel_job(job_id=None):
+    if job_id not in all_running_jobs:
+        return jsonify({
+            "status": "error",
+            "message": "Job to delete not found"
+        })
+
     job, simbot_obj = all_running_jobs[job_id]
 
-    simbot_obj.cancelFlag = True
-    print("Cancel! job %s" % job_id)
+    # cause sim to stop at next opportunity
+    simbot_obj.cancel_sim()
+    del all_running_jobs[job_id]
+
+    print("Cancel complete of job %s" % job_id)
 
     return jsonify({
         "status": "success",
@@ -169,9 +189,21 @@ def client_connected():
     print("Client connected")
 
 
+@socketio.on('disconnect')
+def client_disconnected():
+    # cancel the job associated with this client
+    # there will only ever be one job per client
+    print("Client disconnected")
+    if socket_client[request.sid] in all_running_jobs:
+        # client has a job
+        all_running_jobs[socket_client[request.sid]][1].cancel_sim()
+        del all_running_jobs[socket_client[request.sid]]
+
+
 @socketio.on('handshake')
 def handshake_client(data):
     client_socket[data['data']] = sockets[request.sid]
+    socket_client[request.sid] = data['data']
 
 
 if __name__ == "__main__":

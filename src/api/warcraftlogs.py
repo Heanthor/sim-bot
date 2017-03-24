@@ -4,11 +4,13 @@ import datetime
 import requests
 from datetime import timedelta
 
+from src.api import ReportableError
+
 API_URL = "https://www.warcraftlogs.com:443/v1/"
 logger = logging.getLogger("SimBot")
 
 
-class WarcraftLogsError(Exception):
+class WarcraftLogsError(ReportableError):
     EMPTY_RESPONSE = 1
     NO_RECENT_KILLS = 2
     SERVER_ERROR = 3

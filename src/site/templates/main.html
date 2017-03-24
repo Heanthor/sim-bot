@@ -44,9 +44,13 @@
         var num_sims = 0;
         socket.on('progressbar', function (data) {
             console.log(data);
+            var gpb = $("#guild-progress-bar");
+
             if (data['start']) {
                 num_sims = data['num_sims'];
                 console.log("Total sims: " + num_sims);
+                gpb.show();
+
             } else if (data['done']) {
                 // new player is done
                 progress++;
@@ -58,8 +62,6 @@
                 setProgressbarText("Finished " + data["player"] + " - " + data["boss"]);
             }
 
-            var gpb = $("#guild-progress-bar");
-            gpb.show();
 
             var width = (progress / num_sims) * 100;
             console.log("New width: " + width);
@@ -68,11 +70,20 @@
 
         socket.on("guild-result", function (data) {
             // listener for error or finished results
-{#            console.log("SIM RESULT:");#}
-{#            console.log(data);#}
+            {#            console.log("SIM RESULT:");#}
+            {#            console.log(data);#}
 
-            resetButton($("#submitguild"));
-            guildError('alert-danger', data["message"]);
+            if (data["status"] == "success") {
+                // sim is complete
+                guildError('alert-success', "Guild sim complete!");
+                resetButton($("#submitguild"));
+                $("#guild-progress-bar").hide();
+                // TODO
+            } else {
+                resetButton($("#submitguild"));
+                guildError('alert-danger', data["message"]);
+                $("#guild-progress-bar").hide()
+            }
         });
 
         $(function () {

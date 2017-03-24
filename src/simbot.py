@@ -72,7 +72,14 @@ class SimcraftBot:
         self.event_queue = Queue()
 
         # set by another thread to indicate processing should stop early and result is not wanted
-        self.cancelFlag = False
+        self._cancelFlag = False
+
+    def cancel_sim(self):
+        """
+        Causes any running sim job to be cancelled at the earliest opportunity.
+        :return:
+        """
+        self._cancelFlag = True
 
     def run_all_sims(self):
         """
@@ -101,7 +108,7 @@ class SimcraftBot:
         })
 
         for player in names["DPS"]:
-            if self.cancelFlag:
+            if self._cancelFlag:
                 # kill this simbot in the hottest loop
                 logger.debug("Cancelled job for %s", player["name"])
                 _thread.exit()
@@ -199,7 +206,7 @@ class SimcraftBot:
                 continue
 
             for kill in stats:
-                if self.cancelFlag:
+                if self._cancelFlag:
                     # kill this simbot in the hottest loop
                     logger.debug("Cancelled job for %s" % player)
                     _thread.exit()
