@@ -27,6 +27,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/mainstyle.css') }}">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="{{ url_for('static', filename='js/jquery.collapse.js') }}"></script>
+
 
     {#    <script src="{{ url_for('static', filename='js/main.js') }}"></script>#}
     <script type="text/javascript" charset="utf-8">
@@ -82,6 +84,9 @@
                 guildError('alert-success', "Guild sim complete!");
                 resetButton($("#submitguild"));
                 $("#guild-progress-bar").hide();
+
+                console.log(data['data']);
+                $("#guild-report-printout").html(listFromSimResults2(data['data']));
                 // TODO
             } else {
                 resetButton($("#submitguild"));
@@ -200,6 +205,70 @@
 
         function setBarWidth(bar, percent) {
             bar.css("width", percent + "%").attr('aria-valuenow', percent);
+        }
+
+        function listFromSimResults(json) {
+            // http://www.bootply.com/tGF9MEGbLM
+            var list = "<div id='menu'><div class='panel list-group'>";
+
+            $.each(json, function (playerName, value) {
+                if (value.hasOwnProperty("error")) {
+                    // exclude from list
+                    // list += "<a href='#' class='list-group-item'>" + value["error"] + "</a>"
+                } else if (value.hasOwnProperty("guild_avg")) {
+                    console.log("Guild average: " + value['guild_avg']);
+                }
+                else {
+                    list += "<a href='javascript:void(0);' class='list-group-item' data-toggle='collapse' data-target='#sm-" + playerName + "' data-parent='#menu'> " + playerName + "</a>";
+
+
+                    list += "<div id='sm-" + playerName + "' class='sublinks collapse'>";
+                    list += "<a href='javascript:void(0);' class='list-group-item'> Average performance: " + Math.round(value["average_performance"] * 100) / 100 + "%</a>";
+
+
+                    $.each(value['bosses'], function (ind, b) {
+                        list += "<a href='javascript:void(0);' class='list-group-item' data-toggle='collapse' data-target='#sm-" + playerName + b["boss_name"].replace(" ", "-") + "' data-parent='#sm-" + playerName +
+                        "'> " + b["boss_name"] + "</a>";
+
+                        list += "<div id='sm-" + playerName + b["boss_name"].replace(" ", "-") + "' class='sublinks collapse'>";
+                        list += "<a href='javascript:void(0);' class='list-group-item'>" + "Average dps: " + Math.round(b['average_dps']);
+                        list += "<a href='javascript:void(0);' class='list-group-item'>" + "Sim dps: " + b['sim_dps'];
+                        list += "<a href='javascript:void(0);' class='list-group-item'>" + "Performance: " + Math.round(b["percent_potential"] * 100) / 100 + "%</div>";
+                    });
+                    list += "</div>";
+                }
+            });
+
+            return list + "</div></div>";
+        }
+
+        function listFromSimResults2(json) {
+            var list = "<div id='list' data-collapse='accordion'>";
+
+            list += "<h2> Guild average: " + json['guild_avg'] + "%</h2><ul>";
+
+            $.each(json, function (playerName, value) {
+                if (value.hasOwnProperty("error")) {
+                    //exclude from list
+                } else if (value.hasOwnProperty("guild_avg")) {
+                    // skip!
+                } else {
+                    list += "<h2> " + playerName + " - Performance Rating: " + Math.round(value['average_performance']) + "%</h2>";
+                    list += "<ul>";
+
+                    $.each(value['bosses'], function (ind, b) {
+                        list += "<li><h2>" + b["boss_name"] + "</h2></li><ul>";
+                        list += "<li>Sim dps: " + b['sim_dps'] + "</li>";
+                        list += "<li>Actual dps: " + Math.round(b['average_dps']) + "</li>";
+                        list += "<li>Performance: " + Math.round(b['percent_potential'] * 100) / 100 + "</li>";
+
+                        list += "</ul></li>";
+                    });
+
+                    list += "</ul>";
+                }
+            });
+            return list + "</ul></div>";
         }
 
     </script>

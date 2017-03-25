@@ -17,75 +17,75 @@
             "boss_name":"Skorpyron",
             "average_dps":662326.6666666666,
             "num_fights":3,
-            "sim_dps":854315,
-            "percent_potential":77.527219663317
+            "sim_dps":853583,
+            "percent_potential":77.59370402956323
          },
          {
             "boss_name":"Chronomatic Anomaly",
             "average_dps":632642.6666666666,
             "num_fights":3,
-            "sim_dps":660791,
-            "percent_potential":95.74020630829818
+            "sim_dps":664114,
+            "percent_potential":95.26115496235083
          },
          {
             "boss_name":"Trilliax",
             "average_dps":514276.0,
             "num_fights":3,
-            "sim_dps":660791,
-            "percent_potential":77.82733118338476
+            "sim_dps":664114,
+            "percent_potential":77.43790975645749
          },
          {
             "boss_name":"Spellblade Aluriel",
             "average_dps":599502.3333333334,
             "num_fights":3,
-            "sim_dps":854315,
-            "percent_potential":70.17345280526894
+            "sim_dps":853583,
+            "percent_potential":70.23363086347003
          },
          {
             "boss_name":"Tichondrius",
             "average_dps":544693.0,
             "num_fights":4,
-            "sim_dps":978557,
-            "percent_potential":55.66287911690376
+            "sim_dps":979511,
+            "percent_potential":55.60866595678864
          },
          {
             "boss_name":"Star Augur Etraeus",
             "average_dps":499451.75,
             "num_fights":4,
-            "sim_dps":660791,
-            "percent_potential":75.58392139118118
+            "sim_dps":664114,
+            "percent_potential":75.20572522187456
          },
          {
             "boss_name":"Krosus",
             "average_dps":451441.75,
             "num_fights":4,
-            "sim_dps":660791,
-            "percent_potential":68.31838660030176
+            "sim_dps":664114,
+            "percent_potential":67.97654468961655
          },
          {
             "boss_name":"High Botanist Tel'arn",
             "average_dps":550914.0,
             "num_fights":3,
-            "sim_dps":854315,
-            "percent_potential":64.48605022737515
+            "sim_dps":853583,
+            "percent_potential":64.5413509875431
          },
          {
             "boss_name":"Grand Magistrix Elisande",
             "average_dps":433833.3333333333,
             "num_fights":3,
-            "sim_dps":652836,
-            "percent_potential":66.45364736830281
+            "sim_dps":653337,
+            "percent_potential":66.40268855633973
          },
          {
             "boss_name":"Gul'dan",
             "average_dps":444086.0,
             "num_fights":1,
-            "sim_dps":652836,
-            "percent_potential":68.02412857134104
+            "sim_dps":653337,
+            "percent_potential":67.97196546345914
          }
       ],
-      "average_performance":71.97972232356746,
-      "elapsed_time":17.85909414291382
+      "average_performance":71.82333404874632,
+      "elapsed_time":17.15479040145874
    },
    "Zulrahn":{
       "bosses":[
@@ -93,68 +93,68 @@
             "boss_name":"Skorpyron",
             "average_dps":758782.3333333334,
             "num_fights":3,
-            "sim_dps":1121954,
-            "percent_potential":67.63043166950993
+            "sim_dps":1121299,
+            "percent_potential":67.6699375753776
          },
          {
             "boss_name":"Chronomatic Anomaly",
             "average_dps":545738.0,
             "num_fights":3,
-            "sim_dps":589948,
-            "percent_potential":92.50611918338565
+            "sim_dps":587048,
+            "percent_potential":92.96309671440837
          },
          {
             "boss_name":"Trilliax",
             "average_dps":425756.6666666667,
             "num_fights":3,
-            "sim_dps":589948,
-            "percent_potential":72.16850750687631
+            "sim_dps":587048,
+            "percent_potential":72.52501782932003
          },
          {
             "boss_name":"Spellblade Aluriel",
             "average_dps":604284.3333333334,
             "num_fights":3,
-            "sim_dps":1121954,
-            "percent_potential":53.85999188320852
+            "sim_dps":1121299,
+            "percent_potential":53.891453870317676
          },
          {
             "boss_name":"Tichondrius",
             "average_dps":627799.0,
             "num_fights":3,
-            "sim_dps":1155470,
-            "percent_potential":54.33278233099951
+            "sim_dps":1156211,
+            "percent_potential":54.29796118528538
          },
          {
             "boss_name":"Star Augur Etraeus",
             "average_dps":510781.6666666667,
             "num_fights":3,
-            "sim_dps":589948,
-            "percent_potential":86.58079469150954
+            "sim_dps":587048,
+            "percent_potential":87.0085012923418
          },
          {
             "boss_name":"Krosus",
             "average_dps":461050.6666666667,
             "num_fights":3,
-            "sim_dps":589948,
-            "percent_potential":78.15106868175953
+            "sim_dps":587048,
+            "percent_potential":78.53713268193856
          },
          {
             "boss_name":"High Botanist Tel'arn",
             "average_dps":506082.5,
             "num_fights":2,
-            "sim_dps":1121954,
-            "percent_potential":45.10724147335809
+            "sim_dps":1121299,
+            "percent_potential":45.13359059448015
          },
          {
             "boss_name":"Grand Magistrix Elisande",
             "average_dps":469981.0,
             "num_fights":2,
-            "sim_dps":590064,
-            "percent_potential":79.64915670164592
+            "sim_dps":588619,
+            "percent_potential":79.84468731046738
          }
       ],
-      "average_performance":69.99845490247256,
-      "elapsed_time":17.950268507003784
+      "average_performance":70.20793100599299,
+      "elapsed_time":17.30657720565796
    },
    "Giasham":{
       "bosses":[
@@ -162,61 +162,61 @@
             "boss_name":"Skorpyron",
             "average_dps":827927.0,
             "num_fights":2,
-            "sim_dps":875622,
-            "percent_potential":94.55301488541859
+            "sim_dps":875875,
+            "percent_potential":94.52570286856002
          },
          {
             "boss_name":"Chronomatic Anomaly",
             "average_dps":694726.5,
             "num_fights":2,
-            "sim_dps":469342,
-            "percent_potential":148.02137886658343
+            "sim_dps":469765,
+            "percent_potential":147.88809298266153
          },
          {
             "boss_name":"Trilliax",
-            "average_dps":498624.0,
-            "num_fights":1,
-            "sim_dps":469342,
-            "percent_potential":106.23894729216647
+            "average_dps":476795.0,
+            "num_fights":2,
+            "sim_dps":469765,
+            "percent_potential":101.49649292731473
          },
          {
             "boss_name":"Spellblade Aluriel",
             "average_dps":745180.0,
             "num_fights":1,
-            "sim_dps":875622,
-            "percent_potential":85.10293254395161
+            "sim_dps":875875,
+            "percent_potential":85.07835022120737
          },
          {
             "boss_name":"Tichondrius",
             "average_dps":539275.0,
             "num_fights":1,
-            "sim_dps":909286,
-            "percent_potential":59.307522605648835
+            "sim_dps":909615,
+            "percent_potential":59.286071579734276
          },
          {
             "boss_name":"Star Augur Etraeus",
             "average_dps":604443.0,
             "num_fights":1,
-            "sim_dps":469342,
-            "percent_potential":128.78519288706315
+            "sim_dps":469765,
+            "percent_potential":128.66922823113686
          },
          {
             "boss_name":"Krosus",
             "average_dps":572505.0,
             "num_fights":1,
-            "sim_dps":469342,
-            "percent_potential":121.98034695382046
+            "sim_dps":469765,
+            "percent_potential":121.87050972294658
          },
          {
             "boss_name":"High Botanist Tel'arn",
             "average_dps":402510.0,
             "num_fights":1,
-            "sim_dps":875622,
-            "percent_potential":45.96846584485086
+            "sim_dps":875875,
+            "percent_potential":45.95518766947338
          }
       ],
-      "average_performance":98.74472523493793,
-      "elapsed_time":20.779855489730835
+      "average_performance":98.09620452537935,
+      "elapsed_time":22.4049654006958
    },
    "Zhul\u00ec":{
       "error":"No logs on record."
@@ -230,75 +230,78 @@
             "boss_name":"Skorpyron",
             "average_dps":1030055.3333333334,
             "num_fights":3,
-            "sim_dps":1072414,
-            "percent_potential":96.05015724648628
+            "sim_dps":1072531,
+            "percent_potential":96.03967935037154
          },
          {
             "boss_name":"Chronomatic Anomaly",
             "average_dps":710401.3333333334,
             "num_fights":3,
-            "sim_dps":720221,
-            "percent_potential":98.63657590285945
+            "sim_dps":721729,
+            "percent_potential":98.4304819860825
          },
          {
             "boss_name":"Trilliax",
             "average_dps":621484.3333333334,
             "num_fights":3,
-            "sim_dps":720221,
-            "percent_potential":86.29078204236386
+            "sim_dps":721729,
+            "percent_potential":86.11048375960138
          },
          {
             "boss_name":"Spellblade Aluriel",
             "average_dps":890343.3333333334,
             "num_fights":3,
-            "sim_dps":1072414,
-            "percent_potential":83.02235268593411
+            "sim_dps":1072531,
+            "percent_potential":83.01329596378412
          },
          {
             "boss_name":"Tichondrius",
             "average_dps":788801.5,
             "num_fights":4,
-            "sim_dps":1316686,
-            "percent_potential":59.90809502037692
+            "sim_dps":1314775,
+            "percent_potential":59.99517027628302
          },
          {
             "boss_name":"Star Augur Etraeus",
             "average_dps":595614.75,
             "num_fights":4,
-            "sim_dps":720221,
-            "percent_potential":82.69888686944702
+            "sim_dps":721729,
+            "percent_potential":82.52609358914495
          },
          {
             "boss_name":"Krosus",
             "average_dps":609589.5,
             "num_fights":4,
-            "sim_dps":720221,
-            "percent_potential":84.63922879227349
+            "sim_dps":721729,
+            "percent_potential":84.46238130932801
          },
          {
             "boss_name":"High Botanist Tel'arn",
             "average_dps":701073.0,
             "num_fights":2,
-            "sim_dps":1072414,
-            "percent_potential":65.3733539472629
+            "sim_dps":1072531,
+            "percent_potential":65.36622251478046
          },
          {
             "boss_name":"Grand Magistrix Elisande",
             "average_dps":509371.6666666667,
             "num_fights":3,
-            "sim_dps":695657,
-            "percent_potential":73.2216691080039
+            "sim_dps":696018,
+            "percent_potential":73.18369160950819
          },
          {
             "boss_name":"Gul'dan",
             "average_dps":579125.0,
             "num_fights":1,
-            "sim_dps":695657,
-            "percent_potential":83.24864121255159
+            "sim_dps":696018,
+            "percent_potential":83.20546307710433
          }
       ],
-      "average_performance":81.30897428275594,
-      "elapsed_time":13.990776062011719
+      "average_performance":81.23329634359887,
+      "elapsed_time":14.737811803817749
+   },
+   "Makona":{
+      "error":"WarcraftLogs server error 400"
    },
    "Pazh":{
       "bosses":[
@@ -306,75 +309,75 @@
             "boss_name":"Skorpyron",
             "average_dps":610327.0,
             "num_fights":2,
-            "sim_dps":899741,
-            "percent_potential":67.83363212302207
+            "sim_dps":900740,
+            "percent_potential":67.75839864999888
          },
          {
             "boss_name":"Chronomatic Anomaly",
             "average_dps":600304.0,
             "num_fights":2,
-            "sim_dps":675987,
-            "percent_potential":88.80407463457138
+            "sim_dps":675070,
+            "percent_potential":88.92470410475951
          },
          {
             "boss_name":"Trilliax",
             "average_dps":530838.0,
             "num_fights":2,
-            "sim_dps":675987,
-            "percent_potential":78.52784151174504
+            "sim_dps":675070,
+            "percent_potential":78.63451197653578
          },
          {
             "boss_name":"Spellblade Aluriel",
             "average_dps":576118.0,
             "num_fights":2,
-            "sim_dps":899741,
-            "percent_potential":64.03153796481432
+            "sim_dps":900740,
+            "percent_potential":63.96052134911295
          },
          {
             "boss_name":"Tichondrius",
             "average_dps":525244.0,
             "num_fights":3,
-            "sim_dps":856768,
-            "percent_potential":61.30527750803017
+            "sim_dps":855795,
+            "percent_potential":61.37497882086247
          },
          {
             "boss_name":"Star Augur Etraeus",
             "average_dps":498909.3333333333,
             "num_fights":3,
-            "sim_dps":675987,
-            "percent_potential":73.80457513729307
+            "sim_dps":675070,
+            "percent_potential":73.90482962260704
          },
          {
             "boss_name":"Krosus",
             "average_dps":492352.6666666667,
             "num_fights":3,
-            "sim_dps":675987,
-            "percent_potential":72.83463538006895
+            "sim_dps":675070,
+            "percent_potential":72.93357232089512
          },
          {
             "boss_name":"High Botanist Tel'arn",
             "average_dps":489937.0,
             "num_fights":2,
-            "sim_dps":899741,
-            "percent_potential":54.45311484082641
+            "sim_dps":900740,
+            "percent_potential":54.39272154006706
          },
          {
             "boss_name":"Grand Magistrix Elisande",
             "average_dps":368688.6666666667,
             "num_fights":3,
-            "sim_dps":664939,
-            "percent_potential":55.446990876857384
+            "sim_dps":666052,
+            "percent_potential":55.35433669843596
          },
          {
             "boss_name":"Gul'dan",
             "average_dps":458999.0,
             "num_fights":1,
-            "sim_dps":664939,
-            "percent_potential":69.02873797446082
+            "sim_dps":666052,
+            "percent_potential":68.91338814386864
          }
       ],
-      "average_performance":68.60704179516895,
-      "elapsed_time":14.895333290100098
+      "average_performance":68.61519632271434,
+      "elapsed_time":17.47071933746338
    },
    "Brokenkey":{
       "bosses":[
@@ -382,71 +385,72 @@
             "boss_name":"Skorpyron",
             "average_dps":807079.5,
             "num_fights":2,
-            "sim_dps":779328,
-            "percent_potential":103.56095251293422
+            "sim_dps":778942,
+            "percent_potential":103.6122715170064
          },
          {
             "boss_name":"Chronomatic Anomaly",
             "average_dps":732747.0,
             "num_fights":2,
-            "sim_dps":691505,
-            "percent_potential":105.96409281205486
+            "sim_dps":691924,
+            "percent_potential":105.89992542533572
          },
          {
             "boss_name":"Trilliax",
             "average_dps":561598.0,
             "num_fights":2,
-            "sim_dps":691505,
-            "percent_potential":81.21387408623221
+            "sim_dps":691924,
+            "percent_potential":81.16469438840103
          },
          {
             "boss_name":"Spellblade Aluriel",
             "average_dps":654452.0,
             "num_fights":2,
-            "sim_dps":779328,
-            "percent_potential":83.97645150693931
+            "sim_dps":778942,
+            "percent_potential":84.01806552991108
          },
          {
             "boss_name":"Tichondrius",
             "average_dps":603749.0,
             "num_fights":3,
-            "sim_dps":520971,
-            "percent_potential":115.88917617295395
+            "sim_dps":521458,
+            "percent_potential":115.78094496584576
          },
          {
             "boss_name":"Star Augur Etraeus",
             "average_dps":544006.5,
             "num_fights":4,
-            "sim_dps":691505,
-            "percent_potential":78.6699300800428
+            "sim_dps":691924,
+            "percent_potential":78.62229088743851
          },
          {
             "boss_name":"Krosus",
             "average_dps":553192.5,
             "num_fights":4,
-            "sim_dps":691505,
-            "percent_potential":79.9983369606872
+            "sim_dps":691924,
+            "percent_potential":79.94989334088714
          },
          {
+            "boss_name":"High Botanist Tel'arn",
             "error":"SimulationCraft threw an error while running the sim."
          },
          {
             "boss_name":"Grand Magistrix Elisande",
             "average_dps":430035.3333333333,
             "num_fights":3,
-            "sim_dps":670365,
-            "percent_potential":64.14943103135357
+            "sim_dps":670784,
+            "percent_potential":64.10936058900232
          },
          {
             "boss_name":"Gul'dan",
             "average_dps":443324.0,
             "num_fights":1,
-            "sim_dps":670365,
-            "percent_potential":66.13173420450053
+            "sim_dps":670784,
+            "percent_potential":66.0904255319149
          }
       ],
-      "average_performance":86.61710881863318,
-      "elapsed_time":32.058478116989136
+      "average_performance":86.58309690841587,
+      "elapsed_time":33.02667427062988
    },
    "R\u00e5ekwon":{
       "bosses":[
@@ -454,135 +458,139 @@
             "boss_name":"Skorpyron",
             "average_dps":962078.0,
             "num_fights":2,
-            "sim_dps":1085229,
-            "percent_potential":88.65207251188458
+            "sim_dps":1085260,
+            "percent_potential":88.64954020234782
          },
          {
             "boss_name":"Chronomatic Anomaly",
             "average_dps":772470.0,
             "num_fights":2,
-            "sim_dps":831135,
-            "percent_potential":92.94157988774387
+            "sim_dps":830899,
+            "percent_potential":92.96797805750158
          },
          {
             "boss_name":"Trilliax",
             "average_dps":672533.0,
             "num_fights":2,
-            "sim_dps":831135,
-            "percent_potential":80.91742015436722
+            "sim_dps":830899,
+            "percent_potential":80.94040310555194
          },
          {
             "boss_name":"Spellblade Aluriel",
             "average_dps":750600.0,
             "num_fights":2,
-            "sim_dps":1085229,
-            "percent_potential":69.16512551728712
+            "sim_dps":1085260,
+            "percent_potential":69.16314984427694
          },
          {
             "boss_name":"Tichondrius",
             "average_dps":656782.6666666666,
             "num_fights":3,
-            "sim_dps":1042230,
-            "percent_potential":63.017056375911906
+            "sim_dps":1041809,
+            "percent_potential":63.04252186981171
          },
          {
             "boss_name":"Star Augur Etraeus",
             "average_dps":625977.3333333334,
             "num_fights":3,
-            "sim_dps":831135,
-            "percent_potential":75.31596351174399
+            "sim_dps":830899,
+            "percent_potential":75.33735548283647
          },
          {
             "boss_name":"Krosus",
             "average_dps":639564.0,
             "num_fights":3,
-            "sim_dps":831135,
-            "percent_potential":76.9506758829793
+            "sim_dps":830899,
+            "percent_potential":76.97253216094856
          },
          {
             "boss_name":"High Botanist Tel'arn",
             "average_dps":685517.0,
             "num_fights":2,
-            "sim_dps":1085229,
-            "percent_potential":63.167958099166164
+            "sim_dps":1085260,
+            "percent_potential":63.16615373274607
          },
          {
             "boss_name":"Grand Magistrix Elisande",
             "average_dps":516884.0,
             "num_fights":3,
-            "sim_dps":827418,
-            "percent_potential":62.46951359530492
+            "sim_dps":826736,
+            "percent_potential":62.521046621896225
          },
          {
             "boss_name":"Gul'dan",
             "average_dps":627960.0,
             "num_fights":1,
-            "sim_dps":827418,
-            "percent_potential":75.89392544034575
+            "sim_dps":826736,
+            "percent_potential":75.95653267790443
          }
       ],
-      "average_performance":74.84912909767347,
-      "elapsed_time":11.346059083938599
+      "average_performance":74.87172137558217,
+      "elapsed_time":14.1114342212677
    },
    "Thanaton":{
       "bosses":[
          {
+            "boss_name":"Skorpyron",
             "error":"No kills logged for this boss."
          },
          {
+            "boss_name":"Chronomatic Anomaly",
             "error":"No kills logged for this boss."
          },
          {
+            "boss_name":"Trilliax",
             "error":"No kills logged for this boss."
          },
          {
+            "boss_name":"Spellblade Aluriel",
             "error":"No kills logged for this boss."
          },
          {
             "boss_name":"Tichondrius",
             "average_dps":595508.0,
             "num_fights":1,
-            "sim_dps":1075737,
-            "percent_potential":55.358140512039654
+            "sim_dps":1074633,
+            "percent_potential":55.41501145042075
          },
          {
             "boss_name":"Star Augur Etraeus",
             "average_dps":519789.0,
             "num_fights":1,
-            "sim_dps":620931,
-            "percent_potential":83.71123361532923
+            "sim_dps":620906,
+            "percent_potential":83.71460414297816
          },
          {
             "boss_name":"Krosus",
             "average_dps":520713.0,
             "num_fights":1,
-            "sim_dps":620931,
-            "percent_potential":83.86004242017229
+            "sim_dps":620906,
+            "percent_potential":83.86341893942078
          },
          {
             "boss_name":"High Botanist Tel'arn",
             "average_dps":571780.0,
             "num_fights":1,
-            "sim_dps":990973,
-            "percent_potential":57.69884749634955
+            "sim_dps":992506,
+            "percent_potential":57.60972729635891
          },
          {
             "boss_name":"Grand Magistrix Elisande",
             "average_dps":504682.0,
             "num_fights":1,
-            "sim_dps":589254,
-            "percent_potential":85.64761545954715
+            "sim_dps":589076,
+            "percent_potential":85.6734954403167
          },
          {
             "boss_name":"Gul'dan",
             "average_dps":473430.0,
             "num_fights":1,
-            "sim_dps":589254,
-            "percent_potential":80.34396032950137
+            "sim_dps":589076,
+            "percent_potential":80.3682377146582
          }
       ],
-      "average_performance":74.43663997215654,
-      "elapsed_time":16.809741258621216
+      "average_performance":74.44074916402559,
+      "elapsed_time":18.66009211540222
    },
    "Kewnik":{
       "error":"No kills in the given time window."
@@ -593,75 +601,75 @@
             "boss_name":"Skorpyron",
             "average_dps":804289.0,
             "num_fights":2,
-            "sim_dps":841804,
-            "percent_potential":95.54349943692357
+            "sim_dps":841599,
+            "percent_potential":95.56677229892145
          },
          {
             "boss_name":"Chronomatic Anomaly",
             "average_dps":628344.0,
             "num_fights":2,
-            "sim_dps":668830,
-            "percent_potential":93.94674281955055
+            "sim_dps":668702,
+            "percent_potential":93.96472569246092
          },
          {
             "boss_name":"Trilliax",
             "average_dps":553624.0,
             "num_fights":2,
-            "sim_dps":668830,
-            "percent_potential":82.7749951407682
+            "sim_dps":668702,
+            "percent_potential":82.79083956680256
          },
          {
             "boss_name":"Spellblade Aluriel",
             "average_dps":575623.6666666666,
             "num_fights":3,
-            "sim_dps":841804,
-            "percent_potential":68.37977328055777
+            "sim_dps":841599,
+            "percent_potential":68.39642949512377
          },
          {
             "boss_name":"Tichondrius",
             "average_dps":519869.0,
             "num_fights":4,
-            "sim_dps":967025,
-            "percent_potential":53.75962358780797
+            "sim_dps":966771,
+            "percent_potential":53.773747867902536
          },
          {
             "boss_name":"Star Augur Etraeus",
             "average_dps":501041.25,
             "num_fights":4,
-            "sim_dps":668830,
-            "percent_potential":74.9130945083205
+            "sim_dps":668702,
+            "percent_potential":74.92743404386408
          },
          {
             "boss_name":"Krosus",
             "average_dps":517214.75,
             "num_fights":4,
-            "sim_dps":668830,
-            "percent_potential":77.33127252067042
+            "sim_dps":668702,
+            "percent_potential":77.34607493322885
          },
          {
             "boss_name":"High Botanist Tel'arn",
             "average_dps":559056.6666666666,
             "num_fights":3,
-            "sim_dps":841804,
-            "percent_potential":66.41173796592396
+            "sim_dps":841599,
+            "percent_potential":66.4279147986947
          },
          {
             "boss_name":"Grand Magistrix Elisande",
             "average_dps":407619.3333333333,
             "num_fights":3,
-            "sim_dps":657778,
-            "percent_potential":61.969134469887
+            "sim_dps":659397,
+            "percent_potential":61.81698329433305
          },
          {
             "boss_name":"Gul'dan",
             "average_dps":382017.0,
             "num_fights":1,
-            "sim_dps":657778,
-            "percent_potential":58.07688916321312
+            "sim_dps":659397,
+            "percent_potential":57.93429451453373
          }
       ],
-      "average_performance":73.3106762893623,
-      "elapsed_time":15.493952989578247
+      "average_performance":73.29452165058656,
+      "elapsed_time":16.30527091026306
    },
    "Valeratis":{
       "bosses":[
@@ -669,113 +677,119 @@
             "boss_name":"Skorpyron",
             "average_dps":782043.3333333334,
             "num_fights":3,
-            "sim_dps":929393,
-            "percent_potential":84.14560184263637
+            "sim_dps":930059,
+            "percent_potential":84.08534655686718
          },
          {
             "boss_name":"Chronomatic Anomaly",
             "average_dps":729327.3333333334,
             "num_fights":3,
-            "sim_dps":710318,
-            "percent_potential":102.67617226838308
+            "sim_dps":710450,
+            "percent_potential":102.65709526825721
          },
          {
             "boss_name":"Trilliax",
             "average_dps":620457.6666666666,
             "num_fights":3,
-            "sim_dps":710318,
-            "percent_potential":87.34928112009925
+            "sim_dps":710450,
+            "percent_potential":87.3330518216154
          },
          {
             "boss_name":"Spellblade Aluriel",
             "average_dps":775392.3333333334,
             "num_fights":3,
-            "sim_dps":929393,
-            "percent_potential":83.42997347013947
+            "sim_dps":930059,
+            "percent_potential":83.3702306341139
          },
          {
             "boss_name":"Tichondrius",
             "average_dps":692788.75,
             "num_fights":4,
-            "sim_dps":1039213,
-            "percent_potential":66.6647501522787
+            "sim_dps":1038660,
+            "percent_potential":66.7002435830782
          },
          {
             "boss_name":"Star Augur Etraeus",
             "average_dps":598308.25,
             "num_fights":4,
-            "sim_dps":710318,
-            "percent_potential":84.23104158982315
+            "sim_dps":710450,
+            "percent_potential":84.21539165317756
          },
          {
             "boss_name":"Krosus",
             "average_dps":687093.5,
             "num_fights":4,
-            "sim_dps":710318,
-            "percent_potential":96.73040807075141
+            "sim_dps":710450,
+            "percent_potential":96.71243578013934
          },
          {
             "boss_name":"High Botanist Tel'arn",
             "average_dps":659380.0,
             "num_fights":3,
-            "sim_dps":929393,
-            "percent_potential":70.94738178574617
+            "sim_dps":930059,
+            "percent_potential":70.89657752895246
          },
          {
             "boss_name":"Grand Magistrix Elisande",
             "average_dps":541094.3333333334,
             "num_fights":3,
-            "sim_dps":695989,
-            "percent_potential":77.74466742051001
+            "sim_dps":699032,
+            "percent_potential":77.40623223734154
          },
          {
             "boss_name":"Gul'dan",
             "average_dps":569763.0,
             "num_fights":1,
-            "sim_dps":695989,
-            "percent_potential":81.86379382432769
+            "sim_dps":699032,
+            "percent_potential":81.50742741390951
          }
       ],
-      "average_performance":83.57830715446954,
-      "elapsed_time":18.150871515274048
+      "average_performance":83.48840324774524,
+      "elapsed_time":18.28709101676941
    },
    "Odiwanken\u00f2b":{
       "bosses":[
          {
+            "boss_name":"Skorpyron",
             "error":"No kills logged for this boss."
          },
          {
+            "boss_name":"Chronomatic Anomaly",
             "error":"No kills logged for this boss."
          },
          {
+            "boss_name":"Trilliax",
             "error":"No kills logged for this boss."
          },
          {
+            "boss_name":"Spellblade Aluriel",
             "error":"No kills logged for this boss."
          },
          {
             "boss_name":"Tichondrius",
             "average_dps":407734.0,
             "num_fights":1,
-            "sim_dps":1186168,
-            "percent_potential":34.37405156773745
+            "sim_dps":1187529,
+            "percent_potential":34.33465624839477
          },
          {
             "boss_name":"Star Augur Etraeus",
             "average_dps":473127.0,
             "num_fights":1,
-            "sim_dps":573669,
-            "percent_potential":82.4738655914822
+            "sim_dps":571874,
+            "percent_potential":82.73273483319753
          },
          {
+            "boss_name":"Krosus",
             "error":"No kills logged for this boss."
          },
          {
+            "boss_name":"High Botanist Tel'arn",
             "error":"No kills logged for this boss."
          }
       ],
-      "average_performance":58.423958579609824,
-      "elapsed_time":11.649611473083496
+      "average_performance":58.533695540796145,
+      "elapsed_time":9.797088861465454
    },
    "Halion":{
       "error":"No logs on record."
@@ -783,50 +797,57 @@
    "Thugenz":{
       "bosses":[
          {
+            "boss_name":"Skorpyron",
             "error":"No kills logged for this boss."
          },
          {
+            "boss_name":"Chronomatic Anomaly",
             "error":"No kills logged for this boss."
          },
          {
+            "boss_name":"Trilliax",
             "error":"No kills logged for this boss."
          },
          {
+            "boss_name":"Spellblade Aluriel",
             "error":"No kills logged for this boss."
          },
          {
+            "boss_name":"Tichondrius",
             "error":"No kills logged for this boss."
          },
          {
             "boss_name":"Star Augur Etraeus",
             "average_dps":474356.0,
             "num_fights":1,
-            "sim_dps":591206,
-            "percent_potential":80.23531560911087
+            "sim_dps":591240,
+            "percent_potential":80.23070157634803
          },
          {
+            "boss_name":"Krosus",
             "error":"No kills logged for this boss."
          },
          {
+            "boss_name":"High Botanist Tel'arn",
             "error":"No kills logged for this boss."
          },
          {
             "boss_name":"Grand Magistrix Elisande",
             "average_dps":388689.0,
             "num_fights":1,
-            "sim_dps":557306,
-            "percent_potential":69.7442697548564
+            "sim_dps":557001,
+            "percent_potential":69.7824599955835
          },
          {
             "boss_name":"Gul'dan",
             "average_dps":460061.0,
             "num_fights":1,
-            "sim_dps":557306,
-            "percent_potential":82.55087869141907
+            "sim_dps":557001,
+            "percent_potential":82.59608151511398
          }
       ],
-      "average_performance":77.51015468512878,
-      "elapsed_time":4.541765928268433
+      "average_performance":77.5364143623485,
+      "elapsed_time":4.6172614097595215
    },
    "Heanth\u00f8r":{
       "error":"No logs on record."
@@ -837,5 +858,5 @@
    "Karendas":{
       "error":"No kills in the given time window."
    },
-   "guild_avg":76.61374109466138
+   "guild_avg":76.560380374661
 }

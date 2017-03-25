@@ -204,7 +204,7 @@ class SimcraftBot:
 
             if not stats:
                 # no kills for this boss on record, but other kills are still present
-                scores["bosses"].append({"error": SimBotError.NO_KILLS_LOGGED.value})
+                scores["bosses"].append({"boss_name": boss_name, "error": SimBotError.NO_KILLS_LOGGED.value})
                 continue
 
             for kill in stats:
@@ -245,7 +245,7 @@ class SimcraftBot:
 
                 if not sim_results:
                     # simcraft error, results are invalid
-                    scores["bosses"].append({"error": SimBotError.SIMCRAFT_ERROR.value})
+                    scores["bosses"].append({"boss_name": boss_name, "error": SimBotError.SIMCRAFT_ERROR.value})
                     sim_cache[tag] = SimBotError.SIMCRAFT_ERROR
 
                     continue
@@ -253,7 +253,7 @@ class SimcraftBot:
                 sim_cache[tag] = sim_results
             else:
                 if isinstance(sim_cache[tag], SimBotError):
-                    scores["bosses"].append({"error": sim_cache[tag]})
+                    scores["bosses"].append({"boss_name": boss_name, "error": sim_cache[tag]})
 
                     continue
                 logger.debug("Using cached sim for player %s spec %s fight config %s", player, max_dps_spec,

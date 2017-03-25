@@ -76,6 +76,23 @@ def check_task_progress():
     with app.test_request_context():
         while True:
             for client_id, (task, simbot_obj) in list(all_running_jobs.items()):
+                # ############ DEBUG #############
+                with open("simbot_output.json", 'r') as f:
+                    result = json.loads(f.read())
+
+                sock = client_socket[client_id]
+                sock.emit("guild-result", {
+                    "status": "success",
+                    "message": "Sim complete",
+                    "data": result  # result is a dict
+                })
+
+                del all_running_jobs[client_id]
+
+                continue
+                # ############ END DEBUG #############
+
+
                 if task.ready():
                     sock = client_socket[client_id]
 
