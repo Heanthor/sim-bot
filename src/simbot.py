@@ -31,7 +31,7 @@ class SimBotError(Enum):
 
 
 class SimcraftBot:
-    def __init__(self, config):
+    def __init__(self, config, bnet_adapter, warcraftlogs_adapter, simc_adapter, boss_profiles):
         """
 
         guild: The guild name to run sims for
@@ -51,19 +51,10 @@ class SimcraftBot:
 
         self._blizzard_locale = "en_US"
 
-        with open(os.path.join(config.params["config_path"], "keys.json"), 'r') as f:
-            f = json.loads(f.read())
-            warcraft_logs_public = f["warcraftlogs"]["public"]
-            battlenet_pub = f["battlenet"]["public"]
-            battlenet_sec = f["battlenet"]["secret"]
-
-        with open(os.path.join(config.params["config_path"], "boss_profiles.json"), 'r') as f:
-            self._profiles = json.loads(f.read())
-
-        self._bnet = BattleNet(battlenet_pub)
-        self._warcr = WarcraftLogs(warcraft_logs_public)
-        self._simc = SimulationCraft(config.params["simc_location"], config.params["simcraft_timeout"],
-                                     config.params["config_path"])
+        self._bnet = bnet_adapter
+        self._warcr = warcraftlogs_adapter
+        self._simc = simc_adapter
+        self._profiles = boss_profiles
 
         # all players in guild
         self._players_in_guild = []
@@ -231,13 +222,13 @@ class SimcraftBot:
             fight_profile = self._profiles[boss_name]
             tag = hash("%s%s%s" % (player, max_dps_spec, fight_profile))
 
-            sim_string = "armory=%s,%s,%s spec=%s talents=%s fight_style=%s" % (self._region,
-                                                                                self.realm_slug(
-                                                                                    realm),
-                                                                                player, max_dps_spec,
-                                                                                ''.join(str(x) for x in
-                                                                                        max_dps_talents),
-                                                                                fight_profile)
+            sim_string = "armory=%s,%s,%s spec=%s talents=%s fight_style=%s iterations=100" % (
+                self._region,
+                self.realm_slug(realm),
+                player, max_dps_spec,
+                ''.join(str(x) for x in max_dps_talents),
+                fight_profile
+            )
 
             # actually run sim
             if tag not in sim_cache:
@@ -412,7 +403,19 @@ if __name__ == '__main__':
     sbc.init_cmd_line()
 
     # create simbot with realm and guild info
-    sb = SimcraftBot(sbc)
+    with open(os.path.join(sbc.params["config_path"], "keys.json"), 'r') as f:
+        f = json.loads(f.read())
+        warcraft_logs_public = f["warcraftlogs"]["public"]
+        battlenet_pub = f["battlenet"]["public"]
+        battlenet_sec = f["battlenet"]["secret"]
+
+    with open(os.path.join(sbc.params["config_path"], "boss_profiles.json"), 'r') as f:
+        profiles = json.loads(f.read())
+
+    bnet = BattleNet(battlenet_pub)
+    warcr = WarcraftLogs(warcraft_logs_public)
+    simc = SimulationCraft(sbc.params["simc_location"], sbc.params["simcraft_timeout"], sbc.params["config_path"])
+    sb = SimcraftBot(sbc, bnet, warcr, simc, profiles)
 
     start = time.time()
     print(json.dumps(sb.run_all_sims()))
