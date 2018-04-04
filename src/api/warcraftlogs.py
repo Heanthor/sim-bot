@@ -225,8 +225,9 @@ class WarcraftLogs:
         simc_offset = 1
 
         if not self.has_talent_data():
-            logger.critical("Blizzard talents not set for WarcraftLogs!")
-            raise RuntimeError("Blizzard talents not set for WarcraftLogs!")
+            error_str = "Blizzard talents not set for WarcraftLogs!"
+            logger.critical(error_str)
+            raise RuntimeError(error_str)
 
         for talent in warcraftlogs_talents:
             entry = self._talent_data[WarcraftLogs.BNET_CLASS_MAPPING[class_str.lower()]]

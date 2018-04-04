@@ -31,6 +31,12 @@ class BattleNet:
         self._sec_ticker = time.time()
         self._hr_ticker = time.time()
 
+        # cache responses
+        # TODO cache these responses
+        # TODO this should be moved to mongo eventually, with a timeout/stale time
+        self.guild_members_cache = {}
+        self.talents_cache = {}
+
     def get_guild_members(self, realm, guild_name, locale, level):
         """
         Gets list of max level guild members and their roles, in the form:

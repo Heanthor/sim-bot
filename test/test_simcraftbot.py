@@ -5,13 +5,17 @@ from __future__ import absolute_import
 import unittest
 
 from src.api.warcraftlogs import WarcraftLogsError
-from src.simbot import SimcraftBot
+from src.simbot import SimcraftBot, SimBotConfig
 
 
 class TestSimcraftBot(unittest.TestCase):
     def setUp(self):
-        self.sb = SimcraftBot("Clutch", "Fizzcrank", "US", "heroic", 3, 110,
-                              "C:\\Users\\reedt\Downloads\\simc-715-02-win64-bdd3ba8\\simc-715-02-win64\\simc.exe", 15)
+        sbc = SimBotConfig()
+        sbc.init_args("Clutch", "Fizzcrank",
+                      "C:\\Users\\reedt\Downloads\\simc-715-02-win64-bdd3ba8\\simc-715-02-win64\\simc.exe",
+                      write_logs=False)
+
+        self.sb = SimcraftBot(sbc)
 
     def testSimReports(self):
         self.assertIsNone(self.sb.sim_single_character("Heanthor", "Fizzcrank")["error"])

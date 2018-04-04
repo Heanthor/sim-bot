@@ -89,7 +89,7 @@ class TestWarcraftLogs(unittest.TestCase):
 
     def test_process_parse(self):
         # 999 weeks to prevent breaking dataset
-        result = self.wl.process_parses("Stachio", 4, 999, api_stub, talent_dump)
+        result = self.wl.process_parses("Stachio", 4, 999, api_stub)
 
         self.assertIsNotNone(result)
 

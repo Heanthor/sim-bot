@@ -57,7 +57,7 @@ class SimcraftBot:
             battlenet_pub = f["battlenet"]["public"]
             battlenet_sec = f["battlenet"]["secret"]
 
-        with open(os.path.join(config.params["config_path"], "nighthold_profiles.json"), 'r') as f:
+        with open(os.path.join(config.params["config_path"], "boss_profiles.json"), 'r') as f:
             self._profiles = json.loads(f.read())
 
         self._bnet = BattleNet(battlenet_pub)
@@ -308,21 +308,25 @@ class SimBotConfig:
         self.params = {}
 
     @staticmethod
-    def init_logger(persist, location):
+    def init_logger(persist, location, write_logs=True):
         if len(logger.handlers):
             # logger has already been initialized by another SimBot
             return
 
         logger.setLevel(logging.DEBUG)
-        if persist:
-            handler = logging.FileHandler(
-                os.path.join(get_script_path(), location, "simbot-%s.log" % time.strftime("%Y%m%d-%H%M%S")))
-        else:
-            handler = logging.FileHandler(os.path.join(get_script_path(), location, 'simbot.log'), 'w')
-        handler.setLevel(logging.DEBUG)
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        handler.setFormatter(formatter)
-        logger.addHandler(handler)
+
+        if write_logs:
+            if persist:
+                handler = logging.FileHandler(
+                    os.path.join(get_script_path(), location, "simbot-%s.log" % time.strftime("%Y%m%d-%H%M%S")))
+            else:
+                handler = logging.FileHandler(os.path.join(get_script_path(), location, 'simbot.log'), 'w')
+
+            handler.setLevel(logging.DEBUG)
+            handler.setFormatter(formatter)
+            logger.addHandler(handler)
+
         # stdout logger
         ch = logging.StreamHandler(sys.stdout)
         ch.setLevel(logging.DEBUG)
@@ -354,6 +358,8 @@ class SimBotConfig:
                             help='Level of characters to sim')
         parser.add_argument('--weeks_to_examine', type=int, default=3, nargs="?",
                             help='Number of weeks of historical logs to average')
+        parser.add_argument('--write_logs', type=bool, default=True, nargs='?',
+                            help="Save logs to file")
         parser.add_argument('--persist_logs', type=bool, default=False, nargs='?',
                             help="Save logs in separate files, or overwrite single file.")
         parser.add_argument('--log_path', type=str, default="../logs", nargs='?',
@@ -361,11 +367,11 @@ class SimBotConfig:
 
         self.params = vars(parser.parse_args())
 
-        self.init_logger(self.params["persist_logs"], self.params["log_path"])
+        self.init_logger(self.params["persist_logs"], self.params["log_path"], self.params["write_logs"])
 
     def init_args(self, guildname, realm, simc_location, config_path="", simc_timeout=5, region="US",
                   raid_difficulty="heroic", blizzard_locale="en_US", max_level=110, weeks_to_examine=3,
-                  persist_logs=False, log_path="../logs"):
+                  persist_logs=False, log_path="../logs", write_logs=True):
         """
 
         :param guildname: The guild name to run sims for (in quotes)
@@ -380,6 +386,7 @@ class SimBotConfig:
         :param max_level: Level of characters to be simmed
         :param persist_logs: Save logs in separate files, or overwrite single file.
         :param log_path: Path (relative to __file__) to save logs to (excluding /<filename>.log)
+        :param write_logs: Save logs to file
         """
 
         self.params["guildname"] = guildname
@@ -394,8 +401,9 @@ class SimBotConfig:
         self.params["persist_logs"] = persist_logs
         self.params["log_path"] = log_path
         self.params["config_path"] = config_path
+        self.params["write_logs"] = write_logs
 
-        self.init_logger(persist_logs, log_path)
+        self.init_logger(persist_logs, log_path, write_logs)
 
 
 if __name__ == '__main__':
