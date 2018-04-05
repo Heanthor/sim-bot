@@ -48,6 +48,7 @@ class SimcraftBot:
         self._difficulty = config.params["raid_difficulty"]
         self._num_weeks = config.params["weeks_to_examine"]
         self._max_level = config.params["max_level"]
+        self._sim_iterations = config.params["simcraft_iterations"]
 
         self._blizzard_locale = "en_US"
 
@@ -222,15 +223,17 @@ class SimcraftBot:
             fight_profile = self._profiles[boss_name]
             tag = hash("%s%s%s" % (player, max_dps_spec, fight_profile))
 
-            sim_string = "armory=%s,%s,%s spec=%s talents=%s fight_style=%s iterations=100" % (
+            sim_string = "armory=%s,%s,%s spec=%s talents=%s fight_style=%s iterations=%d" % (
                 self._region,
                 self.realm_slug(realm),
                 player, max_dps_spec,
                 ''.join(str(x) for x in max_dps_talents),
-                fight_profile
+                fight_profile,
+                self._sim_iterations
             )
 
             # actually run sim
+            # TODO this area will be rewritten for async sim results
             if tag not in sim_cache:
                 sim_results = self._simc.run_sim(sim_string.split(" "))
 
@@ -337,6 +340,8 @@ class SimBotConfig:
                             help="Path (relative to __file__) of config directory (including /config")
         parser.add_argument('--simcraft_timeout', type=int, default=5, nargs="?",
                             help='Timeout, in seconds, of each individual simulation.')
+        parser.add_argument('--simcraft_iterations', type=int, default=100, nargs="?",
+                            help='Simcraft iterations')
         parser.add_argument('--region', type=str, default="US", nargs="?", choices=["US", "EU", "KR", "TW", "CN"],
                             help='Region where guild exists.')
         parser.add_argument('--raid_difficulty', type=str, default="heroic", nargs="?",
@@ -360,7 +365,7 @@ class SimBotConfig:
 
         self.init_logger(self.params["persist_logs"], self.params["log_path"], self.params["write_logs"])
 
-    def init_args(self, guildname, realm, simc_location, config_path="", simc_timeout=5, region="US",
+    def init_args(self, guildname, realm, simc_location, config_path="", simc_timeout=5, simc_iter=100, region="US",
                   raid_difficulty="heroic", blizzard_locale="en_US", max_level=110, weeks_to_examine=3,
                   persist_logs=False, log_path="../logs", write_logs=True):
         """
@@ -370,6 +375,7 @@ class SimBotConfig:
         :param simc_location: Location of simc executable
         :param config_path: Path (relative to __file__) of config directory (including /config)
         :param simc_timeout: Timeout, in seconds, of each individual simulation.
+        :param simc_iter: Simcraft iterations
         :param region: US, EU, KR, TW, CN.
         :param blizzard_locale: en_US
         :param raid_difficulty: normal, heroic, mythic, lfr
@@ -384,6 +390,7 @@ class SimBotConfig:
         self.params["realm"] = realm
         self.params["simc_location"] = simc_location
         self.params["simcraft_timeout"] = simc_timeout
+        self.params["simcraft_iterations"] = simc_iter
         self.params["region"] = region
         self.params["raid_difficulty"] = raid_difficulty
         self.params["blizzard_locale"] = blizzard_locale

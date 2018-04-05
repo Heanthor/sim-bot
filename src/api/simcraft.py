@@ -24,7 +24,7 @@ class SimulationCraft:
             raise RuntimeError("Simc path incomplete (must end with simc executable")
 
         with open(os.path.join(config_path, "boss_profiles.json"), 'r') as f:
-            self._nighthold_profile = json.loads(f.read())
+            self.boss_profiles = json.loads(f.read())
 
         self._simc_timeout = simc_timeout
 
