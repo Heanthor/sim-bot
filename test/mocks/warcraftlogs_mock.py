@@ -30,6 +30,9 @@ class WarcraftLogsMock(WarcraftLogs):
         if "reports" in url:
             return RequestMock(self.reports_response)
         elif "parses" in url:
+            if self._parse_call_count >= len(self.all_parses_responses):
+                return RequestMock("{}")
+
             to_return = self.all_parses_responses[self._parse_call_count]
             self._parse_call_count += 1
 

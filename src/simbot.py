@@ -157,6 +157,7 @@ class SimcraftBot:
 
         return to_return
 
+    # TODO this suite will be run in one lambda
     def _sim_single_suite(self, player, realm, raiding_stats):
         """
         Produces report on single character's average sims in the form:
