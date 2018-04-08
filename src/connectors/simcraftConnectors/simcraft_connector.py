@@ -1,5 +1,6 @@
-from abc import ABC
+class SimcraftConnector:
+    def queue_sim(self, sim_func, *args, **kwargs):
+        pass
 
-
-class SimcraftConnector(ABC):
-    pass
+    def get_completed_sims(self):
+        pass

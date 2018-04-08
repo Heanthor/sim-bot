@@ -17,6 +17,7 @@ import _thread
 from src.api.battlenet import BattleNet
 from src.api.simcraft import SimulationCraft
 from src.api.warcraftlogs import WarcraftLogs, WarcraftLogsError
+from src.connectors.simcraftConnectors.local_simcraft_connector import LocalSimcraftConnector
 
 logger = logging.getLogger("SimBot")
 
@@ -30,6 +31,7 @@ class SimBotError(Enum):
     NO_KILLS_LOGGED = "No kills logged for this boss."
 
 
+# noinspection PyCompatibility
 class SimcraftBot:
     def __init__(self, config, bnet_adapter, warcraftlogs_adapter, simc_adapter, boss_profiles):
         """
@@ -124,6 +126,8 @@ class SimcraftBot:
 
         return guild_sims
 
+    # TODO this can be async as well
+    # warcraftlogs can be queried async, but we only spawn async sim processes if data is found
     def sim_single_character(self, player_name, realm):
         """
         Runs full suite of sims on specific character and realm, using the given locale.
@@ -158,7 +162,7 @@ class SimcraftBot:
         return to_return
 
     # TODO this suite will be run in one lambda
-    def _sim_single_suite(self, player, realm, raiding_stats):
+    async def _sim_single_suite(self, player, realm, raiding_stats):
         """
         Produces report on single character's average sims in the form:
          {
