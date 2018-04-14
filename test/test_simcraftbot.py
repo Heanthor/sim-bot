@@ -24,6 +24,8 @@ class TestSimcraftBot(unittest.TestCase):
         expected = 74.21253335879693
         margin_of_error = 0.75
 
+        print("Out: %s" % result["guild_avg"])
+
         self.assertTrue(abs(expected - result["guild_avg"]) < margin_of_error)
 
     def testRuntime(self):

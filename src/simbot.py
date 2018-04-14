@@ -101,26 +101,30 @@ class SimcraftBot:
             "num_sims": num_sims
         })
 
+        lsc = LocalSimcraftConnector()
         for player in names["DPS"]:
             if self._cancelFlag:
                 # kill this simbot in the hottest loop
                 logger.debug("Cancelled job for %s", player["name"])
                 _thread.exit()
 
-            results = self.sim_single_character(player["name"], player["realm"])
+            self.sim_single_character(player["name"], player["realm"], lsc)
 
-            guild_sims[player["name"]] = results
+            # guild_sims[player["name"]] = results
+            #
+            # if results and "error" not in results:
+            #     guild_percents.append(results["average_performance"])
+            #     logger.debug("Finished all sims for character %s in %.2f sec", player["name"], results["elapsed_time"])
+            # else:
+            #     logger.debug("Skipped player %s", player["name"])
+            #
+            #     self.event_queue.put({
+            #         "player": player["name"],
+            #         "done": True
+            #     })
 
-            if results and "error" not in results:
-                guild_percents.append(results["average_performance"])
-                logger.debug("Finished all sims for character %s in %.2f sec", player["name"], results["elapsed_time"])
-            else:
-                logger.debug("Skipped player %s", player["name"])
+        all_results = lsc.get_completed_sims()
 
-                self.event_queue.put({
-                    "player": player["name"],
-                    "done": True
-                })
 
         guild_sims["guild_avg"] = sum(guild_percents) / len(guild_percents) if len(guild_percents) > 0 else 0.0
 
@@ -128,11 +132,12 @@ class SimcraftBot:
 
     # TODO this can be async as well
     # warcraftlogs can be queried async, but we only spawn async sim processes if data is found
-    def sim_single_character(self, player_name, realm):
+    def sim_single_character(self, player_name, realm, simc_connector):
         """
         Runs full suite of sims on specific character and realm, using the given locale.
         :param player_name:
         :param realm:
+        :param simc_connector Simc handler
         :return:
         """
         if not self._players_in_guild:
@@ -152,14 +157,14 @@ class SimcraftBot:
         except WarcraftLogsError as e:
             return {"error": str(e)}
 
-        to_return = self._sim_single_suite(player_name, realm, raiding_stats)
+        simc_connector.queue_sim(self._sim_single_suite, player_name, realm, raiding_stats)
 
-        self.event_queue.put({
-            "player": player_name,
-            "done": True
-        })
+        # self.event_queue.put({
+        #     "player": player_name,
+        #     "done": True
+        # })
 
-        return to_return
+        return True
 
     # TODO this suite will be run in one lambda
     async def _sim_single_suite(self, player, realm, raiding_stats):
