@@ -1,0 +1,6 @@
+"Matt Damon"
+Arthas
+C:\Users\reedt\Downloads\simc-735-01-win64\simc-735-01-win64\simc.exe
+../config
+--simcraft_timeout=15
+--persist_logs=true

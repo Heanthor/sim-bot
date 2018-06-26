@@ -108,6 +108,7 @@ class SimcraftBot:
                 logger.debug("Cancelled job for %s", player["name"])
                 _thread.exit()
 
+            # results =
             self.sim_single_character(player["name"], player["realm"], lsc)
 
             # guild_sims[player["name"]] = results
@@ -243,9 +244,8 @@ class SimcraftBot:
             )
 
             # actually run sim
-            # TODO this area will be rewritten for async sim results
             if tag not in sim_cache:
-                sim_results = self._simc.run_sim(sim_string.split(" "))
+                sim_results = await self._simc.run_sim(sim_string.split(" "))
 
                 if not sim_results:
                     # simcraft error, results are invalid

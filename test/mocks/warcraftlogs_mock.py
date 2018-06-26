@@ -1,8 +1,11 @@
+import json
+import time
+
 from src.api.warcraftlogs import WarcraftLogs
 
 
 # noinspection PyCompatibility
-from test.mocks.RequestMock import RequestMock
+from test.mocks.request_mock import RequestMock
 
 
 class WarcraftLogsMock(WarcraftLogs):
@@ -14,7 +17,19 @@ class WarcraftLogsMock(WarcraftLogs):
         super().__init__("")
 
         self.reports_response = reports_response
-        self.all_parses_responses = all_parses_responses
+
+        # set the parse times to the current time, so we're always in the week window
+        modified = []
+        for parse_response in all_parses_responses:
+            decoded = json.loads(parse_response)
+
+            for kill in decoded:
+                for spec in kill["specs"]:
+                    for data in spec["data"]:
+                        data["start_time"] = time.time() * 1000
+            modified.append(json.dumps(decoded))
+
+        self.all_parses_responses = modified
 
         # each time a parse is requested, return a different one and increment the count
         self._parse_call_count = 0

@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 import multiprocessing
@@ -28,37 +29,30 @@ class SimulationCraft:
 
         self._simc_timeout = simc_timeout
 
-    def run_sim(self, param_list):
+    async def run_sim(self, param_list):
         """
-        Runs a sim (through a subprocess) with the given params
+        Runs an async sim with the given params
         :param param_list: The string to run with, e.g. armory=US,Fizzcrank,xxx spec=elemental talents=0001220
                                                         fight_style=HecticAddCleave
-        :return: The resulting simmed DPS, or False if sim timed out
+        :return: Coroutine containing the resulting simmed DPS, or False if sim timed out
         """
         sim_string = " ".join(param_list)
         logger.debug("Simming with string %s", sim_string)
 
-        pool = ThreadPool(processes=1)
-        async_output = pool.apply_async(self.simcraft_proc_worker, (param_list,))
-
+        proc_handle = await asyncio.create_subprocess_exec(self._simc_path, *param_list, stdout=asyncio.subprocess.PIPE)
         try:
-            output = async_output.get(timeout=self._simc_timeout)
-        except multiprocessing.context.TimeoutError:
+            output, err = await asyncio.wait_for(proc_handle.communicate(), timeout=self._simc_timeout)
+        except asyncio.TimeoutError:
             # HecticAddCleave can take a long time on some specs -- make the timeout generous to avoid skipping any
             logger.error("Sim timed out with string %s, skipping." % sim_string)
 
-            # windows kill process
-            if os.name == "nt":
-                subprocess.check_call('taskkill /im simc.exe /t /f')
-            else:
-                # TODO linux/mac
-                pass
+            proc_handle.kill()
+            await proc_handle.communicate()
 
             return False
-        return int(self.find_dps(output))
 
-    def simcraft_proc_worker(self, param_list):
-        return str(subprocess.check_output([self._simc_path] + param_list).replace(b'\r', b'').replace(b'\n', b''))
+        cleaned_output = output.decode('utf-8').replace('\r', '').replace('\n', '')
+        return int(self.find_dps(cleaned_output))
 
     @staticmethod
     def find_dps(string):

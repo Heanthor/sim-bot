@@ -3,4 +3,8 @@ class SimcraftConnector:
         pass
 
     def get_completed_sims(self):
+        """
+        Blocks until all queued sims are complete
+        :return: List of data from completed sims
+        """
         pass

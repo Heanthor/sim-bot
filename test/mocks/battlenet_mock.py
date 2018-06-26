@@ -2,7 +2,7 @@ from src.api.battlenet import BattleNet
 
 
 # noinspection PyCompatibility
-from test.mocks.RequestMock import RequestMock
+from test.mocks.request_mock import RequestMock
 
 
 class BattleNetMock(BattleNet):
