@@ -103,29 +103,27 @@ class SimcraftBot:
 
         lsc = LocalSimcraftConnector()
         for player in names["DPS"]:
-            if self._cancelFlag:
-                # kill this simbot in the hottest loop
-                logger.debug("Cancelled job for %s", player["name"])
-                _thread.exit()
-
-            # results =
+            # if self._cancelFlag:
+            #     # kill this simbot in the hottest loop
+            #     logger.debug("Cancelled job for %s", player["name"])
+            #     _thread.exit()
             self.sim_single_character(player["name"], player["realm"], lsc)
-
-            # guild_sims[player["name"]] = results
-            #
-            # if results and "error" not in results:
-            #     guild_percents.append(results["average_performance"])
-            #     logger.debug("Finished all sims for character %s in %.2f sec", player["name"], results["elapsed_time"])
-            # else:
-            #     logger.debug("Skipped player %s", player["name"])
-            #
-            #     self.event_queue.put({
-            #         "player": player["name"],
-            #         "done": True
-            #     })
 
         all_results = lsc.get_completed_sims()
 
+        for item in all_results:
+            guild_sims[item["player_name"]] = item
+
+            if item and "error" not in item:
+                guild_percents.append(item["average_performance"])
+                logger.debug("Finished all sims for character %s in %.2f sec", item["player_name"], item["elapsed_time"])
+            else:
+                logger.debug("Skipped player %s", item["player_name"])
+
+                self.event_queue.put({
+                    "player": item["player_name"],
+                    "done": True
+                })
 
         guild_sims["guild_avg"] = sum(guild_percents) / len(guild_percents) if len(guild_percents) > 0 else 0.0
 
@@ -179,7 +177,8 @@ class SimcraftBot:
                       },
          "average_performance": _,
          "elapsed_time": _,
-         "error": _ (if an error causes the entire result to be useless. Otherwise, errors are per-boss)
+         "error": _, (if an error causes the entire result to be useless. Otherwise, errors are per-boss)
+         "player_name": _
          }
         :param player:
         :param realm:
@@ -260,7 +259,8 @@ class SimcraftBot:
                     scores["bosses"].append({"boss_name": boss_name, "error": sim_cache[tag]})
 
                     continue
-                logger.debug("Using cached sim for player %s spec %s fight config %s", player, max_dps_spec,
+                logger.debug("Using cached sim (%s) for player %s spec %s fight config %s", sim_cache[tag], player,
+                             max_dps_spec,
                              fight_profile)
                 sim_results = sim_cache[tag]
 
@@ -290,6 +290,7 @@ class SimcraftBot:
 
         scores["average_performance"] = sum(scores_lst) / len(scores_lst) if len(scores_lst) != 0 else 0
         scores["elapsed_time"] = time.time() - start
+        scores["player_name"] = player
 
         return scores
 

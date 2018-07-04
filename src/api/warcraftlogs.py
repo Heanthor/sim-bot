@@ -109,7 +109,7 @@ class WarcraftLogs:
         raw = r.json()
 
         if not raw:
-            logger.error("Empty warcraftlogs response for character %s, server %s, region %s, difficulty %s",
+            logger.info("Empty warcraftlogs response for character %s, server %s, region %s, difficulty %s",
                          character_name, server, region, difficulty)
             raise WarcraftLogsError("No logs on record.")
         elif r.status_code != 200:

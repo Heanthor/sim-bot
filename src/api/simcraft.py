@@ -1,14 +1,13 @@
 import asyncio
 import json
 import logging
-import multiprocessing
 import os
 
-import subprocess
-
-from multiprocessing.pool import ThreadPool
-
 logger = logging.getLogger("SimBot")
+
+
+class SimulationcraftProcessError(Exception):
+    pass
 
 
 class SimulationCraft:
@@ -49,7 +48,12 @@ class SimulationCraft:
             proc_handle.kill()
             await proc_handle.communicate()
 
-            return False
+            raise
+
+        if err is not None:
+            logger.error("Simcraft error '%s'" % str(err))
+
+            raise SimulationcraftProcessError(str(err))
 
         cleaned_output = output.decode('utf-8').replace('\r', '').replace('\n', '')
         return int(self.find_dps(cleaned_output))
