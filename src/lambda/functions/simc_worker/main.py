@@ -1,7 +1,6 @@
 import asyncio
 import json
 import os
-import subprocess
 from asyncio import get_event_loop
 
 import sys
@@ -12,7 +11,6 @@ from src.api.simcraft import SimulationCraft
 def handle(event, context):
     os.environ['PATH'] = os.environ['PATH'] + ':' + os.environ['LAMBDA_TASK_ROOT']
 
-    return subprocess.check_output('ls -la lib', shell=True, stderr=subprocess.STDOUT)
     sc = SimulationCraft("./lib/simc", 5, "")
     body = json.loads(event["body"])
 
