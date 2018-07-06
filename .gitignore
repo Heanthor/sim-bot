@@ -90,3 +90,5 @@ ENV/
 
 .idea/*
 config/keys.json
+src/lambda/simc
+test/result*.txt

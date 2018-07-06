@@ -17,7 +17,7 @@ import _thread
 from src.api.battlenet import BattleNet
 from src.api.simcraft import SimulationCraft
 from src.api.warcraftlogs import WarcraftLogs, WarcraftLogsError
-from src.connectors.simcraftConnectors.local_simcraft_connector import LocalSimcraftConnector
+from src.connectors.simcraft_connectors.local_simcraft_connector import LocalSimcraftConnector
 
 logger = logging.getLogger("SimBot")
 
