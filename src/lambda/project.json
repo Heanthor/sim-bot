@@ -8,7 +8,7 @@
   "runtime": "python3.6",
   "region": "us-east-1",
   "hooks": {
-    "build": "cp ../../../../config/boss_profiles.json boss_profiles.json && mkdir src\\api && cp ../../../api/simcraft.py src/api/simcraft.py",
+    "build": "chmod -R 777 lib/simc && cp ../../../../config/boss_profiles.json boss_profiles.json && mkdir src\\api && cp ../../../api/simcraft.py src/api/simcraft.py",
     "clean": "rm -rf src && rm boss_profiles.json"
   }
 }
