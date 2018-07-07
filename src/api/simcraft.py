@@ -28,18 +28,24 @@ class SimulationCraft:
 
         self._simc_timeout = simc_timeout
 
-    async def run_sim(self, param_list, simc_stderr=False):
+    async def run_sim(self, character_name, realm_slug, region, spec, talent_string, iterations, simc_stderr=False):
         """
         Runs an async sim with the given params
-        :param param_list: The string to run with, e.g. armory=US,Fizzcrank,xxx spec=elemental talents=0001220
-                                                        fight_style=HecticAddCleave
+        :param iterations: Simcraft iterations
+        :param talent_string: Simcraft talent string, 7 digits 1-3
+        :param spec: Spec string
+        :param region: Realm region
+        :param realm_slug: Realm slug
+        :param character_name: Character name
         :param simc_stderr: Pipe stderr back to python? Seems to not work on Windows
         :return: Coroutine containing the resulting simmed DPS, or False if sim timed out
         """
-        sim_string = " ".join(param_list)
+
+        sim_string = "armory=%s,%s,%s spec=%s talents=%s iterations=%d" % (
+            region, realm_slug, character_name, spec, talent_string, iterations)
         logger.debug("Simming with string %s", sim_string)
 
-        shell_cmd = " ".join([self._simc_path] + param_list)
+        shell_cmd = "%s %s" % (self._simc_path, sim_string)
 
         if simc_stderr:
             stderr_pipe = asyncio.subprocess.PIPE

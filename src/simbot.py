@@ -116,7 +116,8 @@ class SimcraftBot:
 
             if item and "error" not in item:
                 guild_percents.append(item["average_performance"])
-                logger.debug("Finished all sims for character %s in %.2f sec", item["player_name"], item["elapsed_time"])
+                logger.debug("Finished all sims for character %s in %.2f sec", item["player_name"],
+                             item["elapsed_time"])
             else:
                 logger.debug("Skipped player %s", item["player_name"])
 
@@ -233,18 +234,14 @@ class SimcraftBot:
             fight_profile = self._profiles[boss_name]
             tag = hash("%s%s%s" % (player, max_dps_spec, fight_profile))
 
-            sim_string = "armory=%s,%s,%s spec=%s talents=%s fight_style=%s iterations=%d" % (
-                self._region,
-                self.realm_slug(realm),
-                player, max_dps_spec,
-                ''.join(str(x) for x in max_dps_talents),
-                fight_profile,
-                self._sim_iterations
-            )
-
             # actually run sim
             if tag not in sim_cache:
-                sim_results = await self._simc.run_sim(sim_string.split(" "))
+                sim_results = await self._simc.run_sim(player,
+                                                       self.realm_slug(realm),
+                                                       self._region,
+                                                       max_dps_spec,
+                                                       ''.join(str(x) for x in max_dps_talents),
+                                                       self._sim_iterations)
 
                 if not sim_results:
                     # simcraft error, results are invalid
