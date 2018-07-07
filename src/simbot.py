@@ -17,6 +17,7 @@ import _thread
 from src.api.battlenet import BattleNet
 from src.api.simcraft import SimulationCraft
 from src.api.warcraftlogs import WarcraftLogs, WarcraftLogsError
+from src.connectors.simcraft_connectors.lambda_simcraft_connector import LambdaSimcraftConnector
 from src.connectors.simcraft_connectors.local_simcraft_connector import LocalSimcraftConnector
 
 logger = logging.getLogger("SimBot")
@@ -51,6 +52,7 @@ class SimcraftBot:
         self._num_weeks = config.params["weeks_to_examine"]
         self._max_level = config.params["max_level"]
         self._sim_iterations = config.params["simcraft_iterations"]
+        self._local_sim = config.params["local_sim"]
 
         self._blizzard_locale = "en_US"
 
@@ -101,15 +103,19 @@ class SimcraftBot:
             "num_sims": num_sims
         })
 
-        lsc = LocalSimcraftConnector()
+        if self._local_sim:
+            sc = LocalSimcraftConnector()
+        else:
+            sc = LambdaSimcraftConnector()
+
         for player in names["DPS"]:
             # if self._cancelFlag:
             #     # kill this simbot in the hottest loop
             #     logger.debug("Cancelled job for %s", player["name"])
             #     _thread.exit()
-            self.sim_single_character(player["name"], player["realm"], lsc)
+            self.sim_single_character(player["name"], player["realm"], sc)
 
-        all_results = lsc.get_completed_sims()
+        all_results = sc.get_completed_sims()
 
         for item in all_results:
             guild_sims[item["player_name"]] = item
@@ -344,6 +350,8 @@ class SimBotConfig:
                             help='Realm where the guild exists')
         parser.add_argument('simc_location', type=str,
                             help='Absolute path of SimulationCraft CLI executable')
+        parser.add_argument('local_sim', type=bool, default=True,
+                            help='True to run sims locally, false to run sims on Lambda')
         parser.add_argument('config_path', type=str, default='/',
                             help="Path (relative to __file__) of config directory (including /config")
         parser.add_argument('--simcraft_timeout', type=int, default=5, nargs="?",
@@ -373,7 +381,7 @@ class SimBotConfig:
 
         self.init_logger(self.params["persist_logs"], self.params["log_path"], self.params["write_logs"])
 
-    def init_args(self, guildname, realm, simc_location, config_path="", simc_timeout=5, simc_iter=100, region="US",
+    def init_args(self, guildname, realm, simc_location, local_sim=True, config_path="", simc_timeout=5, simc_iter=100, region="US",
                   raid_difficulty="heroic", blizzard_locale="en_US", max_level=110, weeks_to_examine=3,
                   persist_logs=False, log_path="../logs", write_logs=True):
         """
@@ -381,6 +389,7 @@ class SimBotConfig:
         :param guildname: The guild name to run sims for (in quotes)
         :param realm: The realm
         :param simc_location: Location of simc executable
+        :param local_sim: True to run sims locally, false to run on Lambda
         :param config_path: Path (relative to __file__) of config directory (including /config)
         :param simc_timeout: Timeout, in seconds, of each individual simulation.
         :param simc_iter: Simcraft iterations
@@ -397,6 +406,7 @@ class SimBotConfig:
         self.params["guildname"] = guildname
         self.params["realm"] = realm
         self.params["simc_location"] = simc_location
+        self.params["local_sim"] = local_sim
         self.params["simcraft_timeout"] = simc_timeout
         self.params["simcraft_iterations"] = simc_iter
         self.params["region"] = region
