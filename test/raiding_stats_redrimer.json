@@ -1,0 +1,954 @@
+{
+  "Garothi Worldbreaker": [
+    {
+      "ilvl": 956,
+      "dps": 1451930,
+      "historical_percent": 52.687100433626,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 952,
+      "dps": 1212310,
+      "historical_percent": 28.941663542567,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 954,
+      "dps": 1156670,
+      "historical_percent": 24.90030366224,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 953,
+      "dps": 1112410,
+      "historical_percent": 21.261728594626,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 952,
+      "dps": 1032380,
+      "historical_percent": 16.37431434746,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 952,
+      "dps": 1022060,
+      "historical_percent": 15.969722556781,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 948,
+      "dps": 814422,
+      "historical_percent": 8.9092950185653,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 940,
+      "dps": 807235,
+      "historical_percent": 8.8298244360922,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    }
+  ],
+  "Felhounds of Sargeras": [
+    {
+      "ilvl": 956,
+      "dps": 1208720,
+      "historical_percent": 27.077455866205,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 954,
+      "dps": 1189160,
+      "historical_percent": 25.08789277082,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 952,
+      "dps": 1127860,
+      "historical_percent": 20.301729173969,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 952,
+      "dps": 1125890,
+      "historical_percent": 20.070284192605,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 954,
+      "dps": 1101060,
+      "historical_percent": 19.073647083863,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 950,
+      "dps": 956802,
+      "historical_percent": 10.993319748755,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 941,
+      "dps": 786045,
+      "historical_percent": 8.3787922523846,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    }
+  ],
+  "Antoran High Command": [
+    {
+      "ilvl": 952,
+      "dps": 1208460,
+      "historical_percent": 14.224264022562,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 954,
+      "dps": 1153260,
+      "historical_percent": 12.380799987199,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 952,
+      "dps": 1119710,
+      "historical_percent": 10.466669381439,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 944,
+      "dps": 1014900,
+      "historical_percent": 9.0547594809996,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 956,
+      "dps": 983113,
+      "historical_percent": 9.0511557080173,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 950,
+      "dps": 941362,
+      "historical_percent": 8.4441474331949,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    }
+  ],
+  "Eonar the Life-Binder": [
+    {
+      "ilvl": 951,
+      "dps": 669293,
+      "historical_percent": 17.998472566044,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 955,
+      "dps": 657838,
+      "historical_percent": 17.756985444327,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 954,
+      "dps": 643656,
+      "historical_percent": 17.019096279758,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 952,
+      "dps": 532427,
+      "historical_percent": 9.8299853259276,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 956,
+      "dps": 485717,
+      "historical_percent": 9.248002095912,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 953,
+      "dps": 412660,
+      "historical_percent": 7.6489880744294,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 945,
+      "dps": 397371,
+      "historical_percent": 7.2515840958637,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    }
+  ],
+  "Portal Keeper Hasabel": [
+    {
+      "ilvl": 956,
+      "dps": 1172310,
+      "historical_percent": 36.12230358203,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 953,
+      "dps": 880831,
+      "historical_percent": 13.92444689842,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 952,
+      "dps": 856131,
+      "historical_percent": 12.630680788515,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 951,
+      "dps": 823141,
+      "historical_percent": 10.756731440829,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 944,
+      "dps": 455480,
+      "historical_percent": 5.6130786161274,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    }
+  ],
+  "Imonar the Soulhunter": [
+    {
+      "ilvl": 956,
+      "dps": 1108080,
+      "historical_percent": 36.422727272727,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 954,
+      "dps": 935411,
+      "historical_percent": 19.860369211453,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 945,
+      "dps": 864418,
+      "historical_percent": 15.604522737245,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 952,
+      "dps": 811021,
+      "historical_percent": 13.276287879542,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 954,
+      "dps": 554550,
+      "historical_percent": 7.4935401913471,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 955,
+      "dps": 250208,
+      "historical_percent": 3.4269881065948,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    }
+  ],
+  "Kin'garoth": [
+    {
+      "ilvl": 956,
+      "dps": 1300740,
+      "historical_percent": 36.291729186559,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 954,
+      "dps": 1226430,
+      "historical_percent": 29.207475047781,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 955,
+      "dps": 1127520,
+      "historical_percent": 21.557275919574,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 954,
+      "dps": 1074620,
+      "historical_percent": 18.524003977742,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 945,
+      "dps": 995677,
+      "historical_percent": 14.535824543062,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 952,
+      "dps": 991681,
+      "historical_percent": 14.86542615695,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    }
+  ],
+  "Varimathras": [
+    {
+      "ilvl": 956,
+      "dps": 1351890,
+      "historical_percent": 27.618578843744,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 954,
+      "dps": 1224990,
+      "historical_percent": 17.572390857675,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 954,
+      "dps": 1206430,
+      "historical_percent": 17.025290596719,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 945,
+      "dps": 1124890,
+      "historical_percent": 11.547059209519,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 954,
+      "dps": 1064490,
+      "historical_percent": 9.8155634158666,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    }
+  ],
+  "The Coven of Shivarra": [
+    {
+      "ilvl": 954,
+      "dps": 974295,
+      "historical_percent": 22.180462998984,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 954,
+      "dps": 897428,
+      "historical_percent": 18.45627901867,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 956,
+      "dps": 718801,
+      "historical_percent": 14.193258229705,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 954,
+      "dps": 161262,
+      "historical_percent": 2.6817634695995,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    }
+  ],
+  "Aggramar": [
+    {
+      "ilvl": 954,
+      "dps": 1087900,
+      "historical_percent": 20.30082685198,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 956,
+      "dps": 1087540,
+      "historical_percent": 20.62675677292,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 953,
+      "dps": 919915,
+      "historical_percent": 12.453162257295,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 954,
+      "dps": 467929,
+      "historical_percent": 5.3623382058561,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    }
+  ],
+  "Argus the Unmaker": [
+    {
+      "ilvl": 956,
+      "dps": 1078700,
+      "historical_percent": 22.917001877179,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 954,
+      "dps": 897626,
+      "historical_percent": 13.81938632875,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 954,
+      "dps": 847495,
+      "historical_percent": 12.758588249488,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 954,
+      "dps": 808133,
+      "historical_percent": 11.873923098639,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    }
+  ]
+}

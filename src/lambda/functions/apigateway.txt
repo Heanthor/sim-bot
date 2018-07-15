@@ -1,0 +1,10 @@
+{
+    "sim_params": {
+        "character_name": "Heanthoro",
+        "iterations": 100,
+        "realm_slug": "Arthas",
+        "region": "US",
+        "talent_string": "1211231",
+        "spec": "enhancement"
+    }
+}

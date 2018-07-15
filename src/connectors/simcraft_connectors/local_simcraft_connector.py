@@ -7,10 +7,11 @@ from src.connectors.simcraft_connectors.simcraft_connector import SimcraftConnec
 
 # noinspection PyCompatibility
 class LocalSimcraftConnector(SimcraftConnector):
-    def __init__(self):
+    def __init__(self, simbot):
         if sys.platform == 'win32':
             asyncio.set_event_loop(asyncio.ProactorEventLoop())
 
+        self._simbot = simbot
         self.loop = asyncio.get_event_loop()
         self.running_sims = []
 

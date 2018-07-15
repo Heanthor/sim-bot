@@ -92,3 +92,5 @@ ENV/
 config/keys.json
 src/lambda/functions/simc_worker/lib/*
 test/result*.txt
+# virtualenv
+simbot/*
