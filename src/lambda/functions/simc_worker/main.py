@@ -1,6 +1,7 @@
 import asyncio
 import json
 import os
+import traceback
 from asyncio import get_event_loop
 
 import sys
@@ -14,7 +15,7 @@ from src.simbot_config import SimBotConfig
 
 BUCKET_NAME = 'heanthor-simbot'  # replace with your bucket name
 KEY = 'boss_profiles.json'  # replace with your object key
-LOCAL_FILENAME = 'boss_profiles.json'
+LOCAL_FILENAME = '/tmp/boss_profiles.json'
 
 s3 = boto3.resource('s3')
 
@@ -68,7 +69,7 @@ def handle(event, context):
         write_logs=False
     )
 
-    sc = SimulationCraft("./lib/simc", 5, "")
+    sc = SimulationCraft("./lib/simc", 5, "/tmp")
     sb = SimcraftBot(sbc, None, None, sc, profile_dict)
 
     loop = get_event_loop()
@@ -82,6 +83,7 @@ def handle(event, context):
         suite = loop.run_until_complete(promise)
         return response({"suite": suite}, 200)
     except Exception as e:
+        print(traceback.format_exc())
         return response({"error": str(e)}, 500)
 
 

@@ -1,14 +1,14 @@
 {
   "name": "simc_worker",
   "description": "Simbot worker",
-  "memory": 1024,
-  "timeout": 10,
+  "memory": 2048,
+  "timeout": 20,
   "role": "arn:aws:iam::533639758947:role/simc_worker_lambda_function",
   "environment": {},
   "runtime": "python3.6",
   "region": "us-east-1",
   "hooks": {
-    "build": "cp ../../../../config/boss_profiles.json boss_profiles.json && mkdir src\\api && cp ../../../api/simcraft.py src/api/simcraft.py",
-    "clean": "rm -rf src && rm boss_profiles.json"
+    "build": "pip install -r ../../../../requirements.txt -t . && mkdir src\\api && cp ../../../../src/api/*.py src/api && cp -r ../../../../src/connectors src/connectors && cp ../../../*.py src" ,
+    "clean": "rm -rf src"
   }
 }

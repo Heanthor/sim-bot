@@ -1,10 +1,132 @@
 {
     "sim_params": {
-        "character_name": "Heanthoro",
+        "character_name": "Redrimer",
         "iterations": 100,
         "realm_slug": "Arthas",
         "region": "US",
-        "talent_string": "1211231",
-        "spec": "enhancement"
+        "raiding_stats": {
+              "Garothi Worldbreaker": [
+    {
+      "ilvl": 956,
+      "dps": 1451930,
+      "historical_percent": 52.687100433626,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 952,
+      "dps": 1212310,
+      "historical_percent": 28.941663542567,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 954,
+      "dps": 1156670,
+      "historical_percent": 24.90030366224,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 953,
+      "dps": 1112410,
+      "historical_percent": 21.261728594626,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 952,
+      "dps": 1032380,
+      "historical_percent": 16.37431434746,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 952,
+      "dps": 1022060,
+      "historical_percent": 15.969722556781,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 948,
+      "dps": 814422,
+      "historical_percent": 8.9092950185653,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "ilvl": 940,
+      "dps": 807235,
+      "historical_percent": 8.8298244360922,
+      "spec": "Subtlety",
+      "talents": [
+        3,
+        1,
+        1,
+        3,
+        2,
+        1,
+        1
+      ]
+    }
+  ]
+        }
     }
 }

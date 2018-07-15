@@ -30,6 +30,18 @@ class TestSimcraftBot(unittest.TestCase):
 
         self.assertTrue(abs(expected - result["guild_avg"]) < margin_of_error)
 
+    def testLambda(self):
+        lambda_sb = setup_iterations(100, False)
+        result = lambda_sb.run_all_sims()
+        expected = 74.21253335879693
+        margin_of_error = 0.75
+
+        pprint.pprint(result)
+
+        print("Out: %s" % result["guild_avg"])
+
+        self.assertTrue(abs(expected - result["guild_avg"]) < margin_of_error)
+
     def testRuntime(self):
         temp = time.time()
         self.sb.run_all_sims()
@@ -46,13 +58,14 @@ class TestSimcraftBot(unittest.TestCase):
         self.assertTrue(time2 < time1)
 
 
-def setup_iterations(iterations):
+def setup_iterations(iterations, local=True):
     sbc = SimBotConfig()
     sbc.init_args("TestGuild_NoAPI", "TestRealm_NoAPI",
                   "C:\\Users\\reedt\\Downloads\\simc-735-01-win64\\simc-735-01-win64\\simc.exe",
                   config_path='../config',
                   simc_iter=iterations,
-                  write_logs=False)
+                  write_logs=False,
+                  local_sim=local)
 
     # load json dumps
     # NOTE: player name order matters here
@@ -71,12 +84,9 @@ def setup_iterations(iterations):
         with open('warcr_%s.json' % name, 'rb') as f:
             warcr_entries.append(f.read().decode('utf-8'))
 
-    with open(os.path.join(sbc.params["config_path"], "boss_profiles.json"), 'r') as f:
-        profiles = json.loads(f.read())
-
     # create mock objects to standardize api responses
     bnet = BattleNetMock(bnet_guild, bnet_talent)
     warcr = WarcraftLogsMock('{}', warcr_entries)
     simc = SimulationCraft(sbc.params["simc_location"], sbc.params["simcraft_timeout"], sbc.params["config_path"])
 
-    return SimcraftBot(sbc, bnet, warcr, simc, profiles)
+    return SimcraftBot(sbc, bnet, warcr, simc)

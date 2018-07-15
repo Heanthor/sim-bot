@@ -27,16 +27,24 @@ class SimBotError(Enum):
 
 # noinspection PyCompatibility
 class SimcraftBot:
-    def __init__(self, config, bnet_adapter, warcraftlogs_adapter, simc_adapter, boss_profiles):
+    def __init__(self, config, bnet=None, warcr=None, simc=None, profiles=None):
         """
 
-        guild: The guild name to run sims for
-        realm: The realm
-        region: US, EU, KR, TW, CN.
-        num_weeks: Number of weeks to look back in time
-        max_level: Level of characters to be simmed
-        simc_location: Location of simc executable
+        :param config: SimbotConfig
         """
+        # create simbot with realm and guild info
+        with open(os.path.join(config.params["config_path"], "keys.json"), 'r') as f:
+            f = json.loads(f.read())
+            warcraft_logs_public = f["warcraftlogs"]["public"]
+            battlenet_pub = f["battlenet"]["public"]
+            battlenet_sec = f["battlenet"]["secret"]
+
+        if profiles is None:
+            with open(os.path.join(config.params["config_path"], "boss_profiles.json"), 'r') as f:
+                self._profiles = json.loads(f.read())
+
+        with open(os.path.join(config.params["config_path"], "urls.json"), 'r') as f:
+            self._urls = json.loads(f.read())
 
         self._guild = config.params["guildname"]
         self._realm = config.params["realm"]
@@ -49,10 +57,10 @@ class SimcraftBot:
 
         self._blizzard_locale = "en_US"
 
-        self._bnet = bnet_adapter
-        self._warcr = warcraftlogs_adapter
-        self._simc = simc_adapter
-        self._profiles = boss_profiles
+        self._bnet = bnet or BattleNet(battlenet_pub)
+        self._warcr = warcr or WarcraftLogs(warcraft_logs_public)
+        self._simc = simc or SimulationCraft(config.params["simc_location"], config.params["simcraft_timeout"],
+                                             config.params["config_path"])
 
         # all players in guild
         self._players_in_guild = []
@@ -97,9 +105,9 @@ class SimcraftBot:
         })
 
         if self._local_sim:
-            sc = LocalSimcraftConnector(self)
+            sc = LocalSimcraftConnector()
         else:
-            sc = LambdaSimcraftConnector(self)
+            sc = LambdaSimcraftConnector(self._urls)
 
         for player in names["DPS"]:
             # if self._cancelFlag:
@@ -155,7 +163,8 @@ class SimcraftBot:
         except WarcraftLogsError as e:
             return {"error": str(e)}
 
-        simc_connector.queue_sim(self.sim_single_suite, player_name, realm, raiding_stats)
+        simc_connector.queue_sim(self.sim_single_suite, player_name, self.realm_slug(realm), self._region,
+                                 self._sim_iterations, raiding_stats)
 
         # self.event_queue.put({
         #     "player": player_name,
@@ -165,7 +174,7 @@ class SimcraftBot:
         return True
 
     # unit of work to be parallelized
-    async def sim_single_suite(self, player, realm, raiding_stats):
+    async def sim_single_suite(self, player, realm_slug, region, iterations, raiding_stats):
         """
         Produces report on single character's average sims in the form:
          {
@@ -235,11 +244,11 @@ class SimcraftBot:
             # actually run sim
             if tag not in sim_cache:
                 sim_results = await self._simc.run_sim(player,
-                                                       self.realm_slug(realm),
-                                                       self._region,
+                                                       realm_slug,
+                                                       region,
                                                        max_dps_spec,
                                                        ''.join(str(x) for x in max_dps_talents),
-                                                       self._sim_iterations)
+                                                       iterations)
 
                 if not sim_results:
                     # simcraft error, results are invalid
@@ -305,20 +314,7 @@ if __name__ == '__main__':
     sbc = SimBotConfig()
     sbc.init_cmd_line()
 
-    # create simbot with realm and guild info
-    with open(os.path.join(sbc.params["config_path"], "keys.json"), 'r') as f:
-        f = json.loads(f.read())
-        warcraft_logs_public = f["warcraftlogs"]["public"]
-        battlenet_pub = f["battlenet"]["public"]
-        battlenet_sec = f["battlenet"]["secret"]
-
-    with open(os.path.join(sbc.params["config_path"], "boss_profiles.json"), 'r') as f:
-        profiles = json.loads(f.read())
-
-    bnet = BattleNet(battlenet_pub)
-    warcr = WarcraftLogs(warcraft_logs_public)
-    simc = SimulationCraft(sbc.params["simc_location"], sbc.params["simcraft_timeout"], sbc.params["config_path"])
-    sb = SimcraftBot(sbc, bnet, warcr, simc, profiles)
+    sb = SimcraftBot(sbc)
 
     start = time.time()
     print(json.dumps(sb.run_all_sims()))

@@ -90,7 +90,9 @@ ENV/
 
 .idea/*
 config/keys.json
+config/urls.json
 src/lambda/functions/simc_worker/lib/*
+src/lambda/functions/simc_worker/apikey.txt
 test/result*.txt
 # virtualenv
 simbot/*

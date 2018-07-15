@@ -1,4 +1,13 @@
+import sys
+
+import asyncio
+
+
 class SimcraftConnector:
+    def __init__(self):
+        if sys.platform == 'win32':
+            asyncio.set_event_loop(asyncio.ProactorEventLoop())
+
     def queue_sim(self, sim_func, *args, **kwargs):
         pass
 
